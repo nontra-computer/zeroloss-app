@@ -4,10 +4,12 @@ import clsx from 'clsx'
 import { useLayout } from '../../core'
 import { toAbsoluteUrl } from '../../../helpers'
 import { AsideMenu } from './AsideMenu'
+import useAsideMenu from '@/Hooks/useAsideMenu'
 import { ZEROLOSS_SETTING_MENU } from '@/Configuration/menu'
 
 const AsideDefault: FC = () => {
 	const { classes } = useLayout()
+	const { onClick } = useAsideMenu()
 
 	return (
 		<div
@@ -45,11 +47,13 @@ const AsideDefault: FC = () => {
 				{/* begin::Menu */}
 
 				{ZEROLOSS_SETTING_MENU.map((menu, index) => (
-					<div className={index === ZEROLOSS_SETTING_MENU.length - 1 ? 'mb-5' : 'mb-5'}>
+					<div
+						key={`setting-icon-${index}`}
+						className={index === ZEROLOSS_SETTING_MENU.length - 1 ? 'mb-5' : 'mb-5'}
+						onClick={() => onClick(menu.key)}>
 						<button
-							key={`setting-icon-${index}`}
 							type="button"
-							className="btn btm-sm btn-icon btn-color-white btn-active-light"
+							className={clsx('btn btm-sm btn-icon btn-color-white btn-active-light', {})}
 							data-kt-menu-trigger="click"
 							data-kt-menu-overflow="true"
 							data-kt-menu-placement="top-start"

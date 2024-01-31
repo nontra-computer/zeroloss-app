@@ -9,6 +9,23 @@
 	"ZEROLOSS.MENU.SYSTEM_SETUP": "System Setup",
 	"ZEROLOSS.MENU.USER_PROFILE": "User Profile",
 
+	"ZEROLOSS.MENU.MAIN_DASHBOARD": "Main Dashboard",
+	"ZEROLOSS.MENU.MEASUREMENT": "Measurement Dashboard",
+	"ZEROLOSS.MENU.MWA_MEASUREMENT": "MWA Measurement Dashboard",
+
+	"ZEROLOSS.MENU.EVENT_DASHBOARD": "Event Dashboard",
+	"ZEROLOSS.MENU.CREATE_EVENT": "Create New Event",
+
+	"ZEROLOSS.MENU.REPORT_MEASUREMENT": "Measurement",
+	"ZEROLOSS.MENU.REPORT_EVENT": "Event",
+	"ZEROLOSS.MENU.REPORT_SUMMARY": "Summary",
+
+	"ZEROLOSS.MENU.CHEMHUB": "Chemhub",
+	"ZEROLOSS.MENU.HAZARD_MODELING": "Hazard Modeling",
+	"ZEROLOSS.MENU.IMPORT": "Import",
+	"ZEROLOSS.MENU.MEASUREMENT_SETUP": "Measurement Setup",
+	"ZEROLOSS.MENU.CHAT": "Chat",
+
 	"TRANSLATOR.SELECT": "Select your language",
 	"MENU.NEW": "new",
 	"MENU.ACTIONS": "Actions",

@@ -4,10 +4,12 @@ import { useIntl } from 'react-intl'
 // import { AsideMenuItemWithSub } from './AsideMenuItemWithSub'
 import { AsideMenuItem } from './AsideMenuItem'
 
+import useAsideMenu from '@/Hooks/useAsideMenu'
 import { ZEROLOSS_MENU } from '@/Configuration/menu'
 
 export function AsideMenuMain() {
 	const intl = useIntl()
+	const { onClick, checkIsAsideMenuActive } = useAsideMenu()
 
 	return (
 		<React.Fragment>
@@ -15,6 +17,8 @@ export function AsideMenuMain() {
 				<React.Fragment key={`menu-icon-${index}`}>
 					<AsideMenuItem
 						to={menu.path}
+						customActive={checkIsAsideMenuActive(menu.key)}
+						onClick={() => onClick(menu.key)}
 						title={intl.formatMessage({ id: menu.label })}
 						fontIcon={menu.icon}
 						bsTitle={intl.formatMessage({ id: menu.label })}

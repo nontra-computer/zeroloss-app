@@ -9,27 +9,31 @@ import { useLayout } from '../../core'
 type Props = {
 	to: string
 	title: string
+	customActive?: boolean
 	icon?: string
 	fontIcon?: string
 	className?: string
 	hasBullet?: boolean
 	bsTitle?: string
 	outside?: boolean
+	onClick?: () => void
 }
 
 const AsideMenuItem: FC<Props & WithChildren> = ({
 	children,
 	to,
 	title,
+	customActive,
 	icon,
 	fontIcon,
 	className,
 	bsTitle,
 	outside = false,
 	hasBullet = false,
+	onClick,
 }) => {
 	const { pathname } = useLocation()
-	const isActive = checkIsActive(pathname, to)
+	const isActive = checkIsActive(pathname, to) || customActive
 	const { config } = useLayout()
 	const { aside } = config
 
@@ -42,7 +46,7 @@ const AsideMenuItem: FC<Props & WithChildren> = ({
 					{bsTitle}
 				</Tooltip>
 			)}>
-			<div className={clsx('menu-item', isActive && 'here show', className)}>
+			<div className={clsx('menu-item', isActive && 'here show', className)} onClick={onClick}>
 				{outside ? (
 					<a
 						href={to}
