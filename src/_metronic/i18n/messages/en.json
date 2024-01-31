@@ -26,6 +26,10 @@
 	"ZEROLOSS.MENU.MEASUREMENT_SETUP": "Measurement Setup",
 	"ZEROLOSS.MENU.CHAT": "Chat",
 
+	"ZEROLOSS.HEADER.CURRENT_TIME": "Current Time",
+	"ZEROLOSS.HEADER.NEW_MESSAGE": "New Messages",
+	"ZEROLOSS.HEADER.NO_MESSAGE": "No Messages",
+
 	"TRANSLATOR.SELECT": "Select your language",
 	"MENU.NEW": "new",
 	"MENU.ACTIONS": "Actions",

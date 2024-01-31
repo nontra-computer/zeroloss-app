@@ -3,7 +3,8 @@
 $zeroloss-base-white: #ffffff;
 $zeroloss-base-black: #000000;
 
-$zeroloss-primary: #07217F;
+$zeroloss-primary: #07217f;
+$zeroloss-brand-600: #667dcf;
 
 $zeroloss-primary-900: #003c68;
 $zeroloss-primary-800: #006b97;
@@ -80,209 +81,210 @@ $zeroloss-team-b-color: #ba521a;
 // zeroloss Theme Colors
 
 $zeroloss-theme-colors: (
-  "zeroloss-base-white": $zeroloss-base-white,
-  "zeroloss-base-black": $zeroloss-base-black,
-  "zeroloss-primary": $zeroloss-primary,
-  "zeroloss-primary-900": $zeroloss-primary-900,
-  "zeroloss-primary-800": $zeroloss-primary-800,
-  "zeroloss-primary-700": $zeroloss-primary-700,
-  "zeroloss-primary-600": $zeroloss-primary-600,
-  "zeroloss-primary-500": $zeroloss-primary-500,
-  "zeroloss-primary-400": $zeroloss-primary-400,
-  "zeroloss-primary-300": $zeroloss-primary-300,
-  "zeroloss-primary-200": $zeroloss-primary-200,
-  "zeroloss-primary-100": $zeroloss-primary-100,
-  "zeroloss-primary-50": $zeroloss-primary-50,
-  "zeroloss-primary-25": $zeroloss-primary-25,
-  "zeroloss-grey-900": $zeroloss-grey-900,
-  "zeroloss-grey-800": $zeroloss-grey-800,
-  "zeroloss-grey-700": $zeroloss-grey-700,
-  "zeroloss-grey-600": $zeroloss-grey-600,
-  "zeroloss-grey-500": $zeroloss-grey-500,
-  "zeroloss-grey-400": $zeroloss-grey-400,
-  "zeroloss-grey-300": $zeroloss-grey-300,
-  "zeroloss-grey-200": $zeroloss-grey-200,
-  "zeroloss-grey-100": $zeroloss-grey-100,
-  "zeroloss-grey-50": $zeroloss-grey-50,
-  "zeroloss-grey-25": $zeroloss-grey-25,
-  "zeroloss-success-900": $zeroloss-success-900,
-  "zeroloss-success-800": $zeroloss-success-800,
-  "zeroloss-success-700": $zeroloss-success-700,
-  "zeroloss-success-600": $zeroloss-success-600,
-  "zeroloss-success-500": $zeroloss-success-500,
-  "zeroloss-success-400": $zeroloss-success-400,
-  "zeroloss-success-300": $zeroloss-success-300,
-  "zeroloss-success-200": $zeroloss-success-200,
-  "zeroloss-success-100": $zeroloss-success-100,
-  "zeroloss-success-50": $zeroloss-success-50,
-  "zeroloss-success-25": $zeroloss-success-25,
-  "zeroloss-error-900": $zeroloss-error-900,
-  "zeroloss-error-800": $zeroloss-error-800,
-  "zeroloss-error-700": $zeroloss-error-700,
-  "zeroloss-error-600": $zeroloss-error-600,
-  "zeroloss-error-500": $zeroloss-error-500,
-  "zeroloss-error-400": $zeroloss-error-400,
-  "zeroloss-error-300": $zeroloss-error-300,
-  "zeroloss-error-200": $zeroloss-error-200,
-  "zeroloss-error-100": $zeroloss-error-100,
-  "zeroloss-error-50": $zeroloss-error-50,
-  "zeroloss-error-25": $zeroloss-error-25,
-  "zeroloss-warning-900": $zeroloss-warning-900,
-  "zeroloss-warning-800": $zeroloss-warning-800,
-  "zeroloss-warning-700": $zeroloss-warning-700,
-  "zeroloss-warning-600": $zeroloss-warning-600,
-  "zeroloss-warning-500": $zeroloss-warning-500,
-  "zeroloss-warning-400": $zeroloss-warning-400,
-  "zeroloss-warning-300": $zeroloss-warning-300,
-  "zeroloss-warning-200": $zeroloss-warning-200,
-  "zeroloss-warning-100": $zeroloss-warning-100,
-  "zeroloss-warning-50": $zeroloss-warning-50,
-  "zeroloss-warning-25": $zeroloss-warning-25,
-  "zeroloss-purple-1": $zeroloss-purple-1,
-  "zeroloss-purple-2": $zeroloss-purple-2,
-  "zeroloss-standard": $zeroloss-standard-color,
-  "zeroloss-business": $zeroloss-business-color,
-  "zeroloss-enterprise": $zeroloss-enterprise-color,
-  "zeroloss-team-a": $zeroloss-team-a-color,
-  "zeroloss-team-b": $zeroloss-team-b-color,
+	'zeroloss-base-white': $zeroloss-base-white,
+	'zeroloss-base-black': $zeroloss-base-black,
+	'zeroloss-primary': $zeroloss-primary,
+	'zeroloss-brand-600': $zeroloss-brand-600,
+	'zeroloss-primary-900': $zeroloss-primary-900,
+	'zeroloss-primary-800': $zeroloss-primary-800,
+	'zeroloss-primary-700': $zeroloss-primary-700,
+	'zeroloss-primary-600': $zeroloss-primary-600,
+	'zeroloss-primary-500': $zeroloss-primary-500,
+	'zeroloss-primary-400': $zeroloss-primary-400,
+	'zeroloss-primary-300': $zeroloss-primary-300,
+	'zeroloss-primary-200': $zeroloss-primary-200,
+	'zeroloss-primary-100': $zeroloss-primary-100,
+	'zeroloss-primary-50': $zeroloss-primary-50,
+	'zeroloss-primary-25': $zeroloss-primary-25,
+	'zeroloss-grey-900': $zeroloss-grey-900,
+	'zeroloss-grey-800': $zeroloss-grey-800,
+	'zeroloss-grey-700': $zeroloss-grey-700,
+	'zeroloss-grey-600': $zeroloss-grey-600,
+	'zeroloss-grey-500': $zeroloss-grey-500,
+	'zeroloss-grey-400': $zeroloss-grey-400,
+	'zeroloss-grey-300': $zeroloss-grey-300,
+	'zeroloss-grey-200': $zeroloss-grey-200,
+	'zeroloss-grey-100': $zeroloss-grey-100,
+	'zeroloss-grey-50': $zeroloss-grey-50,
+	'zeroloss-grey-25': $zeroloss-grey-25,
+	'zeroloss-success-900': $zeroloss-success-900,
+	'zeroloss-success-800': $zeroloss-success-800,
+	'zeroloss-success-700': $zeroloss-success-700,
+	'zeroloss-success-600': $zeroloss-success-600,
+	'zeroloss-success-500': $zeroloss-success-500,
+	'zeroloss-success-400': $zeroloss-success-400,
+	'zeroloss-success-300': $zeroloss-success-300,
+	'zeroloss-success-200': $zeroloss-success-200,
+	'zeroloss-success-100': $zeroloss-success-100,
+	'zeroloss-success-50': $zeroloss-success-50,
+	'zeroloss-success-25': $zeroloss-success-25,
+	'zeroloss-error-900': $zeroloss-error-900,
+	'zeroloss-error-800': $zeroloss-error-800,
+	'zeroloss-error-700': $zeroloss-error-700,
+	'zeroloss-error-600': $zeroloss-error-600,
+	'zeroloss-error-500': $zeroloss-error-500,
+	'zeroloss-error-400': $zeroloss-error-400,
+	'zeroloss-error-300': $zeroloss-error-300,
+	'zeroloss-error-200': $zeroloss-error-200,
+	'zeroloss-error-100': $zeroloss-error-100,
+	'zeroloss-error-50': $zeroloss-error-50,
+	'zeroloss-error-25': $zeroloss-error-25,
+	'zeroloss-warning-900': $zeroloss-warning-900,
+	'zeroloss-warning-800': $zeroloss-warning-800,
+	'zeroloss-warning-700': $zeroloss-warning-700,
+	'zeroloss-warning-600': $zeroloss-warning-600,
+	'zeroloss-warning-500': $zeroloss-warning-500,
+	'zeroloss-warning-400': $zeroloss-warning-400,
+	'zeroloss-warning-300': $zeroloss-warning-300,
+	'zeroloss-warning-200': $zeroloss-warning-200,
+	'zeroloss-warning-100': $zeroloss-warning-100,
+	'zeroloss-warning-50': $zeroloss-warning-50,
+	'zeroloss-warning-25': $zeroloss-warning-25,
+	'zeroloss-purple-1': $zeroloss-purple-1,
+	'zeroloss-purple-2': $zeroloss-purple-2,
+	'zeroloss-standard': $zeroloss-standard-color,
+	'zeroloss-business': $zeroloss-business-color,
+	'zeroloss-enterprise': $zeroloss-enterprise-color,
+	'zeroloss-team-a': $zeroloss-team-a-color,
+	'zeroloss-team-b': $zeroloss-team-b-color,
 ) !default;
 
 :export {
-  @each $name, $color in $zeroloss-theme-colors {
-    #{$name}: #{$color};
-  }
+	@each $name, $color in $zeroloss-theme-colors {
+		#{$name}: #{$color};
+	}
 }
 
 // Text colors
 @each $name, $color in $zeroloss-theme-colors {
-  // Base color
-  .text-#{$name} {
-    color: $color !important;
-  }
+	// Base color
+	.text-#{$name} {
+		color: $color !important;
+	}
 }
 
 // Button Colors
 @each $name, $color in $zeroloss-theme-colors {
-  // Base color
-  .btn-#{$name} {
-    background-color: $color !important;
-    border-color: $color !important;
-  }
+	// Base color
+	.btn-#{$name} {
+		background-color: $color !important;
+		border-color: $color !important;
+	}
 
-  .btn-#{$name}:hover {
-    background-color: darken($color, 10%) !important;
-    border-color: darken($color, 10%) !important;
-  }
+	.btn-#{$name}:hover {
+		background-color: darken($color, 10%) !important;
+		border-color: darken($color, 10%) !important;
+	}
 
-  .btn-#{$name}:focus {
-    background-color: darken($color, 10%) !important;
-    border-color: darken($color, 10%) !important;
-  }
+	.btn-#{$name}:focus {
+		background-color: darken($color, 10%) !important;
+		border-color: darken($color, 10%) !important;
+	}
 
-  .btn-#{$name}:active {
-    background-color: darken($color, 10%) !important;
-    border-color: darken($color, 10%) !important;
-  }
+	.btn-#{$name}:active {
+		background-color: darken($color, 10%) !important;
+		border-color: darken($color, 10%) !important;
+	}
 }
 
 // Inverse Gradient Button Colors
 @each $name, $color in $zeroloss-theme-colors {
-  // Base color
-  .btn-#{$name}-inverse {
-    background-color: #ffffff !important;
-    border: 1px solid $color !important;
-    color: $color !important;
-  }
+	// Base color
+	.btn-#{$name}-inverse {
+		background-color: #ffffff !important;
+		border: 1px solid $color !important;
+		color: $color !important;
+	}
 
-  .btn-#{$name}-inverse:hover {
-    background-color: #ffffff !important;
-    border: 1px solid darken($color, 10%) !important;
-    color: darken($color, 10%) !important;
-  }
+	.btn-#{$name}-inverse:hover {
+		background-color: #ffffff !important;
+		border: 1px solid darken($color, 10%) !important;
+		color: darken($color, 10%) !important;
+	}
 
-  .btn-#{$name}-inverse:focus {
-    background-color: #ffffff !important;
-    border: 1px solid darken($color, 10%) !important;
-    color: darken($color, 10%) !important;
-  }
+	.btn-#{$name}-inverse:focus {
+		background-color: #ffffff !important;
+		border: 1px solid darken($color, 10%) !important;
+		color: darken($color, 10%) !important;
+	}
 
-  .btn-#{$name}-inverse:active {
-    background-color: #ffffff !important;
-    border: 1px solid darken($color, 10%) !important;
-    color: darken($color, 10%) !important;
-  }
+	.btn-#{$name}-inverse:active {
+		background-color: #ffffff !important;
+		border: 1px solid darken($color, 10%) !important;
+		color: darken($color, 10%) !important;
+	}
 }
 
 // Badge Colors
 @each $name, $color in $zeroloss-theme-colors {
-  // Base color
-  .badge-#{$name} {
-    background-color: $color !important;
-  }
+	// Base color
+	.badge-#{$name} {
+		background-color: $color !important;
+	}
 
-  .badge-#{$name}:hover {
-    background-color: darken($color, 10%) !important;
-  }
+	.badge-#{$name}:hover {
+		background-color: darken($color, 10%) !important;
+	}
 }
 
 // Background Colors
 @each $name, $color in $zeroloss-theme-colors {
-  // Base color
-  .bg-#{$name} {
-    background-color: $color !important;
-  }
+	// Base color
+	.bg-#{$name} {
+		background-color: $color !important;
+	}
 
-  // Hover color
-  .bg-#{$name}.hover-enabled:hover {
-    background-color: darken($color, 5%) !important;
-  }
+	// Hover color
+	.bg-#{$name}.hover-enabled:hover {
+		background-color: darken($color, 5%) !important;
+	}
 }
 
 // Border Colors
 @each $name, $color in $zeroloss-theme-colors {
-  // Base color
-  .border-#{$name} {
-    border-color: $color !important;
-  }
+	// Base color
+	.border-#{$name} {
+		border-color: $color !important;
+	}
 }
 
 // Link Colors
 @each $name, $color in $zeroloss-theme-colors {
-  // Base color
-  .link-#{$name} {
-    color: $color !important;
-  }
+	// Base color
+	.link-#{$name} {
+		color: $color !important;
+	}
 
-  .link-#{$name}:hover {
-    color: darken($color, 10%) !important;
-  }
+	.link-#{$name}:hover {
+		color: darken($color, 10%) !important;
+	}
 
-  .link-#{$name}:focus {
-    color: darken($color, 10%) !important;
-  }
+	.link-#{$name}:focus {
+		color: darken($color, 10%) !important;
+	}
 
-  .link-#{$name}:active {
-    color: darken($color, 10%) !important;
-  }
+	.link-#{$name}:active {
+		color: darken($color, 10%) !important;
+	}
 }
 
 // Svg
 @each $name, $color in $zeroloss-theme-colors {
-  // Base color
-  .svg-#{$name} {
-    svg path {
-      stroke: $color !important;
-    }
-  }
+	// Base color
+	.svg-#{$name} {
+		svg path {
+			stroke: $color !important;
+		}
+	}
 }
 
 // Svg Active, Hover
 @each $name, $color in $zeroloss-theme-colors {
-  // Base color
-  .svg-#{$name}:active,
-  .svg-#{$name}:hover {
-    svg path {
-      stroke: lighten($color, 30%) !important;
-    }
-  }
+	// Base color
+	.svg-#{$name}:active,
+	.svg-#{$name}:hover {
+		svg path {
+			stroke: lighten($color, 30%) !important;
+		}
+	}
 }

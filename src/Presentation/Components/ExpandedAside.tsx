@@ -21,13 +21,13 @@ const ExpandedAside: React.FC = () => {
 
 			<div
 				className={clsx(
-					'position-fixed bg-zeroloss-base-white border-1px border-zeroloss-grey-200 h-100 transition-300 overflow-hidden text-nowrap',
+					'position-fixed bg-zeroloss-base-white h-100 transition-300 overflow-hidden text-nowrap',
 					{
-						'w-300px': isAsideExpanded,
+						'w-300px border-1px border-zeroloss-grey-200 ': isAsideExpanded,
 						'w-0': !isAsideExpanded,
 					}
 				)}
-				style={{ zIndex: 98, marginLeft: 100 }}>
+				style={{ marginLeft: 100 }}>
 				<div className="row p-6 py-10 gy-3">
 					{/* Logo */}
 					<div className="col-12 mb-5">

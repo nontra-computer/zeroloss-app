@@ -148,12 +148,12 @@ export const ZEROLOSS_SETTING_MENU = [
 		className: 'py-3',
 		subMenu: [],
 	},
-	{
-		key: 'profile',
-		icon: 'bi-person-circle',
-		path: '/profile',
-		label: 'ZEROLOSS.MENU.USER_PROFILE',
-		className: 'py-3',
-		subMenu: [],
-	},
+	// {
+	// 	key: 'profile',
+	// 	icon: 'bi-person-circle',
+	// 	path: '/profile',
+	// 	label: 'ZEROLOSS.MENU.USER_PROFILE',
+	// 	className: 'py-3',
+	// 	subMenu: [],
+	// },
 ]

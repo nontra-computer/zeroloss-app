@@ -11,30 +11,30 @@ const languages = [
     flag: toAbsoluteUrl('media/flags/united-states.svg'),
   },
   {
-    lang: 'zh',
-    name: 'Mandarin',
-    flag: toAbsoluteUrl('media/flags/china.svg'),
+    lang: 'th',
+    name: 'Thai',
+    flag: toAbsoluteUrl('media/flags/thailand.svg'),
   },
-  {
-    lang: 'es',
-    name: 'Spanish',
-    flag: toAbsoluteUrl('media/flags/spain.svg'),
-  },
-  {
-    lang: 'ja',
-    name: 'Japanese',
-    flag: toAbsoluteUrl('media/flags/japan.svg'),
-  },
-  {
-    lang: 'de',
-    name: 'German',
-    flag: toAbsoluteUrl('media/flags/germany.svg'),
-  },
-  {
-    lang: 'fr',
-    name: 'French',
-    flag: toAbsoluteUrl('media/flags/france.svg'),
-  },
+  // {
+  //   lang: 'es',
+  //   name: 'Spanish',
+  //   flag: toAbsoluteUrl('media/flags/spain.svg'),
+  // },
+  // {
+  //   lang: 'ja',
+  //   name: 'Japanese',
+  //   flag: toAbsoluteUrl('media/flags/japan.svg'),
+  // },
+  // {
+  //   lang: 'de',
+  //   name: 'German',
+  //   flag: toAbsoluteUrl('media/flags/germany.svg'),
+  // },
+  // {
+  //   lang: 'fr',
+  //   name: 'French',
+  //   flag: toAbsoluteUrl('media/flags/france.svg'),
+  // },
 ]
 
 const Languages: FC = () => {
@@ -48,7 +48,7 @@ const Languages: FC = () => {
       data-kt-menu-flip='bottom'
     >
       <a href='#' className='menu-link px-5'>
-        <span className='menu-title position-relative'>
+        <span className='menu-title position-relative py-3'>
           Language
           <span className='fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0'>
             {currentLanguage?.name}{' '}
@@ -64,7 +64,7 @@ const Languages: FC = () => {
       <div className='menu-sub menu-sub-dropdown w-175px py-4'>
         {languages.map((l) => (
           <div
-            className='menu-item px-3'
+            className='menu-item px-3 py-3'
             key={l.lang}
             onClick={() => {
               setLanguage(l.lang)

@@ -5,6 +5,7 @@ import { useLayout } from '../../core'
 import { toAbsoluteUrl } from '../../../helpers'
 import { AsideMenu } from './AsideMenu'
 import useAsideMenu from '@/Hooks/useAsideMenu'
+import { HeaderUserMenu } from '@/_metronic/partials'
 import { ZEROLOSS_SETTING_MENU } from '@/Configuration/menu'
 
 const AsideDefault: FC = () => {
@@ -47,10 +48,7 @@ const AsideDefault: FC = () => {
 				{/* begin::Menu */}
 
 				{ZEROLOSS_SETTING_MENU.map((menu, index) => (
-					<div
-						key={`setting-icon-${index}`}
-						className={index === ZEROLOSS_SETTING_MENU.length - 1 ? 'mb-5' : 'mb-5'}
-						onClick={() => onClick(menu.key)}>
+					<div key={`setting-icon-${index}`} className={'mb-5'} onClick={() => onClick(menu.key)}>
 						<button
 							type="button"
 							className={clsx('btn btm-sm btn-icon btn-color-white btn-active-light', {})}
@@ -65,6 +63,22 @@ const AsideDefault: FC = () => {
 						</button>
 					</div>
 				))}
+
+				<div
+					className={clsx('d-flex align-items-center', 'mb-10')}
+					id="kt_header_user_menu_toggle">
+					{/* begin::Toggle */}
+					<div
+						className={clsx('cursor-pointer symbol', 'symbol-30px symbol-md-40px')}
+						data-kt-menu-trigger="click"
+						data-kt-menu-attach="parent"
+						data-kt-menu-placement="top-start">
+						<img src={toAbsoluteUrl('media/avatars/300-1.jpg')} alt="metronic" />
+					</div>
+					<HeaderUserMenu />
+					{/* end::Toggle */}
+				</div>
+
 				{/* end::Menu */}
 			</div>
 			{/* end::Footer */}
