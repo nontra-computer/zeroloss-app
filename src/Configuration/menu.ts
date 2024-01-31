@@ -1,0 +1,77 @@
+export const ZEROLOSS_MENU = [
+	{
+		key: 'favorite',
+		icon: 'bi-star',
+		path: '#',
+		label: 'ZEROLOSS.MENU.FAVORITE',
+		className: 'py-3',
+		subMenu: [],
+	},
+	{
+		key: 'dashboard',
+		icon: 'bi-bar-chart-line',
+		path: '/dashboard',
+		label: 'ZEROLOSS.MENU.DASHBOARD',
+		className: 'py-3',
+		subMenu: [],
+	},
+	{
+		key: 'gis',
+		icon: 'bi-map-fill',
+		path: '/gis',
+		label: 'ZEROLOSS.MENU.GIS',
+		className: 'py-3',
+		subMenu: [],
+	},
+	{
+		key: 'events',
+		icon: 'bi-calendar2-event-fill',
+		path: '/events',
+		label: 'ZEROLOSS.MENU.EVENT',
+		className: 'py-3',
+		subMenu: [],
+	},
+	{
+		key: 'report',
+		icon: 'bi-clipboard-check-fill',
+		path: '/report',
+		label: 'ZEROLOSS.MENU.REPORT',
+		className: 'py-3',
+		subMenu: [],
+	},
+	{
+		key: 'user_account',
+		icon: 'bi-people-fill',
+		path: '/user-account',
+		label: 'ZEROLOSS.MENU.USER',
+		className: 'py-3',
+		subMenu: [],
+	},
+]
+
+export const ZEROLOSS_SETTING_MENU = [
+	{
+		key: 'tools',
+		icon: 'bi-boxes',
+		path: '/tools',
+		label: 'ZEROLOSS.MENU.TOOLS',
+		className: 'py-3',
+		subMenu: [],
+	},
+	{
+		key: 'setup',
+		icon: 'bi-gear-fill',
+		path: '/setup',
+		label: 'ZEROLOSS.MENU.SYSTEM_SETUP',
+		className: 'py-3',
+		subMenu: [],
+	},
+	{
+		key: 'profile',
+		icon: 'bi-person-circle',
+		path: '/profile',
+		label: 'ZEROLOSS.MENU.USER_PROFILE',
+		className: 'py-3',
+		subMenu: [],
+	},
+]

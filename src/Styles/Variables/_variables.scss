@@ -1,0 +1,288 @@
+// Custom Colors Variables
+
+$zeroloss-base-white: #ffffff;
+$zeroloss-base-black: #000000;
+
+$zeroloss-primary: #07217F;
+
+$zeroloss-primary-900: #003c68;
+$zeroloss-primary-800: #006b97;
+$zeroloss-primary-700: #0087bf;
+$zeroloss-primary-600: #0096d4;
+$zeroloss-primary-500: #0096d4;
+$zeroloss-primary-400: #00a4e8;
+$zeroloss-primary-300: #74d6ff;
+$zeroloss-primary-200: #b9eaff;
+$zeroloss-primary-100: #d8f4ff;
+$zeroloss-primary-50: #eff8ff;
+$zeroloss-primary-25: #f5faff;
+
+$zeroloss-grey-900: #101828;
+$zeroloss-grey-800: #1d2939;
+$zeroloss-grey-700: #344054;
+$zeroloss-grey-600: #475467;
+$zeroloss-grey-500: #667085;
+$zeroloss-grey-400: #98a2b3;
+$zeroloss-grey-300: #d0d5dd;
+$zeroloss-grey-200: #eaecf0;
+$zeroloss-grey-100: #f2f4f7;
+$zeroloss-grey-50: #f9fafb;
+$zeroloss-grey-25: #fcfcfd;
+
+$zeroloss-success-900: #054f31;
+$zeroloss-success-800: #05603a;
+$zeroloss-success-700: #027948;
+$zeroloss-success-600: #039855;
+$zeroloss-success-500: #1bba70;
+$zeroloss-success-400: #32d583;
+$zeroloss-success-300: #6ce9a6;
+$zeroloss-success-200: #a6f4c5;
+$zeroloss-success-100: #d1fadf;
+$zeroloss-success-50: #ecfdf3;
+$zeroloss-success-25: #f6fef9;
+
+$zeroloss-error-900: #7a271a;
+$zeroloss-error-800: #912018;
+$zeroloss-error-700: #b32318;
+$zeroloss-error-600: #d92d20;
+$zeroloss-error-500: #f04438;
+$zeroloss-error-400: #f97066;
+$zeroloss-error-300: #fda19b;
+$zeroloss-error-200: #fecdc9;
+$zeroloss-error-100: #fee4e2;
+$zeroloss-error-50: #fef3f2;
+$zeroloss-error-25: #fffafa;
+
+$zeroloss-warning-900: #792e0d;
+$zeroloss-warning-800: #93370d;
+$zeroloss-warning-700: #b54708;
+$zeroloss-warning-600: #dc6803;
+$zeroloss-warning-500: #f79009;
+$zeroloss-warning-400: #fdb022;
+$zeroloss-warning-300: #fec84b;
+$zeroloss-warning-200: #fedf89;
+$zeroloss-warning-100: #feefc6;
+$zeroloss-warning-50: #fffaeb;
+$zeroloss-warning-25: #fffcf5;
+
+$zeroloss-purple-1: #5925dc;
+$zeroloss-purple-2: #363f72;
+
+// Business Requirements Colors
+
+$zeroloss-standard-color: #4ba75d;
+$zeroloss-business-color: #0096d4;
+$zeroloss-enterprise-color: #fdb022;
+
+$zeroloss-team-a-color: #0096d4;
+$zeroloss-team-b-color: #ba521a;
+
+// zeroloss Theme Colors
+
+$zeroloss-theme-colors: (
+  "zeroloss-base-white": $zeroloss-base-white,
+  "zeroloss-base-black": $zeroloss-base-black,
+  "zeroloss-primary": $zeroloss-primary,
+  "zeroloss-primary-900": $zeroloss-primary-900,
+  "zeroloss-primary-800": $zeroloss-primary-800,
+  "zeroloss-primary-700": $zeroloss-primary-700,
+  "zeroloss-primary-600": $zeroloss-primary-600,
+  "zeroloss-primary-500": $zeroloss-primary-500,
+  "zeroloss-primary-400": $zeroloss-primary-400,
+  "zeroloss-primary-300": $zeroloss-primary-300,
+  "zeroloss-primary-200": $zeroloss-primary-200,
+  "zeroloss-primary-100": $zeroloss-primary-100,
+  "zeroloss-primary-50": $zeroloss-primary-50,
+  "zeroloss-primary-25": $zeroloss-primary-25,
+  "zeroloss-grey-900": $zeroloss-grey-900,
+  "zeroloss-grey-800": $zeroloss-grey-800,
+  "zeroloss-grey-700": $zeroloss-grey-700,
+  "zeroloss-grey-600": $zeroloss-grey-600,
+  "zeroloss-grey-500": $zeroloss-grey-500,
+  "zeroloss-grey-400": $zeroloss-grey-400,
+  "zeroloss-grey-300": $zeroloss-grey-300,
+  "zeroloss-grey-200": $zeroloss-grey-200,
+  "zeroloss-grey-100": $zeroloss-grey-100,
+  "zeroloss-grey-50": $zeroloss-grey-50,
+  "zeroloss-grey-25": $zeroloss-grey-25,
+  "zeroloss-success-900": $zeroloss-success-900,
+  "zeroloss-success-800": $zeroloss-success-800,
+  "zeroloss-success-700": $zeroloss-success-700,
+  "zeroloss-success-600": $zeroloss-success-600,
+  "zeroloss-success-500": $zeroloss-success-500,
+  "zeroloss-success-400": $zeroloss-success-400,
+  "zeroloss-success-300": $zeroloss-success-300,
+  "zeroloss-success-200": $zeroloss-success-200,
+  "zeroloss-success-100": $zeroloss-success-100,
+  "zeroloss-success-50": $zeroloss-success-50,
+  "zeroloss-success-25": $zeroloss-success-25,
+  "zeroloss-error-900": $zeroloss-error-900,
+  "zeroloss-error-800": $zeroloss-error-800,
+  "zeroloss-error-700": $zeroloss-error-700,
+  "zeroloss-error-600": $zeroloss-error-600,
+  "zeroloss-error-500": $zeroloss-error-500,
+  "zeroloss-error-400": $zeroloss-error-400,
+  "zeroloss-error-300": $zeroloss-error-300,
+  "zeroloss-error-200": $zeroloss-error-200,
+  "zeroloss-error-100": $zeroloss-error-100,
+  "zeroloss-error-50": $zeroloss-error-50,
+  "zeroloss-error-25": $zeroloss-error-25,
+  "zeroloss-warning-900": $zeroloss-warning-900,
+  "zeroloss-warning-800": $zeroloss-warning-800,
+  "zeroloss-warning-700": $zeroloss-warning-700,
+  "zeroloss-warning-600": $zeroloss-warning-600,
+  "zeroloss-warning-500": $zeroloss-warning-500,
+  "zeroloss-warning-400": $zeroloss-warning-400,
+  "zeroloss-warning-300": $zeroloss-warning-300,
+  "zeroloss-warning-200": $zeroloss-warning-200,
+  "zeroloss-warning-100": $zeroloss-warning-100,
+  "zeroloss-warning-50": $zeroloss-warning-50,
+  "zeroloss-warning-25": $zeroloss-warning-25,
+  "zeroloss-purple-1": $zeroloss-purple-1,
+  "zeroloss-purple-2": $zeroloss-purple-2,
+  "zeroloss-standard": $zeroloss-standard-color,
+  "zeroloss-business": $zeroloss-business-color,
+  "zeroloss-enterprise": $zeroloss-enterprise-color,
+  "zeroloss-team-a": $zeroloss-team-a-color,
+  "zeroloss-team-b": $zeroloss-team-b-color,
+) !default;
+
+:export {
+  @each $name, $color in $zeroloss-theme-colors {
+    #{$name}: #{$color};
+  }
+}
+
+// Text colors
+@each $name, $color in $zeroloss-theme-colors {
+  // Base color
+  .text-#{$name} {
+    color: $color !important;
+  }
+}
+
+// Button Colors
+@each $name, $color in $zeroloss-theme-colors {
+  // Base color
+  .btn-#{$name} {
+    background-color: $color !important;
+    border-color: $color !important;
+  }
+
+  .btn-#{$name}:hover {
+    background-color: darken($color, 10%) !important;
+    border-color: darken($color, 10%) !important;
+  }
+
+  .btn-#{$name}:focus {
+    background-color: darken($color, 10%) !important;
+    border-color: darken($color, 10%) !important;
+  }
+
+  .btn-#{$name}:active {
+    background-color: darken($color, 10%) !important;
+    border-color: darken($color, 10%) !important;
+  }
+}
+
+// Inverse Gradient Button Colors
+@each $name, $color in $zeroloss-theme-colors {
+  // Base color
+  .btn-#{$name}-inverse {
+    background-color: #ffffff !important;
+    border: 1px solid $color !important;
+    color: $color !important;
+  }
+
+  .btn-#{$name}-inverse:hover {
+    background-color: #ffffff !important;
+    border: 1px solid darken($color, 10%) !important;
+    color: darken($color, 10%) !important;
+  }
+
+  .btn-#{$name}-inverse:focus {
+    background-color: #ffffff !important;
+    border: 1px solid darken($color, 10%) !important;
+    color: darken($color, 10%) !important;
+  }
+
+  .btn-#{$name}-inverse:active {
+    background-color: #ffffff !important;
+    border: 1px solid darken($color, 10%) !important;
+    color: darken($color, 10%) !important;
+  }
+}
+
+// Badge Colors
+@each $name, $color in $zeroloss-theme-colors {
+  // Base color
+  .badge-#{$name} {
+    background-color: $color !important;
+  }
+
+  .badge-#{$name}:hover {
+    background-color: darken($color, 10%) !important;
+  }
+}
+
+// Background Colors
+@each $name, $color in $zeroloss-theme-colors {
+  // Base color
+  .bg-#{$name} {
+    background-color: $color !important;
+  }
+
+  // Hover color
+  .bg-#{$name}.hover-enabled:hover {
+    background-color: darken($color, 5%) !important;
+  }
+}
+
+// Border Colors
+@each $name, $color in $zeroloss-theme-colors {
+  // Base color
+  .border-#{$name} {
+    border-color: $color !important;
+  }
+}
+
+// Link Colors
+@each $name, $color in $zeroloss-theme-colors {
+  // Base color
+  .link-#{$name} {
+    color: $color !important;
+  }
+
+  .link-#{$name}:hover {
+    color: darken($color, 10%) !important;
+  }
+
+  .link-#{$name}:focus {
+    color: darken($color, 10%) !important;
+  }
+
+  .link-#{$name}:active {
+    color: darken($color, 10%) !important;
+  }
+}
+
+// Svg
+@each $name, $color in $zeroloss-theme-colors {
+  // Base color
+  .svg-#{$name} {
+    svg path {
+      stroke: $color !important;
+    }
+  }
+}
+
+// Svg Active, Hover
+@each $name, $color in $zeroloss-theme-colors {
+  // Base color
+  .svg-#{$name}:active,
+  .svg-#{$name}:hover {
+    svg path {
+      stroke: lighten($color, 30%) !important;
+    }
+  }
+}

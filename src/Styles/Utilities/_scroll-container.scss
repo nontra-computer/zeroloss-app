@@ -1,0 +1,47 @@
+@mixin get-child-width($i) {
+	width: #{$i}px !important;
+}
+
+.scroll-container {
+	scroll-behavior: smooth;
+
+	display: block;
+	overflow: auto;
+	white-space: nowrap;
+
+	& > * {
+		display: inline-block;
+		margin-right: 20px;
+	}
+
+	@for $i from 0 through 9999 {
+		@if $i% 1 == 0 {
+			&.child-width-#{$i}px {
+				@include get-child-width($i);
+			}
+		}
+	}
+}
+
+@media (max-width: 992px) {
+	.mobile-scroll-container {
+		scroll-behavior: smooth;
+
+		display: block;
+		overflow: auto;
+		white-space: nowrap;
+
+		& > * {
+			display: inline-block;
+			margin-right: 20px;
+		}
+
+		@for $i from 0 through 9999 {
+			@if $i% 1 == 0 {
+				&.child-width-#{$i}px {
+					@include get-child-width($i);
+				}
+			}
+		}
+	}
+}

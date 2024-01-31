@@ -1,0 +1,49 @@
+.w-0 {
+	width: 0 !important;
+}
+
+.w-fit-content {
+	width: fit-content !important;
+	width: -moz-fit-content !important;
+	overflow-wrap: break-word !important;
+}
+
+.w-max-content {
+	width: max-content !important;
+}
+
+.w-sm-50 {
+	width: auto !important;
+}
+
+.w-sm-100 {
+	width: auto !important;
+}
+
+.w-lg-100 {
+	width: 100% !important;
+}
+
+@media screen and (max-width: 480px) {
+	.w-sm-50 {
+		width: 50% !important;
+	}
+
+	.w-sm-100 {
+		width: 100% !important;
+	}
+
+	@for $i from 0 through 9999 {
+		@if $i% 1 == 0 {
+			.w-sm-#{$i}px {
+				width: #{$i}px !important;
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 481px) and (max-width: 1024px) {
+	.w-md-100 {
+		width: 100% !important;
+	}
+}

@@ -1,0 +1,16 @@
+@for $i from 0 through 100 {
+	@if $i% 1 == 0 {
+		.border-radius-#{$i}px {
+			border-radius: #{$i}px !important;
+		}
+
+		.border-#{$i}px {
+			border-width: #{$i}px !important;
+			border-style: solid !important;
+		}
+	}
+}
+
+.border-width-0 {
+	border-width: 0 !important;
+}
