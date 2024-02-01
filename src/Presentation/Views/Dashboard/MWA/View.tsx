@@ -1,6 +1,8 @@
 import React from 'react'
 import { PageTitle } from '@/_metronic/layout/core'
+import Map from './Components/Map'
 import DataConnection from './Components/DataConnection'
+import Measurement from './Components/Measurement'
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
@@ -25,10 +27,15 @@ const MwaMeasurementDashboardView: React.FC = () => {
 				การประปานครหลวง
 			</PageTitle>
 
-			<div className="row g-5 px-10">
-				<div className="col-12 col-lg-8"></div>
+			<div className="row g-5 px-10 pb-10">
+				<div className="col-12 col-lg-8">
+					<Map />
+				</div>
 				<div className="col-12 col-lg-4">
 					<DataConnection />
+				</div>
+				<div className="col-12">
+					<Measurement />
 				</div>
 			</div>
 		</React.Fragment>

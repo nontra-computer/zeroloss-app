@@ -15,6 +15,8 @@ import './_metronic/assets/keenicons/solid/style.css'
 
 // Zeroloss Styles and Customized Components Styles
 import './Styles/main.scss'
+import 'react-tooltip/dist/react-tooltip.css'
+import 'react-toastify/dist/ReactToastify.css'
 
 /**
  * TIP: Replace this style import with rtl styles to enable rtl mode
