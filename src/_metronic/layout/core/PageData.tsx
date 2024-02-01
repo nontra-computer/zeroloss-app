@@ -15,8 +15,8 @@ export interface PageLink {
 export interface PageDataContextModel {
 	pageTitle?: string
 	setPageTitle: (_title: string) => void
-	pageDescription?: string
-	setPageDescription: (_description: string) => void
+	pageDescription?: JSX.Element | string
+	setPageDescription: (_description: JSX.Element | string) => void
 	pageBreadcrumbs?: Array<PageLink>
 	setPageBreadcrumbs: (_breadcrumbs: Array<PageLink>) => void
 	additionalPageDescription?: string
@@ -26,13 +26,13 @@ export interface PageDataContextModel {
 const PageDataContext = createContext<PageDataContextModel>({
 	setPageTitle: (_title: string) => {},
 	setPageBreadcrumbs: (_breadcrumbs: Array<PageLink>) => {},
-	setPageDescription: (_description: string) => {},
+	setPageDescription: (_description: JSX.Element | string) => {},
 	setAdditionalPageDescription: (_description: string) => {},
 })
 
 const PageDataProvider: FC<WithChildren> = ({ children }) => {
 	const [pageTitle, setPageTitle] = useState<string>('')
-	const [pageDescription, setPageDescription] = useState<string>('')
+	const [pageDescription, setPageDescription] = useState<JSX.Element | string>('')
 	const [pageBreadcrumbs, setPageBreadcrumbs] = useState<Array<PageLink>>([])
 	const [additionalPageDescription, setAdditionalPageDescription] = useState<string>('')
 	const value: PageDataContextModel = {
@@ -53,7 +53,7 @@ function usePageData() {
 }
 
 type Props = {
-	description?: string
+	description?: JSX.Element | string
 	breadcrumbs?: Array<PageLink>
 	aditionalDescription?: string
 }

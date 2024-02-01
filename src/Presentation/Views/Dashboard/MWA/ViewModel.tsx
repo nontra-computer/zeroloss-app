@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
 import moment from 'moment-timezone'
 
@@ -16,9 +17,18 @@ const ViewModel = () => {
 
 		return intl.formatMessage({ id: 'ZEROLOSS.HEADER.CURRENT_TIME' }) + ' ' + time
 	}, [currentTime, intl, selectedLang])
+	const { mode } = useThemeMode()
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	return {
 		timeStr,
+		themeMode,
 	}
 }
 

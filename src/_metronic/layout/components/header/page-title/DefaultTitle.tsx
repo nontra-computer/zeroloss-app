@@ -21,17 +21,20 @@ const DefaultTitle: React.FC = () => {
 			{pageTitle && (
 				<div>
 					<h1
-						className="fw-bolder my-1 lh-base text-zeroloss-primary fw-bold"
+						id="page-title"
+						className="fw-bolder my-1 lh-base fw-bold"
 						style={{ fontSize: '30px' }}>
 						{pageTitle}
 						{pageDescription && config.pageTitle && config.pageTitle.description && (
-							<small className="text-zeroloss-grey-600 fs-5 fw-normal ms-3">
+							<small id="page-description" className="fs-5 fw-normal ms-3">
 								{pageDescription}
 							</small>
 						)}
 					</h1>
 					{additionalPageDescription && (
-						<div className="mt-2 fs-6 text-zeroloss-grey-600">{additionalPageDescription}</div>
+						<div id="additional-page-description" className="mt-2 fs-6">
+							{additionalPageDescription}
+						</div>
 					)}
 				</div>
 			)}

@@ -12,6 +12,8 @@ import DashboardOverviewView from '@/Presentation/Views/Dashboard/Overview/View'
 import MeasurementDashboardView from '@/Presentation/Views/Dashboard/Measurement/View'
 import MwaMeasurementDashboardView from '@/Presentation/Views/Dashboard/MWA/View'
 
+import Error404View from '@/Presentation/Views/Error/404/View'
+
 const PrivateRoutes = () => {
 	const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
 	const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
@@ -86,9 +88,9 @@ const PrivateRoutes = () => {
 						</SuspensedView>
 					}
 				/>
-				{/* Page Not Found */}
-				<Route path="*" element={<Navigate to="/error/404" />} />
 			</Route>
+
+			<Route path="*" element={<Error404View />} />
 		</Routes>
 	)
 }

@@ -10,22 +10,36 @@ import {
 } from '../../../partials'
 import { useLayout } from '../../core'
 import { useIntl } from 'react-intl'
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const itemClass = 'ms-1 ms-lg-3',
-	btnClass =
-		'btn btn-icon btn-color-primary btn-active-light-primary w-30px h-30px w-md-40px h-md-40px',
+	// btnClass =
+	// 	'btn btn-icon btn-color-primary btn-active-light-primary w-30px h-30px w-md-40px h-md-40px',
 	// userAvatarClass = 'symbol-30px symbol-md-40px',
 	btnIconClass = 'fs-1'
 
 const Topbar: FC = () => {
 	const { config } = useLayout()
 	const intl = useIntl()
+	const { mode } = useThemeMode()
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	return (
 		<div className="d-flex align-items-stretch justify-self-end flex-shrink-0">
 			{/* begin::Theme mode */}
 			<div className={'d-flex align-items-center ms-1 ms-lg-3'}>
-				<ThemeModeSwitcher toggleBtnClass="btn-color-primary btn-active-light-primary w-30px h-30px w-md-40px h-md-40px" />
+				<ThemeModeSwitcher
+					toggleBtnClass={clsx('w-30px h-30px w-md-40px h-md-40px', {
+						'btn-color-primary btn-active-light-primary': themeMode === 'light',
+						'btn-icon-white btn-active-light': themeMode === 'dark',
+					})}
+				/>
 			</div>
 			{/* end::Theme mode */}
 
@@ -49,7 +63,10 @@ const Topbar: FC = () => {
 			<div className={clsx('d-flex align-items-center', itemClass)}>
 				{/* begin::Menu- wrapper */}
 				<div
-					className={clsx('btn btn-icon btn-active-light-primary position-relative ', btnClass)}
+					className={clsx('btn btn-icon position-relative w-30px h-30px w-md-40px h-md-40px', {
+						'btn-icon-primary btn-active-light-primary': themeMode === 'light',
+						'btn-icon-white btn-active-light': themeMode === 'dark',
+					})}
 					data-kt-menu-trigger="click"
 					data-kt-menu-attach="parent"
 					data-kt-menu-placement="bottom-end">

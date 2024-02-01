@@ -54,6 +54,12 @@ export const useAsideMenu = () => {
 		}
 	}
 
+	const onClickLinkAside = () => {
+		setSubMenu([])
+		setExpandedKey('')
+		setIsAsideExpanded(false)
+	}
+
 	const checkIsAsideMenuActive = (key: string) => {
 		return expandedKey === key
 	}
@@ -63,6 +69,7 @@ export const useAsideMenu = () => {
 		subMenu,
 		checkIsAsideMenuActive,
 		onClick,
+		onClickLinkAside,
 		toggleAside,
 		openAside,
 		closeAside,

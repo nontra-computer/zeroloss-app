@@ -1,0 +1,27 @@
+[data-bs-theme='light'] {
+	#page-title {
+		color: $zeroloss-primary !important;
+	}
+
+	#page-description {
+		color: $zeroloss-grey-600 !important;
+	}
+
+	#additional-page-description {
+		color: $zeroloss-grey-600 !important;
+	}
+}
+
+[data-bs-theme='dark'] {
+	#page-title {
+		color: $zeroloss-grey-25 !important;
+	}
+
+	#page-description {
+		color: $zeroloss-grey-200 !important;
+	}
+
+	#additional-page-description {
+		color: $zeroloss-grey-200 !important;
+	}
+}

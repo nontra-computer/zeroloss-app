@@ -1,0 +1,26 @@
+[data-bs-theme='dark'] {
+	#custom-theme-mode-switcher .menu-item .menu-link:not(.active) .menu-icon i,
+	#custom-theme-mode-switcher .menu-item .menu-link:not(.active) .menu-title {
+		color: #ffffff !important;
+	}
+
+	#custom-theme-mode-switcher .menu-item:hover .menu-link.active {
+		transition: all 300ms;
+		background-color: #006ae6 !important;
+	}
+
+	#custom-theme-mode-switcher .menu-item:hover .menu-link .menu-icon i,
+	#custom-theme-mode-switcher .menu-item:hover .menu-link .menu-title {
+		color: #ffffff !important;
+	}
+
+	#custom-theme-mode-switcher .menu-item:hover .menu-link:not(.active) {
+		transition: all 300ms;
+		background-color: $zeroloss-grey-700 !important;
+	}
+
+	#custom-theme-mode-switcher .menu-item:hover .menu-icon i,
+	#custom-theme-mode-switcher .menu-item:hover .menu-title {
+		color: #006ae6 !important;
+	}
+}
