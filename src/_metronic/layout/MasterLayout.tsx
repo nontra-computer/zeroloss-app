@@ -10,7 +10,7 @@ import { ActivityDrawer, DrawerMessenger, InviteUsers, UpgradePlan } from '../pa
 import { MenuComponent } from '../assets/ts/components'
 
 // Zeroloss Components
-import ExpandedAside from '@/Presentation/Components/ExpandedAside'
+import ExpandedAside from '@/Presentation/Components/Aside/ExpandedAside/View'
 
 const MasterLayout = () => {
 	const location = useLocation()

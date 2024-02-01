@@ -62,23 +62,21 @@ const DataConnection: React.FC = () => {
 
 	return (
 		<React.Fragment>
-			<div className="row g-5">
-				<div className="col-12">
-					<div className="fs-2 fw-bolder text-zeroloss-grey-900">
-						{intl.formatMessage({
-							id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.SENSOR_TITLE',
-						})}
-					</div>
-					<p className="fs-6 text-zeroloss-grey-600">
-						{intl.formatMessage({
-							id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.SENSOR_DESCRIPTION',
-						})}
-					</p>
-				</div>
+			<div className="fs-2 fw-bolder text-zeroloss-grey-900">
+				{intl.formatMessage({
+					id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.SENSOR_TITLE',
+				})}
+			</div>
+			<p className="fs-6 text-zeroloss-grey-600">
+				{intl.formatMessage({
+					id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.SENSOR_DESCRIPTION',
+				})}
+			</p>
 
+			<div className="row g-5 h-100">
 				{/* start:: Sensor Chart */}
 				<div className="col-12">
-					<div className="card border-12px h-100 border border-zeroloss-grey-200">
+					<div className="card border-12px h-100 border border-zeroloss-grey-200 h-100">
 						<div className="card-body px-6">
 							<div className="d-flex flex-column justify-content-between px-0 h-100">
 								<div className="row">
@@ -139,7 +137,7 @@ const DataConnection: React.FC = () => {
 				{/* end:: Sensor Chart */}
 
 				<div className="col-12">
-					<div className="card border-12px h-100 border border-zeroloss-grey-200">
+					<div className="card border-12px h-100 border border-zeroloss-grey-200 h-100">
 						<div className="card-body px-6">
 							<div className="d-flex flex-column justify-content-between px-0 h-100">
 								<div className="row">

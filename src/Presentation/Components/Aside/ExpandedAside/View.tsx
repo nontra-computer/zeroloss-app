@@ -1,32 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import useAsideMenu from '@/Hooks/useAsideMenu'
-import { useIntl } from 'react-intl'
-import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
 const ExpandedAside: React.FC = () => {
-	const intl = useIntl()
-	const { isAsideExpanded, subMenu, onClickLinkAside } = useAsideMenu()
-	const { mode } = useThemeMode()
-
-	let themeMode = ''
-	if (mode === 'system') {
-		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-	} else {
-		themeMode = mode
-	}
+	const { intl, isAsideExpanded, onClickLinkAside, subMenu, themeMode } = useViewModel()
 
 	return (
 		<React.Fragment>
-			<div
+			{/* This is the placeholder div */}
+			{/* <div
 				className={clsx('bg-zeroloss-base-white h-100 transition-300', {
 					'w-300px': isAsideExpanded,
 					'w-0': !isAsideExpanded,
 				})}
 				style={{ visibility: 'hidden' }}>
-				{/* This is the placeholder div */}
-			</div>
+			</div> */}
 
 			<div
 				className={clsx('position-fixed h-100 transition-300 overflow-hidden text-nowrap', {
@@ -37,7 +26,7 @@ const ExpandedAside: React.FC = () => {
 					'bg-zeroloss-base-white': themeMode === 'light',
 					'bg-zeroloss-base-grey-carbon': themeMode === 'dark',
 				})}
-				style={{ marginLeft: 100 }}>
+				style={{ marginLeft: 100, zIndex: 199 }}>
 				<div className="row p-6 py-10 gy-3">
 					{/* Logo */}
 					<div className="col-12 mb-5">
