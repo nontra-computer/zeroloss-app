@@ -3,12 +3,20 @@ import ApexCharts, { ApexOptions } from 'apexcharts'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
 import { getCSS } from '@/_metronic/assets/ts/_utils'
+import clsx from 'clsx'
 
 const DataConnection: React.FC = () => {
 	const intl = useIntl()
 	const sensorChartRef = useRef<HTMLDivElement | null>(null)
 	const connectionChartRef = useRef<HTMLDivElement | null>(null)
 	const { mode } = useThemeMode()
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	const refreshSensorChart = () => {
 		if (!sensorChartRef.current) {
@@ -17,7 +25,10 @@ const DataConnection: React.FC = () => {
 
 		const height = parseInt(getCSS(sensorChartRef.current, 'height'))
 
-		const chart = new ApexCharts(sensorChartRef.current, getSensorChartOptions(height))
+		const chart = new ApexCharts(
+			sensorChartRef.current,
+			getSensorChartOptions(height, themeMode === 'dark')
+		)
 		if (chart) {
 			chart.render()
 		}
@@ -32,7 +43,10 @@ const DataConnection: React.FC = () => {
 
 		const height = parseInt(getCSS(connectionChartRef.current, 'height'))
 
-		const chart = new ApexCharts(connectionChartRef.current, getConnectionChartOptions(height))
+		const chart = new ApexCharts(
+			connectionChartRef.current,
+			getConnectionChartOptions(height, themeMode === 'dark')
+		)
 		if (chart) {
 			chart.render()
 		}
@@ -48,7 +62,8 @@ const DataConnection: React.FC = () => {
 				chart.destroy()
 			}
 		}
-	}, [sensorChartRef, mode])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sensorChartRef, mode, themeMode])
 
 	useEffect(() => {
 		const chart = refreshConnectionChart()
@@ -58,16 +73,25 @@ const DataConnection: React.FC = () => {
 				chart.destroy()
 			}
 		}
-	}, [connectionChartRef, mode])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionChartRef, mode, themeMode])
 
 	return (
 		<React.Fragment>
-			<div className="fs-2 fw-bolder text-zeroloss-grey-900">
+			<div
+				className={clsx('fs-2 fw-bolder', {
+					'text-zeroloss-base-white': themeMode === 'dark',
+					'text-zeroloss-grey-900': themeMode === 'light',
+				})}>
 				{intl.formatMessage({
 					id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.SENSOR_TITLE',
 				})}
 			</div>
-			<p className="fs-6 text-zeroloss-grey-600">
+			<p
+				className={clsx('fs-6', {
+					'text-zeroloss-base-white': themeMode === 'dark',
+					'text-zeroloss-grey-600': themeMode === 'light',
+				})}>
 				{intl.formatMessage({
 					id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.SENSOR_DESCRIPTION',
 				})}
@@ -76,13 +100,21 @@ const DataConnection: React.FC = () => {
 			<div className="row g-5 h-100">
 				{/* start:: Sensor Chart */}
 				<div className="col-12">
-					<div className="card border-12px h-100 border border-zeroloss-grey-200 h-100">
+					<div
+						className={clsx('card border-1px h-100', {
+							'bg-zeroloss-base-white border-zeroloss-grey-true-200': themeMode === 'light',
+							'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
+						})}>
 						<div className="card-body px-6">
 							<div className="d-flex flex-column justify-content-between px-0 h-100">
 								<div className="row">
 									{/* start:: Header */}
 									<div className="col-12">
-										<p className="fs-3 fw-bolder my-0 text-zeroloss-grey-900">
+										<p
+											className={clsx('fs-3 fw-bolder my-0', {
+												'text-zeroloss-grey-900': themeMode === 'light',
+												'text-zeroloss-base-white': themeMode === 'dark',
+											})}>
 											{intl.formatMessage({
 												id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_SENSOR',
 											})}
@@ -104,25 +136,45 @@ const DataConnection: React.FC = () => {
 										<div className="d-flex flex-column align-items-end justify-content-end h-100">
 											<div className="fs-5 mb-3 w-100">
 												<div className="row">
-													<div className="col-8 text-end text-zeroloss-grey-600">
+													<div
+														className={clsx('col-8 text-end', {
+															'text-zeroloss-base-white': themeMode === 'dark',
+															'text-zeroloss-grey-600': themeMode === 'light',
+														})}>
 														{intl.formatMessage({
 															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_SENSOR_AVAILABLE',
 														})}
 													</div>
 													<div className="col-4">
-														<span className="text-zeroloss-success-700">115</span>
+														<span
+															className={clsx({
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-success-700': themeMode === 'light',
+															})}>
+															115
+														</span>
 													</div>
 												</div>
 											</div>
 											<div className="fs-5 w-100">
 												<div className="row">
-													<div className="col-8 text-end text-zeroloss-grey-600">
+													<div
+														className={clsx('col-8 text-end', {
+															'text-zeroloss-base-white': themeMode === 'dark',
+															'text-zeroloss-grey-600': themeMode === 'light',
+														})}>
 														{intl.formatMessage({
 															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_SENSOR_UNAVAILABLE',
 														})}
 													</div>
 													<div className="col-4">
-														<span className="text-zeroloss-error-700">5</span>
+														<span
+															className={clsx({
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-error-700': themeMode === 'light',
+															})}>
+															5
+														</span>
 													</div>
 												</div>
 											</div>
@@ -137,13 +189,21 @@ const DataConnection: React.FC = () => {
 				{/* end:: Sensor Chart */}
 
 				<div className="col-12">
-					<div className="card border-12px h-100 border border-zeroloss-grey-200 h-100">
+					<div
+						className={clsx('card border-1px h-100', {
+							'bg-zeroloss-base-white border-zeroloss-grey-true-200': themeMode === 'light',
+							'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
+						})}>
 						<div className="card-body px-6">
 							<div className="d-flex flex-column justify-content-between px-0 h-100">
 								<div className="row">
 									{/* start:: Header */}
 									<div className="col-12">
-										<p className="fs-2 fw-bolder my-0 text-zeroloss-grey-900">
+										<p
+											className={clsx('fs-2 fw-bolder my-0', {
+												'text-zeroloss-base-white': themeMode === 'dark',
+												'text-zeroloss-grey-900': themeMode === 'light',
+											})}>
 											{intl.formatMessage({
 												id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION',
 											})}
@@ -164,38 +224,62 @@ const DataConnection: React.FC = () => {
 									<div className="col-12">
 										<div className="row fs-4 gy-5 text-start">
 											{/* Available */}
-											<div className="col-5 col-lg-3 text-zeroloss-grey-600">
+											<div
+												className={clsx('col-5 col-lg-4', {
+													'text-zeroloss-base-white': themeMode === 'dark',
+													'text-zeroloss-grey-600': themeMode === 'light',
+												})}>
 												{intl.formatMessage({
 													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION_AVAILABLE',
 												})}
 											</div>
 											<div className="col-7 col-lg-2 text-zeroloss-success-700">55.7%</div>
-											<div className="col-6 col-lg-2 text-zeroloss-grey-600">
+											<div
+												className={clsx('col-6 col-lg-2', {
+													'text-zeroloss-grey-600': themeMode === 'light',
+													'text-zeroloss-base-white': themeMode === 'dark',
+												})}>
 												{intl.formatMessage({
 													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION_AVAILABLE_QUANTITY',
 												})}
 											</div>
-											<div className="col-2 col-lg-1 text-zeroloss-success-700">93</div>
-											<div className="col-4 col-lg-2 text-zeroloss-grey-600">
+											<div className="col-2 col-lg-2 text-zeroloss-success-700">93</div>
+											<div
+												className={clsx('col-4 col-lg-2', {
+													'text-zeroloss-base-white': themeMode === 'dark',
+													'text-zeroloss-grey-600': themeMode === 'light',
+												})}>
 												{intl.formatMessage({
 													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION_AVAILABLE_UNIT',
 												})}
 											</div>
 
 											{/* Unavailable */}
-											<div className="col-5 col-lg-3 text-zeroloss-grey-600">
+											<div
+												className={clsx('col-5 col-lg-4', {
+													'text-zeroloss-base-white': themeMode === 'dark',
+													'text-zeroloss-grey-600': themeMode === 'light',
+												})}>
 												{intl.formatMessage({
 													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION_UNAVAILABLE',
 												})}
 											</div>
 											<div className="col-7 col-lg-2 text-zeroloss-error-700">55.7%</div>
-											<div className="col-6 col-lg-2 text-zeroloss-grey-600">
+											<div
+												className={clsx('col-6 col-lg-2', {
+													'text-zeroloss-grey-600': themeMode === 'light',
+													'text-zeroloss-base-white': themeMode === 'dark',
+												})}>
 												{intl.formatMessage({
 													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION_UNAVAILABLE_QUANTITY',
 												})}
 											</div>
-											<div className="col-2 col-lg-1 text-zeroloss-error-700">93</div>
-											<div className="col-4 col-lg-2 text-zeroloss-grey-600">
+											<div className="col-2 col-lg-2 text-zeroloss-error-700">93</div>
+											<div
+												className={clsx('col-4 col-lg-2', {
+													'text-zeroloss-base-white': themeMode === 'dark',
+													'text-zeroloss-grey-600': themeMode === 'light',
+												})}>
 												{intl.formatMessage({
 													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION_UNAVAILABLE_UNIT',
 												})}
@@ -213,7 +297,7 @@ const DataConnection: React.FC = () => {
 	)
 }
 
-function getSensorChartOptions(height: number): ApexOptions {
+function getSensorChartOptions(height: number, isDark: boolean): ApexOptions {
 	return {
 		// subtitle: {
 		// 	text: 'ยอดสมัครสมาชิก',
@@ -253,6 +337,8 @@ function getSensorChartOptions(height: number): ApexOptions {
 							show: true,
 							offsetY: -20,
 							fontFamily: 'Noto Sans Thai, sans-serif',
+							fontWeight: 'bolder',
+							color: isDark ? '#ffffff' : '#666666',
 							// @ts-ignore
 							formatter: function (val: any) {
 								return val + ' %'
@@ -301,11 +387,14 @@ function getSensorChartOptions(height: number): ApexOptions {
 			show: false,
 			position: 'bottom',
 			floating: true,
+			labels: {
+				colors: isDark ? '#ffffff' : '#666666',
+			},
 		},
 	}
 }
 
-function getConnectionChartOptions(): ApexOptions {
+function getConnectionChartOptions(height: number, isDark: boolean): ApexOptions {
 	return {
 		// subtitle: {
 		// 	text: 'ยอดขายรวม',
@@ -353,6 +442,9 @@ function getConnectionChartOptions(): ApexOptions {
 		},
 		legend: {
 			position: 'top',
+			labels: {
+				colors: isDark ? '#ffffff' : '#666666',
+			},
 		},
 		xaxis: {
 			labels: {

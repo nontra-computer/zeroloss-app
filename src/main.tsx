@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 
 // Apps
 import { MetronicI18nProvider } from './_metronic/i18n/Metronici18n'
+import AppContext from './Context/AppContext'
 import './_metronic/assets/sass/style.react.scss'
 import './_metronic/assets/fonticon/fonticon.css'
 import './_metronic/assets/keenicons/duotone/style.css'
@@ -47,7 +48,9 @@ if (container) {
 		<QueryClientProvider client={queryClient}>
 			<MetronicI18nProvider>
 				<AuthProvider>
-					<AppRoutes />
+					<AppContext>
+						<AppRoutes />
+					</AppContext>
 				</AuthProvider>
 			</MetronicI18nProvider>
 			<ReactQueryDevtools initialIsOpen={false} />

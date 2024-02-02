@@ -33,7 +33,7 @@ const ExpandedAside: React.FC = () => {
 						<img src="/media/icons/zeroloss/full-logo.svg" alt="Full Zeroloss Logo" />
 					</div>
 					<div className="col-12">
-						<ul className="nav nav-tabs nav-line-tabs nav-line-tabs-2x nav-stretch mb-5 fs-6 border-b-0 text-nowrap">
+						<ul className="nav nav-tabs nav-line-tabs nav-line-tabs-2x nav-stretch mb-5 fs-6 border-b-0 text-nowrap w-100">
 							<li className="nav-item">
 								<a
 									className={clsx('nav-link active fw-bold', {

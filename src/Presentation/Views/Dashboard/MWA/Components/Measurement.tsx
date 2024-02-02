@@ -1,14 +1,22 @@
 import React, { useEffect, useRef } from 'react'
-import NumberBox from './NumberBox'
+import NumberBox from '@/Presentation/Components/NumberBox/View'
 import ApexCharts, { ApexOptions } from 'apexcharts'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
 import { getCSS } from '@/_metronic/assets/ts/_utils'
+import clsx from 'clsx'
 
 const Measurement: React.FC = () => {
 	const intl = useIntl()
 	const { mode } = useThemeMode()
 	const totalChartRef = useRef<HTMLDivElement | null>(null)
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	const refreshTotalChartRef = () => {
 		if (!totalChartRef.current) {
@@ -17,7 +25,10 @@ const Measurement: React.FC = () => {
 
 		const height = parseInt(getCSS(totalChartRef.current, 'height'))
 
-		const chart = new ApexCharts(totalChartRef.current, getTotalChartOptions(height))
+		const chart = new ApexCharts(
+			totalChartRef.current,
+			getTotalChartOptions(height, themeMode === 'dark')
+		)
 		if (chart) {
 			chart.render()
 		}
@@ -33,17 +44,26 @@ const Measurement: React.FC = () => {
 				chart.destroy()
 			}
 		}
-	}, [totalChartRef, mode])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [totalChartRef, mode, themeMode])
 
 	return (
 		<div className="row">
 			<div className="col-12">
-				<div className="fs-2 fw-bolder text-zeroloss-grey-900">
+				<div
+					className={clsx('fs-2 fw-bolder', {
+						'text-zeroloss-grey-900': themeMode === 'light',
+						'text-zeroloss-base-white': themeMode === 'dark',
+					})}>
 					{intl.formatMessage({
 						id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.MEASUREMENT_TITLE',
 					})}
 				</div>
-				<p className="fs-6 text-zeroloss-grey-600">
+				<p
+					className={clsx('fs-6', {
+						'text-zeroloss-base-white': themeMode === 'dark',
+						'text-zeroloss-grey-600': themeMode === 'light',
+					})}>
 					{intl.formatMessage({
 						id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.MEASUREMENT_DESCRIPTION',
 					})}
@@ -51,9 +71,17 @@ const Measurement: React.FC = () => {
 			</div>
 
 			<div className="col-12 col-lg-3">
-				<div className="card border-12px h-100 border border-zeroloss-grey-200">
-					<div className="card-body px-6">
-						<p className="fs-3 fw-bolder my-0 text-zeroloss-grey-900">
+				<div
+					className={clsx('card border-radius-12px border-1px h-100', {
+						'bg-zeroloss-base-white border-zeroloss-grey-200': themeMode === 'light',
+						'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
+					})}>
+					<div className="card-body px-6 h-200px">
+						<p
+							className={clsx('fs-3 fw-bolder my-0', {
+								'text-zeroloss-grey-900': themeMode === 'light',
+								'text-zeroloss-base-white': themeMode === 'dark',
+							})}>
 							{intl.formatMessage({
 								id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.TOTAL_MEASUREMENT_TITLE',
 							})}
@@ -72,19 +100,31 @@ const Measurement: React.FC = () => {
 				</div>
 			</div>
 			<div className="col-12 col-lg-3">
-				<NumberBox id="mwa-exceeds" title="ค่าเกินมาตรฐาน" value={52000} type="danger" />
+				<NumberBox
+					id="mwa-exceeds"
+					title="ค่าเกินมาตรฐาน"
+					value={52000}
+					type="danger"
+					height={200}
+				/>
 			</div>
 			<div className="col-12 col-lg-3">
-				<NumberBox id="mwa-inappropriate" title="เหตุการณ์ผิดปกติ" value={900} type="warning" />
+				<NumberBox
+					id="mwa-inappropriate"
+					title="เหตุการณ์ผิดปกติ"
+					value={900}
+					type="warning"
+					height={200}
+				/>
 			</div>
 			<div className="col-12 col-lg-3">
-				<NumberBox id="mwa-normal" title="เหตุร้องเรียน" value={888} type="success" />
+				<NumberBox id="mwa-normal" title="เหตุร้องเรียน" value={888} type="success" height={200} />
 			</div>
 		</div>
 	)
 }
 
-function getTotalChartOptions(height: number): ApexOptions {
+function getTotalChartOptions(height: number, isDark: boolean): ApexOptions {
 	return {
 		// subtitle: {
 		// 	text: 'จำนวนตรวจวัดทั้งหมด',
@@ -108,7 +148,7 @@ function getTotalChartOptions(height: number): ApexOptions {
 				offsetX: 60,
 				donut: {
 					labels: {
-						show: true,
+						show: false,
 						name: {
 							show: true,
 							fontFamily: 'Noto Sans Thai, sans-serif',
@@ -168,8 +208,11 @@ function getTotalChartOptions(height: number): ApexOptions {
 			fontFamily: 'Noto Sans Thai, sans-serif',
 			show: true,
 			position: 'left',
-			offsetY: 20,
+			offsetY: 5,
 			floating: true,
+			labels: {
+				colors: isDark ? '#ffffff' : '#666666',
+			},
 		},
 	}
 }

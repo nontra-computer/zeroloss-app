@@ -10,6 +10,8 @@ $zeroloss-success: #17b26a;
 $zeroloss-warning: #f79009;
 $zeroloss-error: #de5348;
 $zeroloss-grey: #667085;
+$zeroloss-grey-true-200: #e5e5e5;
+$zeroloss-grey-true-800: #292929;
 
 $zeroloss-primary-900: #003c68;
 $zeroloss-primary-800: #006b97;
@@ -95,6 +97,8 @@ $zeroloss-theme-colors: (
 	'zeroloss-warning': $zeroloss-warning,
 	'zeroloss-error': $zeroloss-error,
 	'zeroloss-grey': $zeroloss-grey,
+	'zeroloss-grey-true-200': $zeroloss-grey-true-200,
+	'zeroloss-grey-true-800': $zeroloss-grey-true-800,
 	'zeroloss-primary-900': $zeroloss-primary-900,
 	'zeroloss-primary-800': $zeroloss-primary-800,
 	'zeroloss-primary-700': $zeroloss-primary-700,
@@ -297,4 +301,8 @@ $zeroloss-theme-colors: (
 			stroke: lighten($color, 30%) !important;
 		}
 	}
+}
+
+.zeroloss-background-grey-opacity {
+	background-color: rgba(115, 115, 115, 0.8) !important;
 }
