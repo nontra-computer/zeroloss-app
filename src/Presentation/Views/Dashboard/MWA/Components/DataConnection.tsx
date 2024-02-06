@@ -5,7 +5,9 @@ import { useIntl } from 'react-intl'
 import { getCSS } from '@/_metronic/assets/ts/_utils'
 import clsx from 'clsx'
 
-const DataConnection: React.FC = () => {
+interface Props {}
+
+const DataConnection: React.FC<Props> = () => {
 	const intl = useIntl()
 	const sensorChartRef = useRef<HTMLDivElement | null>(null)
 	const connectionChartRef = useRef<HTMLDivElement | null>(null)
@@ -137,6 +139,50 @@ const DataConnection: React.FC = () => {
 											<div className="fs-5 mb-3 w-100">
 												<div className="row">
 													<div
+														className={clsx('col-8 text-end text-zeroloss-warning fw-bold', {
+															// 'text-zeroloss-warning': themeMode === 'dark',
+															// 'text-zeroloss-warning': themeMode === 'light',
+														})}>
+														{intl.formatMessage({
+															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_SENSOR_LABEL',
+														})}
+													</div>
+													<div className="col-4">
+														<span
+															className={clsx({
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-success-700': themeMode === 'light',
+															})}>
+															80%
+														</span>
+													</div>
+												</div>
+											</div>
+											<div className="fs-5 mb-3 w-100">
+												<div className="row">
+													<div
+														className={clsx('col-8 text-end text-zeroloss-error fw-bold', {
+															// 'text-zeroloss-warning': themeMode === 'dark',
+															// 'text-zeroloss-warning': themeMode === 'light',
+														})}>
+														{intl.formatMessage({
+															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_OFFLINE_SENSOR_LABEL',
+														})}
+													</div>
+													<div className="col-4">
+														<span
+															className={clsx({
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-success-700': themeMode === 'light',
+															})}>
+															20%
+														</span>
+													</div>
+												</div>
+											</div>
+											<div className="fs-5 mb-3 w-100">
+												<div className="row">
+													<div
 														className={clsx('col-8 text-end', {
 															'text-zeroloss-base-white': themeMode === 'dark',
 															'text-zeroloss-grey-600': themeMode === 'light',
@@ -233,7 +279,13 @@ const DataConnection: React.FC = () => {
 													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION_AVAILABLE',
 												})}
 											</div>
-											<div className="col-7 col-lg-2 text-zeroloss-success-700">55.7%</div>
+											<div
+												className={clsx('col-7 col-lg-2', {
+													'text-zeroloss-success-700': themeMode === 'light',
+													'text-zeroloss-success-400': themeMode === 'dark',
+												})}>
+												55.7%
+											</div>
 											<div
 												className={clsx('col-6 col-lg-2', {
 													'text-zeroloss-grey-600': themeMode === 'light',
@@ -243,7 +295,13 @@ const DataConnection: React.FC = () => {
 													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION_AVAILABLE_QUANTITY',
 												})}
 											</div>
-											<div className="col-2 col-lg-2 text-zeroloss-success-700">93</div>
+											<div
+												className={clsx('col-2 col-lg-2', {
+													'text-zeroloss-success-700': themeMode === 'light',
+													'text-zeroloss-success-400': themeMode === 'dark',
+												})}>
+												93
+											</div>
 											<div
 												className={clsx('col-4 col-lg-2', {
 													'text-zeroloss-base-white': themeMode === 'dark',
@@ -264,7 +322,13 @@ const DataConnection: React.FC = () => {
 													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION_UNAVAILABLE',
 												})}
 											</div>
-											<div className="col-7 col-lg-2 text-zeroloss-error-700">55.7%</div>
+											<div
+												className={clsx('col-7 col-lg-2', {
+													'text-zeroloss-error-500': themeMode === 'dark',
+													'text-zeroloss-error-700': themeMode === 'light',
+												})}>
+												55.7%
+											</div>
 											<div
 												className={clsx('col-6 col-lg-2', {
 													'text-zeroloss-grey-600': themeMode === 'light',
@@ -274,7 +338,13 @@ const DataConnection: React.FC = () => {
 													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CONNECTION_UNAVAILABLE_QUANTITY',
 												})}
 											</div>
-											<div className="col-2 col-lg-2 text-zeroloss-error-700">93</div>
+											<div
+												className={clsx('col-2 col-lg-2', {
+													'text-zeroloss-error-500': themeMode === 'dark',
+													'text-zeroloss-error-700': themeMode === 'light',
+												})}>
+												93
+											</div>
 											<div
 												className={clsx('col-4 col-lg-2', {
 													'text-zeroloss-base-white': themeMode === 'dark',
@@ -309,7 +379,7 @@ function getSensorChartOptions(height: number, isDark: boolean): ApexOptions {
 		// 	},
 		// },
 		series: [80, 20],
-		labels: ['Sensors', 'No Sensors'],
+		labels: ['Sensors', 'Offline Sensors'],
 		chart: {
 			type: 'donut',
 			height: height,
@@ -328,6 +398,7 @@ function getSensorChartOptions(height: number, isDark: boolean): ApexOptions {
 							offsetY: -30,
 							fontFamily: 'Noto Sans Thai, sans-serif',
 							fontWeight: 'bolder',
+							fontSize: '14px',
 							// @ts-ignore
 							formatter: function (val: any) {
 								return val
@@ -338,6 +409,7 @@ function getSensorChartOptions(height: number, isDark: boolean): ApexOptions {
 							offsetY: -20,
 							fontFamily: 'Noto Sans Thai, sans-serif',
 							fontWeight: 'bolder',
+							fontSize: '14px',
 							color: isDark ? '#ffffff' : '#666666',
 							// @ts-ignore
 							formatter: function (val: any) {

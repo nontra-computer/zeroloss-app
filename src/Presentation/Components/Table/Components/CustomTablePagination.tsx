@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import clsx from 'clsx'
+import { KTSVG } from '@/_metronic/helpers'
 import { CustomTablePaginationProp } from '@/Types/Table'
 
 import { usePagination, DOTS } from '@/Hooks/usePagination'
-import { KTSVG } from '@/_metronic/helpers'
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import clsx from 'clsx'
 
 const CustomTablePagination: React.FC<CustomTablePaginationProp> = ({
 	totalCountData,
@@ -19,6 +20,13 @@ const CustomTablePagination: React.FC<CustomTablePaginationProp> = ({
 		currentPage: page,
 		siblingCount: 2,
 	})
+	const { mode } = useThemeMode()
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	/**
 	 * *Remind for Developer
@@ -41,13 +49,25 @@ const CustomTablePagination: React.FC<CustomTablePaginationProp> = ({
 							path={'/media/icons/kumopack/arrow-left.svg'}
 							className="svg-icon svg-icon-light-primary svg-icon-1x"
 						/>
-						<span className="d-none d-xl-inline-block text-kumopack-grey-700 fw-bold">
+						<span
+							className={clsx('d-none d-xl-inline-block text-zeroloss-grey-700 fw-bold', {
+								'text-zeroloss-base-white': themeMode === 'dark' && (page !== 1 || !isLoading),
+								'text-zeroloss-grey-200': themeMode === 'dark' && (page === 1 || isLoading),
+								'text-zeroloss-grey-700': themeMode === 'light' && (page !== 1 || !isLoading),
+							})}>
 							Previous
 						</span>
 					</button>
 
 					{/* Mobile Pagination */}
-					<div className="d-flex d-xl-none text-kumopack-grey-700 align-items-center justify-content-center">
+					<div
+						className={clsx(
+							'd-flex d-xl-none align-items-center justify-content-center',
+							{
+								'text-zeroloss-grey-700': themeMode === 'light',
+								'text-zeroloss-grey-400': themeMode === 'dark',
+							}
+						)}>
 						<div>
 							Page {page} of {paginationRange[paginationRange.length - 1]}
 						</div>
@@ -95,7 +115,18 @@ const CustomTablePagination: React.FC<CustomTablePaginationProp> = ({
 							disabled: page === paginationRange[paginationRange.length - 1] || isLoading,
 						})}
 						onClick={() => updatePage(page + 1)}>
-						<span className="d-none d-xl-inline-block text-kumopack-grey-700 fw-bold me-2">
+						<span
+							className={clsx('d-none d-xl-inline-block fw-bold me-2', {
+								'text-zeroloss-base-white':
+									themeMode === 'dark' &&
+									(page !== paginationRange[paginationRange.length - 1] || !isLoading),
+								'text-zeroloss-grey-200':
+									themeMode === 'dark' &&
+									(page === paginationRange[paginationRange.length - 1] || isLoading),
+								'text-zeroloss-grey-700':
+									themeMode === 'light' &&
+									(page !== paginationRange[paginationRange.length - 1] || !isLoading),
+							})}>
 							Next
 						</span>
 						<KTSVG

@@ -10,7 +10,7 @@ const KonvaImage: React.FC<KonvaImageProps> = props => {
 	const { image } = useViewModel(props)
 
 	return (
-		<Group>
+		<Group draggable>
 			<Image image={image} />
 		</Group>
 	)

@@ -1,8 +1,7 @@
 // @ts-nocheck
-
-import clsx from 'clsx'
 import { Row } from 'react-table'
-
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import clsx from 'clsx'
 interface Prop {
 	row: Row
 	rowKey?: string
@@ -12,6 +11,15 @@ interface Prop {
 }
 
 const CustomRow: React.FC<Prop> = ({ row, rowKey, onClickRow, isGrey }) => {
+	const { mode } = useThemeMode()
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
+
 	return (
 		<tr
 			{...row.getRowProps()}
@@ -20,7 +28,14 @@ const CustomRow: React.FC<Prop> = ({ row, rowKey, onClickRow, isGrey }) => {
 					onClickRow(row.original[rowKey])
 				}
 			}}
-			className={clsx({ 'bg-gray-100': row.isSelected || isGrey }, 'cursor-pointer')}>
+			className={clsx(
+				{
+					'bg-gray-100': row.isSelected || isGrey,
+					'border-zeroloss-base-white': themeMode === 'dark',
+				},
+				'cursor-pointer'
+			)}
+			style={{ borderStyle: 'solid' }}>
 			{row.cells.map(cell => {
 				let className: React.CSSProperties = {
 					width: cell.column.width,

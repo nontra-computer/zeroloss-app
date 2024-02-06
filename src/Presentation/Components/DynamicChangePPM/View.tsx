@@ -1,6 +1,8 @@
-import clsx from 'clsx'
 import React from 'react'
+
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { formatNumberCommas } from '@/Utils/formatNumberCommas'
+import clsx from 'clsx'
 
 interface Props {
 	value: number
@@ -9,9 +11,24 @@ interface Props {
 }
 
 const DynamicChangePPM: React.FC<Props> = ({ value, isPositive, change }) => {
+	const { mode } = useThemeMode()
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
+
 	return (
 		<div className="d-flex flex-row align-items-center">
-			<span className="text-zeroloss-grey-900 fw-bold fs-1 me-2">{formatNumberCommas(value)}</span>
+			<span
+				className={clsx('fw-bold fs-1 me-2', {
+					'text-zeroloss-base-white': themeMode === 'dark',
+					'text-zeroloss-grey-900': themeMode === 'light',
+				})}>
+				{formatNumberCommas(value)}
+			</span>
 			<span className="text-zeroloss-grey-400 fs-3 me-5">ppm</span>
 			<span>
 				<i

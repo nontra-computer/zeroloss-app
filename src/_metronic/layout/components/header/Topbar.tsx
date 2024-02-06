@@ -5,12 +5,13 @@ import {
 	HeaderNotificationsMenu,
 	// HeaderUserMenu,
 	// QuickLinks,
-	Search,
+	// Search,
 	ThemeModeSwitcher,
 } from '../../../partials'
 import { useLayout } from '../../core'
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { useLocation } from 'react-router-dom'
 
 const itemClass = 'ms-1 ms-lg-3',
 	// btnClass =
@@ -22,6 +23,8 @@ const Topbar: FC = () => {
 	const { config } = useLayout()
 	const intl = useIntl()
 	const { mode } = useThemeMode()
+	const location = useLocation()
+	const isDashboard = location.pathname.includes('/dashboard')
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -33,20 +36,22 @@ const Topbar: FC = () => {
 	return (
 		<div className="d-flex align-items-stretch justify-self-end flex-shrink-0">
 			{/* begin::Theme mode */}
-			<div className={'d-flex align-items-center ms-1 ms-lg-3'}>
-				<ThemeModeSwitcher
-					toggleBtnClass={clsx('w-30px h-30px w-md-40px h-md-40px', {
-						'btn-color-primary btn-active-light-primary': themeMode === 'light',
-						'btn-icon-white btn-active-light': themeMode === 'dark',
-					})}
-				/>
-			</div>
+			{isDashboard && (
+				<div className={'d-flex align-items-center ms-1 ms-lg-3'}>
+					<ThemeModeSwitcher
+						toggleBtnClass={clsx('w-30px h-30px w-md-40px h-md-40px', {
+							'btn-color-primary btn-active-light-primary': themeMode === 'light',
+							'btn-icon-white btn-active-light': themeMode === 'dark',
+						})}
+					/>
+				</div>
+			)}
 			{/* end::Theme mode */}
 
 			{/* Search */}
-			<div className={clsx('d-flex align-items-stretch', itemClass)}>
+			{/* <div className={clsx('d-flex align-items-stretch', itemClass)}>
 				<Search />
-			</div>
+			</div> */}
 			{/* Activities */}
 			{/* <div className={clsx('d-flex align-items-center', itemClass)}>
         

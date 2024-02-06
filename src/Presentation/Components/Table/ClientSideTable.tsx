@@ -1,5 +1,7 @@
 import { useMemo, useContext } from 'react'
 import { TableContext } from '@/Context/Table'
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import clsx from 'clsx'
 
 import CustomHeaderColumn from './Components/CustomHeaderColumn'
 import CustomRow from './Components/CustomRow'
@@ -31,6 +33,7 @@ const ClientSideTable: React.FC<TableProps> = ({
 
 	isGrey,
 }) => {
+	const { mode } = useThemeMode()
 	const { isLoading, isError, currentSorting, pagination } = useContext(TableContext)
 	const isShowLoading = useMemo(() => {
 		if (isLoading !== undefined) {
@@ -40,6 +43,13 @@ const ClientSideTable: React.FC<TableProps> = ({
 		}
 	}, [isLoading])
 	const memorizedColumns = useMemo(() => columns, [columns])
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	const {
 		getTableProps,
@@ -81,7 +91,11 @@ const ClientSideTable: React.FC<TableProps> = ({
 						{...getTableProps()}
 						style={{ height: '1px' }}>
 						<thead>
-							<tr className="text-start text-muted fs-7 text-uppercase gs-0">
+							<tr
+								className={clsx('text-start text-muted fs-7 text-uppercase gs-0', {
+									'border-zeroloss-base-white': themeMode === 'dark',
+								})}
+								style={{ borderStyle: 'solid' }}>
 								{headers.map((column: any, idx) => {
 									let className: React.CSSProperties = {
 										color: '#475467',

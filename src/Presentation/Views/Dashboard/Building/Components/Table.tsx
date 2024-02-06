@@ -6,6 +6,7 @@ import DynamicChangePPM from '@/Presentation/Components/DynamicChangePPM/View'
 import Scale from '@/Presentation/Components/Scale/View'
 import SensorChart from './SensorChart'
 import { useIntl } from 'react-intl'
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import clsx from 'clsx'
 
 interface Props {
@@ -15,6 +16,13 @@ interface Props {
 const MeasurementTable: React.FC<Props> = ({ datas }) => {
 	const intl = useIntl()
 	const { updateLoading, updateError, updatePagination, updateSorting } = useContext(TableContext)
+	const { mode } = useThemeMode()
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	const setupTable = () => {
 		updateLoading(false)
@@ -99,19 +107,31 @@ const MeasurementTable: React.FC<Props> = ({ datas }) => {
 		<React.Fragment>
 			<div className="row">
 				<div className="col-12" style={{ height: 'fit-content' }}>
-					<div className="fs-2 fw-bolder text-zeroloss-grey-900">
+					<div
+						className={clsx('fs-2 fw-bolder', {
+							'text-zeroloss-grey-900': themeMode === 'light',
+							'text-zeroloss-base-white': themeMode === 'dark',
+						})}>
 						{intl.formatMessage({
-							id: 'ZEROLOSS.DASHBOARD.MEASUREMENT.SENSOR_TITLE',
+							id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.SENSOR_TITLE',
 						})}
 					</div>
-					<p className="fs-6 text-zeroloss-grey-600">
+					<p
+						className={clsx('fs-6', {
+							'text-zeroloss-base-white': themeMode === 'dark',
+							'text-zeroloss-grey-600': themeMode === 'light',
+						})}>
 						{intl.formatMessage({
-							id: 'ZEROLOSS.DASHBOARD.MEASUREMENT.SENSOR_DESCRIPTION',
+							id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.SENSOR_DESCRIPTION',
 						})}
 					</p>
 				</div>
 				<div className="col-12">
-					<div className="card border-radius-12px h-100 border border-zeroloss-grey-200">
+					<div
+						className={clsx('card border-radius-12px border-1px h-100', {
+							'bg-zeroloss-base-white border-zeroloss-grey-200': themeMode === 'light',
+							'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
+						})}>
 						<div className="card-body px-0 pt-2">
 							<ClientSideTable columns={columns} data={datas} items_per_page={10} />
 						</div>

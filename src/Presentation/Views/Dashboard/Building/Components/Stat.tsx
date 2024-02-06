@@ -1,21 +1,38 @@
 import React from 'react'
 import { useIntl } from 'react-intl'
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import NumberBox from '@/Presentation/Components/NumberBox/View'
+import clsx from 'clsx'
 
 const Stat: React.FC = () => {
 	const intl = useIntl()
+	const { mode } = useThemeMode()
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	return (
 		<div className="row h-100 justify-content-start">
 			<div className="col-12" style={{ height: 'fit-content' }}>
-				<div className="fs-2 fw-bolder text-zeroloss-grey-900">
+				<div
+					className={clsx('fs-2 fw-bolder', {
+						'text-zeroloss-grey-900': themeMode === 'light',
+						'text-zeroloss-base-white': themeMode === 'dark',
+					})}>
 					{intl.formatMessage({
-						id: 'ZEROLOSS.DASHBOARD.MEASUREMENT.RESULT_TITLE',
+						id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.RESULT_TITLE',
 					})}
 				</div>
-				<p className="fs-6 text-zeroloss-grey-600">
+				<p
+					className={clsx('fs-6', {
+						'text-zeroloss-base-white': themeMode === 'dark',
+						'text-zeroloss-grey-600': themeMode === 'light',
+					})}>
 					{intl.formatMessage({
-						id: 'ZEROLOSS.DASHBOARD.MEASUREMENT.RESULT_DESCRIPTION',
+						id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.RESULT_DESCRIPTION',
 					})}
 				</p>
 			</div>
@@ -25,7 +42,7 @@ const Stat: React.FC = () => {
 					title="ค่าเกินมาตรฐาน"
 					type="danger"
 					value={50}
-                    height={200}
+					height={200}
 					infos={[
 						{
 							label: 'แจ้งเหตุ',
@@ -48,7 +65,7 @@ const Stat: React.FC = () => {
 					title="ใกล้เกินมาตรฐาน"
 					type="warning"
 					value={100}
-                    height={200}
+					height={200}
 					infos={[
 						{
 							label: 'แจ้งเหตุ',
@@ -71,7 +88,7 @@ const Stat: React.FC = () => {
 					title="อยู่ในเกณฑ์ปกติ"
 					type="success"
 					value={30}
-                    height={200}
+					height={200}
 					infos={[
 						{
 							label: 'แจ้งเหตุ',

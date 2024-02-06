@@ -3,11 +3,19 @@ import ApexCharts, { ApexOptions } from 'apexcharts'
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { getCSS } from '@/_metronic/assets/ts/_utils'
+import clsx from 'clsx'
 
 const TotalMeasurement: React.FC = () => {
 	const intl = useIntl()
 	const { mode } = useThemeMode()
 	const totalChartRef = useRef<HTMLDivElement | null>(null)
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	const refreshTotalChartRef = () => {
 		if (!totalChartRef.current) {
@@ -16,7 +24,10 @@ const TotalMeasurement: React.FC = () => {
 
 		const height = parseInt(getCSS(totalChartRef.current, 'height'))
 
-		const chart = new ApexCharts(totalChartRef.current, getTotalChartOptions(height))
+		const chart = new ApexCharts(
+			totalChartRef.current,
+			getTotalChartOptions(height, themeMode === 'dark')
+		)
 		if (chart) {
 			chart.render()
 		}
@@ -32,29 +43,46 @@ const TotalMeasurement: React.FC = () => {
 				chart.destroy()
 			}
 		}
-	}, [totalChartRef, mode])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [totalChartRef, themeMode, mode])
 
 	return (
 		<div className="row h-100">
 			<div className="col-12">
-				<div className="fs-2 fw-bolder text-zeroloss-grey-900">
+				<div
+					className={clsx('fs-2 fw-bolder', {
+						'text-zeroloss-grey-900': themeMode === 'light',
+						'text-zeroloss-base-white': themeMode === 'dark',
+					})}>
 					{intl.formatMessage({
-						id: 'ZEROLOSS.DASHBOARD.MEASUREMENT.CONNECTION_TITLE',
+						id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.CONNECTION_TITLE',
 					})}
 				</div>
-				<p className="fs-6 text-zeroloss-grey-600">
+				<p
+					className={clsx('fs-6', {
+						'text-zeroloss-base-white': themeMode === 'dark',
+						'text-zeroloss-grey-600': themeMode === 'light',
+					})}>
 					{intl.formatMessage({
-						id: 'ZEROLOSS.DASHBOARD.MEASUREMENT.CONNECTION_DESCRIPTION',
+						id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.CONNECTION_DESCRIPTION',
 					})}
 				</p>
 			</div>
 
 			<div className="col-12">
-				<div className="card border-radius-12px h-100 border border-zeroloss-grey-200">
+				<div
+					className={clsx('card border-radius-12px border-1px h-100', {
+						'bg-zeroloss-base-white border-zeroloss-grey-200': themeMode === 'light',
+						'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
+					})}>
 					<div className="card-body px-6 h-200px">
-						<p className="fs-3 fw-bolder my-0 text-zeroloss-grey-900">
+						<p
+							className={clsx('fs-3 fw-bolder my-0', {
+								'text-zeroloss-grey-900': themeMode === 'light',
+								'text-zeroloss-base-white': themeMode === 'dark',
+							})}>
 							{intl.formatMessage({
-								id: 'ZEROLOSS.DASHBOARD.MEASUREMENT.CONNECTION_GRAPH_TITLE',
+								id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.CONNECTION_GRAPH_TITLE',
 							})}
 						</p>
 
@@ -74,7 +102,7 @@ const TotalMeasurement: React.FC = () => {
 	)
 }
 
-function getTotalChartOptions(height: number): ApexOptions {
+function getTotalChartOptions(height: number, isDark: boolean): ApexOptions {
 	return {
 		// subtitle: {
 		// 	text: 'จำนวนตรวจวัดทั้งหมด',
@@ -160,6 +188,9 @@ function getTotalChartOptions(height: number): ApexOptions {
 			position: 'left',
 			offsetY: 20,
 			floating: true,
+			labels: {
+				colors: isDark ? '#ffffff' : '#666666',
+			},
 		},
 	}
 }

@@ -1,14 +1,10 @@
 import React from 'react'
 import { PageTitle } from '@/_metronic/layout/core'
-import Map from './Components/Map'
-import TotalMeasurement from './Components/TotalMeasurement'
-import Stat from './Components/Stat'
-import MeasurementTable from './Components/Table'
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
 const MeasurementDashboardView: React.FC = () => {
-	const { timeStr, themeMode, datas } = useViewModel()
+	const { timeStr, themeMode } = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -28,20 +24,7 @@ const MeasurementDashboardView: React.FC = () => {
 				การประปานครหลวง
 			</PageTitle>
 
-			<div className="row g-5 px-10 pb-10">
-				<div className="col-12">
-					<Map />
-				</div>
-				<div className="col-12 col-lg-3">
-					<TotalMeasurement />
-				</div>
-				<div className="col-12 col-lg-9">
-					<Stat />
-				</div>
-				<div className="col-12">
-					<MeasurementTable datas={datas} />
-				</div>
-			</div>
+			<div className="row g-5 px-10 pb-10"></div>
 		</React.Fragment>
 	)
 }

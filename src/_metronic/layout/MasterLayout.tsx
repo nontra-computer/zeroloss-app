@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { AsideDefault } from './components/aside/AsideDefault'
 // import { Footer } from './components/Footer'
 import { HeaderWrapper } from './components/header/HeaderWrapper'
-import { RightToolbar } from '../partials/layout/RightToolbar'
+// import { RightToolbar } from '../partials/layout/RightToolbar'
 import { ScrollTop } from './components/ScrollTop'
 import { PageDataProvider } from './core'
 import { ActivityDrawer, DrawerMessenger, InviteUsers, UpgradePlan } from '../partials'
@@ -45,7 +45,7 @@ const MasterLayout = () => {
 
 			{/* begin:: Drawers */}
 			<ActivityDrawer />
-			<RightToolbar />
+			{/* <RightToolbar /> */}
 			<DrawerMessenger />
 			{/* end:: Drawers */}
 

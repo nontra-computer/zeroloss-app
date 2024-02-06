@@ -3,11 +3,21 @@ import { Stage, Layer } from 'react-konva'
 import KonvaImage from '@/Presentation/Components/Konva/Image/View'
 import Select from 'react-select'
 import { useIntl } from 'react-intl'
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import clsx from 'clsx'
 
 const Map: React.FC = () => {
 	const intl = useIntl()
 	const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
 	const [showStage, setShowStage] = useState(false)
+	const { mode } = useThemeMode()
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	useEffect(() => {
 		const updateStageDimensions = () => {
@@ -38,15 +48,22 @@ const Map: React.FC = () => {
 		<React.Fragment>
 			<div className="d-flex flex-row justify-content-between align-items-center">
 				<div>
-					<div className="fs-2 fw-bolder text-zeroloss-grey-900">
-						{/* {intl.formatMessage({
-							id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.MEASUREMENT_TITLE',
-						})} */}
-						ระบบการเฝ้าระวัง Chlorine
-					</div>
-					<p className="fs-6 text-zeroloss-grey-600">
+					<div
+						className={clsx('fs-2 fw-bolder', {
+							'text-zeroloss-base-white': themeMode === 'dark',
+							'text-zeroloss-grey-900': themeMode === 'light',
+						})}>
 						{intl.formatMessage({
-							id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.MEASUREMENT_DESCRIPTION',
+							id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.MEASUREMENT_TITLE',
+						})}
+					</div>
+					<p
+						className={clsx('fs-6', {
+							'text-zeroloss-base-white': themeMode === 'dark',
+							'text-zeroloss-grey-600': themeMode === 'light',
+						})}>
+						{intl.formatMessage({
+							id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.MEASUREMENT_DESCRIPTION',
 						})}
 					</p>
 				</div>
@@ -74,9 +91,55 @@ const Map: React.FC = () => {
 								...provided,
 								width: '100%',
 							}),
-							control: provided => ({
+							control: (provided, state) => ({
 								...provided,
 								borderRadius: '8px',
+								border:
+									themeMode === 'dark'
+										? state.isFocused
+											? '2px solid #E5E5E5'
+											: '1px solid #E5E5E5'
+										: state.isFocused
+											? '2px solid #07217f'
+											: '1px solid #07217f',
+								'&:hover': {
+									border: themeMode === 'dark' ? '2px solid #E5E5E5' : '2px solid #07217f',
+								},
+								backgroundColor: themeMode === 'dark' ? 'transparent' : '#FFFFFF',
+								boxShadow: themeMode === 'dark' ? 'none' : undefined,
+								color: themeMode === 'dark' ? '#E5E5E5' : undefined,
+							}),
+							singleValue: provided => ({
+								...provided,
+								color: themeMode === 'dark' ? '#E5E5E5' : undefined,
+								backgroundColor: themeMode === 'dark' ? 'transparent' : '#FFFFFF',
+							}),
+							menu: provided => ({
+								...provided,
+								borderRadius: '8px',
+								backgroundColor: themeMode === 'dark' ? '#424242' : '#FFFFFF',
+								color: themeMode === 'dark' ? '#E5E5E5' : undefined,
+							}),
+							option: (provided, state) => ({
+								...provided,
+								backgroundColor: state.isSelected
+									? themeMode === 'dark'
+										? '#FFFFFF'
+										: '#07217f'
+									: themeMode === 'dark'
+										? '#424242'
+										: '#FFFFFF',
+								color: state.isSelected
+									? themeMode === 'dark'
+										? '#424242'
+										: '#FFFFFF'
+									: themeMode === 'dark'
+										? '#E5E5E5'
+										: '#07217f',
+								'&:hover': {
+									backgroundColor: themeMode === 'dark' ? '#606060' : '#3351be',
+									color: themeMode === 'dark' ? '#E5E5E5' : '#FFFFFF',
+								},
 							}),
 						}}
 						components={{
@@ -123,7 +186,7 @@ const Map: React.FC = () => {
 														<span className="me-2 bullet bullet-dot bg-zeroloss-error h-12px w-12px p-2"></span>
 														<span className="fs-4 text-zeroloss-base-white">
 															{intl.formatMessage({
-																id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEARHER_EXCEEDS',
+																id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_EXCEEDS',
 															})}
 														</span>
 													</div>
@@ -132,7 +195,7 @@ const Map: React.FC = () => {
 														<span className="me-2 bullet bullet-dot bg-zeroloss-success h-12px w-12px p-2"></span>
 														<span className="fs-4 text-zeroloss-base-white">
 															{intl.formatMessage({
-																id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEARHER_NORMAL',
+																id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_NORMAL',
 															})}
 														</span>
 													</div>
@@ -141,7 +204,7 @@ const Map: React.FC = () => {
 														<span className="me-2 bullet bullet-dot bg-zeroloss-warning h-12px w-12px p-2"></span>
 														<span className="fs-4 text-zeroloss-base-white">
 															{intl.formatMessage({
-																id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEARHER_CLOSE_TO_EXCEEDS',
+																id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_CLOSE_TO_EXCEEDS',
 															})}
 														</span>
 													</div>
@@ -150,7 +213,7 @@ const Map: React.FC = () => {
 														<span className="me-2 bullet bullet-dot bg-zeroloss-none h-12px w-12px p-2"></span>
 														<span className="fs-4 text-zeroloss-base-white">
 															{intl.formatMessage({
-																id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEARHER_UNAVAILABLE',
+																id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_UNAVAILABLE',
 															})}
 														</span>
 													</div>

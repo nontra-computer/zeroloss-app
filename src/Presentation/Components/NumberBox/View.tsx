@@ -77,14 +77,29 @@ const NumberBox: React.FC<Props> = ({ id, title, type, value, infos, height }) =
 						<div className="d-flex flex-column" style={{ gap: '8px' }}>
 							{infos.map((info, index) => (
 								<div key={`number-box-info-${index}`} className="fs-5">
-									<span className="text-zeroloss-grey-900 me-2">{info.label}</span>
 									<span
-										className={clsx({
-											'text-zeroloss-success-700': type === 'success',
-											'text-zeroloss-warning-700': type === 'warning',
-											'text-zeroloss-error-700': type === 'danger',
-											'text-zeroloss-grey-700': type === 'none',
+										className={clsx('me-2', {
+											'text-zeroloss-grey-900': themeMode === 'light',
+											'text-zeroloss-base-white': themeMode === 'dark',
 										})}>
+										{info.label}
+									</span>
+									<span
+										className={clsx(
+											themeMode === 'light'
+												? {
+														'text-zeroloss-success-700': type === 'success',
+														'text-zeroloss-warning-700': type === 'warning',
+														'text-zeroloss-error-700': type === 'danger',
+														'text-zeroloss-grey-700': type === 'none',
+													}
+												: {
+														'text-zeroloss-success-500': type === 'success',
+														'text-zeroloss-warning-500': type === 'warning',
+														'text-zeroloss-error-500': type === 'danger',
+														'text-zeroloss-grey-500': type === 'none',
+													}
+										)}>
 										{info.value}
 									</span>
 								</div>
