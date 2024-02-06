@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { Stage, Layer } from 'react-konva'
-import KonvaImage from '@/Presentation/Components/Konva/Image/View'
+import React, { useState } from 'react'
 import Select from 'react-select'
+import PlantStation from '@/Presentation/Components/PlantStation/View'
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
+import { Tooltip } from 'react-tooltip'
+
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import clsx from 'clsx'
@@ -12,8 +14,11 @@ interface Props {
 
 const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 	const intl = useIntl()
-	const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
-	const [showStage, setShowStage] = useState(false)
+	// const stageRef = useRef<any>(null)
+	// const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
+	// const [showStage, setShowStage] = useState(false)
+	// const [scale, setScale] = useState(1)
+	const [expanded, setExpanded] = useState(false)
 	const { mode } = useThemeMode()
 
 	let themeMode = ''
@@ -23,33 +28,79 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 		themeMode = mode
 	}
 
-	useEffect(() => {
-		const updateStageDimensions = () => {
-			const container = document.getElementById('mwa-map-container')
+	// const onZoomIn = () => {
+	// 	setScale(prevScale => prevScale * 1.1)
+	// }
 
-			if (container) {
-				setStageDimensions({
-					width: container.getBoundingClientRect().width,
-					height: container.getBoundingClientRect().height,
-				})
-				setShowStage(true)
-			}
-		}
+	// const onZoomOut = () => {
+	// 	setScale(prevScale => prevScale / 1.1)
+	// }
 
-		// Update dimensions initially
-		updateStageDimensions()
+	// useEffect(() => {
+	// 	const updateStageDimensions = () => {
+	// 		const container = document.getElementById('mwa-map-container')
 
-		// Update dimensions whenever the window is resized
-		window.addEventListener('resize', updateStageDimensions)
+	// 		if (container) {
+	// 			setStageDimensions({
+	// 				width: container.offsetWidth,
+	// 				height: container.offsetHeight,
+	// 			})
+	// 			setShowStage(true)
+	// 		}
+	// 	}
 
-		// Clean up event listener when the component is unmounted
-		return () => {
-			window.removeEventListener('resize', updateStageDimensions)
-		}
-	}, [])
+	// 	// Update dimensions initially
+	// 	updateStageDimensions()
+
+	// 	// Update dimensions whenever the window is resized
+	// 	window.addEventListener('resize', updateStageDimensions)
+
+	// 	// Clean up event listener when the component is unmounted
+	// 	return () => {
+	// 		window.removeEventListener('resize', updateStageDimensions)
+	// 	}
+	// }, [])
+
+	// const firstBuild = document.querySelectorAll('#first-building')
 
 	return (
 		<React.Fragment>
+			<Tooltip
+				isOpen
+				noArrow
+				anchorSelect="#first-building-group"
+				className="fs-3 fw-bold"
+				style={{ zIndex: 1000 }}>
+				<div className="position-relative">
+					<img
+						src="/media/maps/red-time.svg"
+						height={50}
+						alt="Red Time Icon"
+						className="position-absolute"
+						style={{ left: -70, top: -5 }}
+					/>{' '}
+					CHLORINE Station 1
+				</div>
+			</Tooltip>
+
+			<Tooltip
+				isOpen
+				noArrow
+				anchorSelect="#second-building-group"
+				className="fs-3 fw-bold"
+				style={{ zIndex: 1000 }}>
+				<div className="position-relative">
+					<img
+						src="/media/maps/green-time.svg"
+						height={50}
+						alt="Green Time Icon"
+						className="position-absolute"
+						style={{ left: -70, top: -5 }}
+					/>{' '}
+					CHLORINE Station 1
+				</div>
+			</Tooltip>
+
 			<div className="d-flex flex-row justify-content-between align-items-center">
 				<div>
 					<div
@@ -123,6 +174,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 								borderRadius: '8px',
 								backgroundColor: themeMode === 'dark' ? '#424242' : '#FFFFFF',
 								color: themeMode === 'dark' ? '#E5E5E5' : undefined,
+								zIndex: 1000,
 							}),
 							option: (provided, state) => ({
 								...provided,
@@ -158,211 +210,307 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 
 			<div
 				id="mwa-map-container"
-				className="card border-12px h-100 border border-zeroloss-grey-200 p-0 overflow-hidden">
-				<div
-					className="card-body position-relative"
-					style={{ backgroundImage: 'url("/media/maps/plant-station.svg")' }}>
-					<div className="row h-100">
-						<div className="col-7">
-							<div className="d-flex justify-content-start align-items-end h-100">
-								<div className="border-radius-4px overflow-hidden shadow transition-300 cursor-pointer">
-									<div className="bg-zeroloss-base-white p-3 hover-enabled transition-300">
-										<i className="bi bi-zoom-in text-zeroloss-grey-900 fs-5"></i>
-									</div>
-									<div className="bg-zeroloss-base-white p-3 hover-enabled transition-300">
-										<i className="bi bi-zoom-out text-zeroloss-grey-900 fs-5"></i>
+				className={clsx('card border-radius-12px border-1px p-0 overflow-hidden', {
+					// 'h-100': !showStage,
+					'bg-zeroloss-base-white border-zeroloss-grey-true-200': themeMode === 'light',
+					'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
+				})}>
+				<div className="card-body position-relative p-0">
+					<TransformWrapper initialScale={1.5} minScale={1}>
+						{({ zoomIn, zoomOut }) => (
+							<React.Fragment>
+								<div
+									className="position-absolute d-flex justify-content-start align-items-end"
+									style={{ zIndex: 100, left: 20, bottom: 20 }}>
+									<div className="border-radius-4px overflow-hidden shadow transition-300 cursor-pointer">
+										<div
+											className="bg-zeroloss-base-white p-3 hover-enabled transition-300"
+											onClick={() => zoomIn()}>
+											<i className="bi bi-zoom-in text-zeroloss-grey-900 fs-5"></i>
+										</div>
+										<div
+											className="bg-zeroloss-base-white p-3 hover-enabled transition-300"
+											onClick={() => zoomOut()}>
+											<i className="bi bi-zoom-out text-zeroloss-grey-900 fs-5"></i>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-						<div className="col-5 h-100">
-							{/* Weather Info */}
-							<div
-								className="card border-radius-12px mb-3"
-								style={{
-									height: '70%',
-									background:
-										themeMode === 'light' ? 'rgba(255, 255, 255, 0.80)' : 'rgba(20, 20, 20, 0.80)',
-								}}>
-								<div className="card-body p-4 h-100">
-									<div
-										className="d-flex flex-row align-items-center mb-3"
-										style={{ columnGap: '12px' }}>
-										<div
-											className={clsx('fs-1 fw-bold d-inline-block', {
-												'text-zeroloss-primary': themeMode === 'light',
-												'text-zeroloss-base-white': themeMode === 'dark',
-											})}>
-											{intl.formatMessage({
-												id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_TITLE',
-											})}
-										</div>
-										<div
-											className={clsx(
-												'border-radius-6px badge text-zeroloss-grey-900 bg-zeroloss-base-white border border-zeroloss-grey-200'
-											)}>
-											<span className="me-2 bullet bullet-dot bg-success h-6px w-6px animation-blink"></span>
-											Online
-										</div>
-									</div>
 
+								<div className="position-absolute p-4" style={{ zIndex: 100, right: 20 }}>
 									<div
-										className={clsx('card border-radius-12px mb-3 h-25', {
-											'bg-zeroloss-base-white': themeMode === 'light',
-											'zeroloss-background-grey-opacity border-1px border-zeroloss-grey-true-200':
-												themeMode === 'dark',
-										})}>
-										<div className="card-body p-4">
+										className="card border-radius-12px mb-3 transition-300"
+										style={{
+											height: '70%',
+											background:
+												themeMode === 'light'
+													? 'rgba(255, 255, 255, 0.80)'
+													: 'rgba(20, 20, 20, 0.80)',
+										}}>
+										<div className="card-body p-4 h-100">
 											<div
-												className={clsx('fs-2 fw-bold mb-5', {
-													'text-zeroloss-primary': themeMode === 'light',
-													'text-zeroloss-base-white': themeMode === 'dark',
-												})}>
-												{intl.formatMessage({
-													id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_WIND',
+												className={clsx('d-flex flex-row align-items-center mb-3', {
+													'justify-content-start': expanded,
+													'justify-content-between': !expanded,
 												})}
-											</div>
-
-											{/* Wind */}
-											<i
-												className={clsx('d-inline-block bi bi-wind fs-2x', {
-													'text-zeroloss-grey-600': themeMode === 'light',
-													'text-zeroloss-base-white': themeMode === 'dark',
-												})}></i>
-											<div
-												className={clsx('ms-2 d-inline-block fs-4 fw-semibold', {
-													'text-zeroloss-base-white': themeMode === 'dark',
-													'text-zeroloss-grey-600': themeMode === 'light',
-												})}>
-												NE 2.6 m/s
-											</div>
-										</div>
-									</div>
-
-									<div
-										className={clsx('card border-radius-12px', {
-											'bg-zeroloss-base-white': themeMode === 'light',
-											'zeroloss-background-grey-opacity border-1px border-zeroloss-grey-true-200':
-												themeMode === 'dark',
-										})}
-										style={{ height: '60%' }}>
-										<div className="card-body p-4">
-											{/* Temperature */}
-											<div className="mb-7">
-												<i
-													className={clsx('d-inline-block bi bi-thermometer-high fs-2x', {
-														'text-zeroloss-base-white': themeMode === 'dark',
-														'text-zeroloss-grey-600': themeMode === 'light',
-													})}></i>
+												style={{ columnGap: '12px' }}>
 												<div
-													className={clsx('ms-2 d-inline-block fs-4 fw-semibold', {
+													className={clsx('fs-4 fw-bold d-inline-block', {
+														'd-none': !expanded,
+														'd-block': expanded,
+														'text-zeroloss-primary': themeMode === 'light',
 														'text-zeroloss-base-white': themeMode === 'dark',
-														'text-zeroloss-grey-600': themeMode === 'light',
 													})}>
-													Temperature : 30C
-												</div>
-											</div>
-
-											{/* Water / Droplet */}
-											<div className="mb-7">
-												<i
-													className={clsx('d-inline-block bi bi-droplet-fill fs-2x', {
-														'text-zeroloss-base-white': themeMode === 'dark',
-														'text-zeroloss-grey-600': themeMode === 'light',
-													})}></i>
-												<div
-													className={clsx('ms-2 d-inline-block fs-4 fw-semibold', {
-														'text-zeroloss-base-white': themeMode === 'dark',
-														'text-zeroloss-grey-600': themeMode === 'light',
-													})}>
-													RH : 60%
-												</div>
-											</div>
-
-											{/* Pressure */}
-											<div className="mb-7">
-												<i
-													className={clsx('d-inline-block bi bi-unindent fs-2x', {
-														'text-zeroloss-base-white': themeMode === 'dark',
-														'text-zeroloss-grey-600': themeMode === 'light',
+													{intl.formatMessage({
+														id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_TITLE',
 													})}
-													style={{ transform: 'rotate(270deg)' }}></i>
+												</div>
 												<div
-													className={clsx('ms-2 d-inline-block fs-4 fw-semibold', {
-														'text-zeroloss-base-white': themeMode === 'dark',
-														'text-zeroloss-grey-600': themeMode === 'light',
-													})}>
-													Pressure : 1024 mBar
+													className={clsx(
+														'border-radius-6px badge text-zeroloss-grey-900 bg-zeroloss-base-white border border-zeroloss-grey-200'
+													)}>
+													<span className="me-2 bullet bullet-dot bg-success h-6px w-6px animation-blink"></span>
+													Online
+												</div>
+												<div
+													className="cursor-pointer ms-4 text-end"
+													onClick={() => setExpanded(prevState => !prevState)}>
+													<i
+														className={clsx('bi fs-1 fw-bold', {
+															'bi-list': !expanded,
+															'bi-x-lg': expanded,
+															'text-zeroloss-grey-600': themeMode === 'light',
+															'text-zeroloss-base-white': themeMode === 'dark',
+														})}></i>
+												</div>
+											</div>
+
+											<div
+												className={clsx('card border-radius-12px mb-3', {
+													'h-0 border-0 overflow-y-hidden': !expanded,
+													'h-25 border-1px': expanded,
+													'bg-zeroloss-base-white': themeMode === 'light',
+													'zeroloss-background-grey-opacity border-zeroloss-grey-true-200':
+														themeMode === 'dark',
+												})}>
+												<div className="card-body p-4">
+													<div
+														className={clsx('fs-5 fw-bold mb-5', {
+															'text-zeroloss-primary': themeMode === 'light',
+															'text-zeroloss-base-white': themeMode === 'dark',
+														})}>
+														{intl.formatMessage({
+															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_WIND',
+														})}
+													</div>
+
+													<i
+														className={clsx('d-inline-block bi bi-wind fs-4', {
+															'text-zeroloss-grey-600': themeMode === 'light',
+															'text-zeroloss-base-white': themeMode === 'dark',
+														})}></i>
+													<div
+														className={clsx('ms-2 d-inline-block fs-5 fw-semibold', {
+															'text-zeroloss-base-white': themeMode === 'dark',
+															'text-zeroloss-grey-600': themeMode === 'light',
+														})}>
+														NE 2.6 m/s
+													</div>
+												</div>
+											</div>
+
+											<div
+												className={clsx('card border-radius-12px', {
+													'bg-zeroloss-base-white': themeMode === 'light',
+													'zeroloss-background-grey-opacity border-1px border-zeroloss-grey-true-200':
+														themeMode === 'dark',
+												})}
+												style={{ height: '60%' }}>
+												<div className="card-body p-4">
+													<div
+														className={clsx({
+															'd-none': expanded,
+															'd-block': expanded,
+														})}>
+														<i
+															className={clsx('d-inline-block bi bi-wind fs-4', {
+																'text-zeroloss-grey-600': themeMode === 'light',
+																'text-zeroloss-base-white': themeMode === 'dark',
+															})}></i>
+														<div
+															className={clsx('ms-2 d-inline-block fs-5 fw-semibold', {
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-grey-600': themeMode === 'light',
+															})}>
+															<span
+																className={clsx({
+																	'd-none': !expanded,
+																	'd-inline-block': expanded,
+																})}>
+																NE :{' '}
+															</span>
+															<span>2.6 m/s</span>
+														</div>
+													</div>
+
+													<hr
+														className={clsx({
+															'd-block': !expanded,
+															'd-none': expanded,
+														})}
+													/>
+
+													<div className="mb-7">
+														<i
+															className={clsx('d-inline-block bi bi-thermometer-high fs-4', {
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-grey-600': themeMode === 'light',
+															})}></i>
+														<div
+															className={clsx('ms-2 d-inline-block fs-5 fw-semibold', {
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-grey-600': themeMode === 'light',
+															})}>
+															<span
+																className={clsx({
+																	'd-none': !expanded,
+																	'd-inline-block': expanded,
+																})}>
+																Temperature :{' '}
+															</span>
+															<span>30C</span>
+														</div>
+													</div>
+
+													<div className="mb-7">
+														<i
+															className={clsx('d-inline-block bi bi-droplet-fill fs-5', {
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-grey-600': themeMode === 'light',
+															})}></i>
+														<div
+															className={clsx('ms-2 d-inline-block fs-5 fw-semibold', {
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-grey-600': themeMode === 'light',
+															})}>
+															<span
+																className={clsx({
+																	'd-none': !expanded,
+																	'd-inline-block': expanded,
+																})}>
+																RH :{' '}
+															</span>
+															<span>60%</span>
+														</div>
+													</div>
+
+													<div className="mb-7">
+														<i
+															className={clsx('d-inline-block bi bi-unindent fs-2', {
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-grey-600': themeMode === 'light',
+															})}
+															style={{ transform: 'rotate(270deg)' }}></i>
+														<div
+															className={clsx('ms-2 d-inline-block fs-5 fw-semibold', {
+																'text-zeroloss-base-white': themeMode === 'dark',
+																'text-zeroloss-grey-600': themeMode === 'light',
+															})}>
+															<span
+																className={clsx({
+																	'd-none': !expanded,
+																	'd-inline-block': expanded,
+																})}>
+																Pressure :{' '}
+															</span>
+															<span>1024 mBar</span>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							</div>
 
-							{/* Status */}
-							<div
-								className="card border-radius-12px"
-								style={{
-									height: '30%',
-									background:
-										themeMode === 'light' ? 'rgba(255, 255, 255, 0.80)' : 'rgba(20, 20, 20, 0.80)',
-								}}>
-								<div className="card-body p-4 h-100">
 									<div
-										className={clsx('card border-radius-12px mb-3 h-100', {
-											'bg-zeroloss-base-white': themeMode === 'light',
-											'zeroloss-background-grey-opacity border-1px border-zeroloss-grey-true-200':
-												themeMode === 'dark',
-										})}>
-										<div className="card-body p-4">
-											<div className="d-flex flex-column justify-content-center h-100">
-												<div className="mb-3">
-													<span className="me-2 bullet bullet-dot bg-zeroloss-error h-12px w-12px p-2"></span>
-													<span className="fs-4">
-														{intl.formatMessage({
-															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_EXCEEDS',
-														})}
-													</span>
-												</div>
+										className="card border-radius-12px transition-300"
+										style={{
+											height: 'auto',
+											background:
+												themeMode === 'light'
+													? 'rgba(255, 255, 255, 0.80)'
+													: 'rgba(20, 20, 20, 0.80)',
+										}}>
+										<div className="card-body p-4 h-100">
+											<div
+												className={clsx('card border-radius-12px mb-3 h-100', {
+													'bg-zeroloss-base-white': themeMode === 'light',
+													'zeroloss-background-grey-opacity border-1px border-zeroloss-grey-true-200':
+														themeMode === 'dark',
+												})}>
+												<div className="card-body p-4">
+													<div className="d-flex flex-column justify-content-center h-100">
+														<div className="mb-3">
+															<span className="me-2 bullet bullet-dot bg-zeroloss-error h-12px w-12px p-2"></span>
+															<span className="fs-6">
+																{intl.formatMessage({
+																	id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_EXCEEDS',
+																})}
+															</span>
+														</div>
 
-												<div className="mb-3">
-													<span className="me-2 bullet bullet-dot bg-zeroloss-success h-12px w-12px p-2"></span>
-													<span className="fs-4">
-														{intl.formatMessage({
-															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_NORMAL',
-														})}
-													</span>
-												</div>
+														<div className="mb-3">
+															<span className="me-2 bullet bullet-dot bg-zeroloss-success h-12px w-12px p-2"></span>
+															<span className="fs-6">
+																{intl.formatMessage({
+																	id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_NORMAL',
+																})}
+															</span>
+														</div>
 
-												<div className="mb-3">
-													<span className="me-2 bullet bullet-dot bg-zeroloss-warning h-12px w-12px p-2"></span>
-													<span className="fs-4">
-														{intl.formatMessage({
-															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_CLOSE_TO_EXCEEDS',
-														})}
-													</span>
-												</div>
+														<div className="mb-3">
+															<span className="me-2 bullet bullet-dot bg-zeroloss-warning h-12px w-12px p-2"></span>
+															<span className="fs-6">
+																{intl.formatMessage({
+																	id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_CLOSE_TO_EXCEEDS',
+																})}
+															</span>
+														</div>
 
-												<div className="mb-3">
-													<span className="me-2 bullet bullet-dot bg-zeroloss-grey h-12px w-12px p-2"></span>
-													<span className="fs-4">
-														{intl.formatMessage({
-															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_UNAVAILABLE',
-														})}
-													</span>
+														<div className="mb-3">
+															<span className="me-2 bullet bullet-dot bg-zeroloss-grey h-12px w-12px p-2"></span>
+															<span className="fs-6">
+																{intl.formatMessage({
+																	id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.WEATHER_UNAVAILABLE',
+																})}
+															</span>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-					</div>
+
+								<TransformComponent wrapperClass="">
+									<PlantStation />
+								</TransformComponent>
+							</React.Fragment>
+						)}
+					</TransformWrapper>
+
+					{/* <MapInteractionCSS showControls>
+						<PlantStation />
+					</MapInteractionCSS> */}
+
 					{/* {showStage && (
-						<Stage width={stageDimensions.width} height={stageDimensions.height}>
+						<Stage
+							ref={stageRef}
+							width={stageDimensions.width}
+							height={stageDimensions.height}
+							scaleX={scale}
+							scaleY={scale}
+							draggable>
 							<Layer>
-								<KonvaImage image="/media/maps/plant-station.svg" />
+								<KonvaImage image="/media/maps/plant-station-master.svg" />
 							</Layer>
 						</Stage>
 					)} */}

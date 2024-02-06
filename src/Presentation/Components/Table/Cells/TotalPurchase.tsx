@@ -1,4 +1,4 @@
-import formatNumberCommas from 'Utils/formatNumberCommas'
+import { formatNumberCommas } from '@/Utils/formatNumberCommas'
 
 const TotalPurchase = ({ value }: { value: string }) => {
 	const isNegativeOrZero = () => {

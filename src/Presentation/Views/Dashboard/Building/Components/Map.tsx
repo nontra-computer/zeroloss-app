@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { Stage, Layer } from 'react-konva'
-import KonvaImage from '@/Presentation/Components/Konva/Image/View'
+import React, { useState } from 'react'
 import Select from 'react-select'
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
@@ -8,9 +6,10 @@ import clsx from 'clsx'
 
 const Map: React.FC = () => {
 	const intl = useIntl()
-	const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
-	const [showStage, setShowStage] = useState(false)
+	// const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
+	// const [showStage, setShowStage] = useState(false)
 	const { mode } = useThemeMode()
+	const [expanded, setExpanded] = useState(false)
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -19,30 +18,30 @@ const Map: React.FC = () => {
 		themeMode = mode
 	}
 
-	useEffect(() => {
-		const updateStageDimensions = () => {
-			const container = document.getElementById('measurement-map-container')
+	// useEffect(() => {
+	// 	const updateStageDimensions = () => {
+	// 		const container = document.getElementById('measurement-map-container')
 
-			if (container) {
-				setStageDimensions({
-					width: container.getBoundingClientRect().width,
-					height: container.getBoundingClientRect().height,
-				})
-				setShowStage(true)
-			}
-		}
+	// 		if (container) {
+	// 			setStageDimensions({
+	// 				width: container.getBoundingClientRect().width,
+	// 				height: container.getBoundingClientRect().height,
+	// 			})
+	// 			setShowStage(true)
+	// 		}
+	// 	}
 
-		// Update dimensions initially
-		updateStageDimensions()
+	// 	// Update dimensions initially
+	// 	updateStageDimensions()
 
-		// Update dimensions whenever the window is resized
-		window.addEventListener('resize', updateStageDimensions)
+	// 	// Update dimensions whenever the window is resized
+	// 	window.addEventListener('resize', updateStageDimensions)
 
-		// Clean up event listener when the component is unmounted
-		return () => {
-			window.removeEventListener('resize', updateStageDimensions)
-		}
-	}, [])
+	// 	// Clean up event listener when the component is unmounted
+	// 	return () => {
+	// 		window.removeEventListener('resize', updateStageDimensions)
+	// 	}
+	// }, [])
 
 	return (
 		<React.Fragment>
