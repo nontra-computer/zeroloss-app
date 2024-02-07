@@ -80,26 +80,30 @@ const DataConnection: React.FC<Props> = () => {
 
 	return (
 		<React.Fragment>
-			<div
-				className={clsx('fs-2 fw-bolder', {
-					'text-zeroloss-base-white': themeMode === 'dark',
-					'text-zeroloss-grey-900': themeMode === 'light',
-				})}>
-				{intl.formatMessage({
-					id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.SENSOR_TITLE',
-				})}
+			<div className="d-flex flex-row justify-content-between align-items-center">
+				<div>
+					<div
+						className={clsx('fs-2 fw-bolder', {
+							'text-zeroloss-base-white': themeMode === 'dark',
+							'text-zeroloss-grey-900': themeMode === 'light',
+						})}>
+						{intl.formatMessage({
+							id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.SENSOR_TITLE',
+						})}
+					</div>
+					<p
+						className={clsx('fs-6', {
+							'text-zeroloss-base-white': themeMode === 'dark',
+							'text-zeroloss-grey-600': themeMode === 'light',
+						})}>
+						{intl.formatMessage({
+							id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.SENSOR_DESCRIPTION',
+						})}
+					</p>
+				</div>
 			</div>
-			<p
-				className={clsx('fs-6', {
-					'text-zeroloss-base-white': themeMode === 'dark',
-					'text-zeroloss-grey-600': themeMode === 'light',
-				})}>
-				{intl.formatMessage({
-					id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.SENSOR_DESCRIPTION',
-				})}
-			</p>
 
-			<div className="row g-5 h-100">
+			<div className="row gy-5 h-100" id="mwa-data-connection-container">
 				{/* start:: Sensor Chart */}
 				<div className="col-12">
 					<div
@@ -125,7 +129,7 @@ const DataConnection: React.FC<Props> = () => {
 									{/* end:: Header */}
 
 									{/* start:: Content */}
-									<div className="col-12 col-lg-7" style={{ height: '150px', overflow: 'hidden' }}>
+									<div className="col-12 col-lg-7" style={{ height: '150px' }}>
 										{/* begin::Chart */}
 										<div
 											ref={sensorChartRef}
@@ -236,7 +240,7 @@ const DataConnection: React.FC<Props> = () => {
 
 				<div className="col-12">
 					<div
-						className={clsx('card border-1px h-100', {
+						className={clsx('card border-1px', {
 							'bg-zeroloss-base-white border-zeroloss-grey-true-200': themeMode === 'light',
 							'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 						})}>

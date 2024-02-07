@@ -36,7 +36,7 @@ const PrivateRoutes = () => {
 					<Route path="mwa" element={<MwaMeasurementDashboardView />} />
 					<Route path="mwa/building/:buildingId" element={<MwaBuildingDashboardView />} />
 
-					<Route index element={<Navigate to="/dashboard/overview" />} />
+					<Route index element={<Navigate to="/dashboard/mwa" />} />
 				</Route>
 
 				<Route path="builder" element={<BuilderPageWrapper />} />
