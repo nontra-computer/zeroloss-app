@@ -41,6 +41,7 @@ import { AuthProvider, setupAxios } from './app/modules/auth'
 setupAxios(axios)
 Chart.register(...registerables)
 
+const isProduction = process.env.NODE_ENV === 'production'
 const queryClient = new QueryClient()
 const container = document.getElementById('root')
 if (container) {
@@ -53,7 +54,7 @@ if (container) {
 					</AppContext>
 				</AuthProvider>
 			</MetronicI18nProvider>
-			<ReactQueryDevtools initialIsOpen={false} />
+			{!isProduction && <ReactQueryDevtools initialIsOpen={false} />}
 		</QueryClientProvider>
 	)
 }
