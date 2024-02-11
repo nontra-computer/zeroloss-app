@@ -1,6 +1,6 @@
 import React from 'react'
 import { PageTitle } from '@/_metronic/layout/core'
-import Map from './Components/Map'
+import Map from './Components/Map/View'
 import DataConnection from './Components/DataConnection'
 import Measurement from './Components/Measurement'
 import useViewModel from './ViewModel'
