@@ -21,6 +21,11 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 		isShowHover,
 		onEndPanning,
 		onStartPanning,
+		dropdownOptions,
+		buildingOne,
+		buildingTwo,
+		buildingThree,
+		generateIcon,
 	} = useViewModel()
 
 	return (
@@ -47,24 +52,11 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 					</p>
 				</div>
 
-				<div className="w-200px">
+				<div className="w-300px">
 					<Select
 						className="shadow-sm transition-300"
-						defaultValue={{ label: '1. CHLORINE Station 1', value: '1' }}
-						options={[
-							{
-								label: '1. CHLORINE Station 1',
-								value: '1',
-							},
-							{
-								label: '2. CHLORINE Station 2',
-								value: '2',
-							},
-							{
-								label: '3. CHLORINE Station 3',
-								value: '3',
-							},
-						]}
+						placeholder={'Select Building to View Measurement'}
+						options={dropdownOptions}
 						styles={{
 							container: provided => ({
 								...provided,
@@ -92,6 +84,10 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 								...provided,
 								color: themeMode === 'dark' ? '#E5E5E5' : undefined,
 								backgroundColor: themeMode === 'dark' ? 'transparent' : '#FFFFFF',
+							}),
+							placeholder: provided => ({
+								...provided,
+								color: themeMode === 'dark' ? '#a3a3a3' : undefined,
 							}),
 							menu: provided => ({
 								...provided,
@@ -142,41 +138,65 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 							'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 						})}
 						style={{ height: stageDimensions.height }}>
-						<Tooltip
-							place="top"
-							anchorSelect="#first-building-group"
-							className="fs-3 fw-bold"
-							style={{ zIndex: 10 }}
-							isOpen={isShowHover}>
-							<div className="position-relative">
-								<img
-									src="/media/maps/red-time.svg"
-									height={50}
-									alt="Red Time Icon"
-									className="position-absolute"
-									style={{ left: -70, top: -5 }}
-								/>{' '}
-								CHLORINE Station 1
-							</div>
-						</Tooltip>
+						{buildingOne && (
+							<Tooltip
+								place="top"
+								anchorSelect="#first-building-group"
+								className="fs-3 fw-bold"
+								style={{ zIndex: 10 }}
+								isOpen={isShowHover}>
+								<div className="position-relative">
+									<img
+										src={`/media/maps/${generateIcon(buildingOne?.id)}-time.svg`}
+										height={50}
+										alt="Green Time Icon"
+										className="position-absolute"
+										style={{ left: -70, top: -5 }}
+									/>{' '}
+									{buildingOne?.building}
+								</div>
+							</Tooltip>
+						)}
 
-						<Tooltip
-							place="top"
-							anchorSelect="#second-building-group"
-							className="fs-3 fw-bold"
-							style={{ zIndex: 10 }}
-							isOpen={isShowHover}>
-							<div className="position-relative">
-								<img
-									src="/media/maps/green-time.svg"
-									height={50}
-									alt="Green Time Icon"
-									className="position-absolute"
-									style={{ left: -70, top: -5 }}
-								/>{' '}
-								CHLORINE Station 1
-							</div>
-						</Tooltip>
+						{buildingTwo && (
+							<Tooltip
+								place="top"
+								anchorSelect="#second-building-group"
+								className="fs-3 fw-bold"
+								style={{ zIndex: 10 }}
+								isOpen={isShowHover}>
+								<div className="position-relative">
+									<img
+										src={`/media/maps/${generateIcon(buildingTwo?.id)}-time.svg`}
+										height={50}
+										alt="Green Time Icon"
+										className="position-absolute"
+										style={{ left: -70, top: -5 }}
+									/>{' '}
+									{buildingTwo?.building}
+								</div>
+							</Tooltip>
+						)}
+
+						{buildingThree && (
+							<Tooltip
+								place="top"
+								anchorSelect="#third-building-group"
+								className="fs-3 fw-bold"
+								style={{ zIndex: 10 }}
+								isOpen={isShowHover}>
+								<div className="position-relative">
+									<img
+										src={`/media/maps/${generateIcon(buildingThree?.id)}-time.svg`}
+										height={50}
+										alt="Green Time Icon"
+										className="position-absolute"
+										style={{ left: -70, top: -5 }}
+									/>{' '}
+									{buildingThree?.building}
+								</div>
+							</Tooltip>
+						)}
 
 						<div className="card-body position-relative p-0">
 							<TransformWrapper

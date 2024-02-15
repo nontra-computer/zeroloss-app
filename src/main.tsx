@@ -26,7 +26,8 @@ import 'react-toastify/dist/ReactToastify.css'
  **/
 import './_metronic/assets/sass/style.scss'
 import { AppRoutes } from './app/routing/AppRoutes'
-import { AuthProvider, setupAxios } from './app/modules/auth'
+import { AuthProvider } from './app/modules/auth'
+import { setupAxios } from './Configuration/Axios'
 /**
  * Creates `axios-mock-adapter` instance for provided `axios` instance, add
  * basic Metronic mocks and returns it.
