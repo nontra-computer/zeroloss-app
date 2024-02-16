@@ -1,18 +1,11 @@
 import React from 'react'
-import { useIntl } from 'react-intl'
-import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import NumberBox from '@/Presentation/Components/NumberBox/View'
 import clsx from 'clsx'
 
+import useViewModel from './ViewModel'
+
 const Stat: React.FC = () => {
-	const intl = useIntl()
-	const { mode } = useThemeMode()
-	let themeMode = ''
-	if (mode === 'system') {
-		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-	} else {
-		themeMode = mode
-	}
+	const { intl, themeMode, data } = useViewModel()
 
 	return (
 		<div className="row h-100 justify-content-start">
@@ -41,7 +34,7 @@ const Stat: React.FC = () => {
 					id="measurement-exceeds"
 					title="ค่าเกินมาตรฐาน"
 					type="danger"
-					value={50}
+					value={data?.totalDanger ?? 0}
 					height={200}
 					infos={[
 						{
@@ -62,9 +55,9 @@ const Stat: React.FC = () => {
 			<div className="col-12 col-lg-4">
 				<NumberBox
 					id="measurement-close-to-exceeds"
-					title="ใกล้เกินมาตรฐาน"
+					title="ค่าใกล้เกินมาตรฐาน"
 					type="warning"
-					value={100}
+					value={data?.totalWarning ?? 0}
 					height={200}
 					infos={[
 						{
@@ -85,9 +78,9 @@ const Stat: React.FC = () => {
 			<div className="col-12 col-lg-4">
 				<NumberBox
 					id="measurement-normal"
-					title="อยู่ในเกณฑ์ปกติ"
+					title="ค่าอยู่ในเกณฑ์ปกติ"
 					type="success"
-					value={30}
+					value={data?.totalNormal ?? 0}
 					height={200}
 					infos={[
 						{

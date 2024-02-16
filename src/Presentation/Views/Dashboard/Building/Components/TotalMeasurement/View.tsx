@@ -1,21 +1,12 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import ApexCharts, { ApexOptions } from 'apexcharts'
-import { useIntl } from 'react-intl'
-import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { getCSS } from '@/_metronic/assets/ts/_utils'
 import clsx from 'clsx'
 
-const TotalMeasurement: React.FC = () => {
-	const intl = useIntl()
-	const { mode } = useThemeMode()
-	const totalChartRef = useRef<HTMLDivElement | null>(null)
+import useViewModel from './ViewModel'
 
-	let themeMode = ''
-	if (mode === 'system') {
-		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-	} else {
-		themeMode = mode
-	}
+const TotalMeasurement: React.FC = () => {
+	const { intl, themeMode, mode, data, totalChartRef } = useViewModel()
 
 	const refreshTotalChartRef = () => {
 		if (!totalChartRef.current) {
@@ -26,7 +17,7 @@ const TotalMeasurement: React.FC = () => {
 
 		const chart = new ApexCharts(
 			totalChartRef.current,
-			getTotalChartOptions(height, themeMode === 'dark')
+			getTotalChartOptions(height, themeMode === 'dark', data)
 		)
 		if (chart) {
 			chart.render()
@@ -44,7 +35,7 @@ const TotalMeasurement: React.FC = () => {
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [totalChartRef, themeMode, mode])
+	}, [totalChartRef, themeMode, mode, data])
 
 	return (
 		<div className="row h-100">
@@ -102,7 +93,7 @@ const TotalMeasurement: React.FC = () => {
 	)
 }
 
-function getTotalChartOptions(height: number, isDark: boolean): ApexOptions {
+function getTotalChartOptions(height: number, isDark: boolean, data: any): ApexOptions {
 	return {
 		// subtitle: {
 		// 	text: 'จำนวนตรวจวัดทั้งหมด',
@@ -113,7 +104,7 @@ function getTotalChartOptions(height: number, isDark: boolean): ApexOptions {
 		// 		fontFamily: 'Noto Sans Thai, sans-serif',
 		// 	},
 		// },
-		series: [10, 5],
+		series: Object.keys(data).length > 0 ? [data?.totalOnline, data?.totalOffline] : [],
 		labels: ['เชื่อมโยงได้', 'เชื่อมโยงไม่ได้'],
 		chart: {
 			type: 'donut',
@@ -130,7 +121,6 @@ function getTotalChartOptions(height: number, isDark: boolean): ApexOptions {
 						name: {
 							show: true,
 							fontFamily: 'Noto Sans Thai, sans-serif',
-							// @ts-ignore
 							formatter: function (val: any) {
 								return val
 							},
@@ -138,7 +128,6 @@ function getTotalChartOptions(height: number, isDark: boolean): ApexOptions {
 						value: {
 							show: true,
 							fontFamily: 'Noto Sans Thai, sans-serif',
-							// @ts-ignore
 							formatter: function (val: any) {
 								return val
 							},

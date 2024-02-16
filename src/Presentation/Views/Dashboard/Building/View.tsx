@@ -1,14 +1,14 @@
 import React from 'react'
 import { PageTitle } from '@/_metronic/layout/core'
-import Map from './Components/Map'
-import TotalMeasurement from './Components/TotalMeasurement'
-import Stat from './Components/Stat'
-import MeasurementTable from './Components/Table'
+import Map from './Components/Map/View'
+import TotalMeasurement from './Components/TotalMeasurement/View'
+import Stat from './Components/Stat/View'
+import MeasurementTable from './Components/Table/View'
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
 const MWABuildingDashboardView: React.FC = () => {
-	const { timeStr, themeMode, datas } = useViewModel()
+	const { timeStr, themeMode } = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -39,7 +39,7 @@ const MWABuildingDashboardView: React.FC = () => {
 					<Stat />
 				</div>
 				<div className="col-12">
-					<MeasurementTable datas={datas} />
+					<MeasurementTable />
 				</div>
 			</div>
 		</React.Fragment>

@@ -6,11 +6,14 @@ import clsx from 'clsx'
 
 interface Props {
 	value: number
-	isPositive: boolean
+	arrow: boolean
+	minus: boolean
+	direction: 'up' | 'down'
+	type: 'success' | 'warning' | 'danger'
 	change: number
 }
 
-const DynamicChangePPM: React.FC<Props> = ({ value, isPositive, change }) => {
+const DynamicChangePPM: React.FC<Props> = ({ arrow, minus, value, direction, type, change }) => {
 	const { mode } = useThemeMode()
 
 	let themeMode = ''
@@ -33,14 +36,19 @@ const DynamicChangePPM: React.FC<Props> = ({ value, isPositive, change }) => {
 			<span>
 				<i
 					className={clsx('bi fs-2', {
-						'text-zeroloss-success-500 bi-arrow-up': isPositive,
-						'text-zeroloss-error-500 bi-arrow-down': !isPositive,
+						'bi-dash': minus,
+						'bi-arrow-up': arrow && direction === 'up',
+						'bi-arrow-down': arrow && direction === 'down',
+						'text-zeroloss-success-500': type === 'success',
+						'text-zeroloss-warning-500': type === 'warning',
+						'text-zeroloss-error-500': type === 'danger',
 					})}></i>
 			</span>
 			<span
 				className={clsx('fs-6 fw-bold', {
-					'text-zeroloss-success-500': isPositive,
-					'text-zeroloss-error-500': !isPositive,
+					'text-zeroloss-success-500': type === 'success',
+					'text-zeroloss-warning-500': type === 'warning',
+					'text-zeroloss-error-500': type === 'danger',
 				})}>
 				{formatNumberCommas(change)} %
 			</span>

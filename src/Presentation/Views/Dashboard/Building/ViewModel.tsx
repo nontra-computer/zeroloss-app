@@ -1,9 +1,12 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
+import { useParams } from 'react-router-dom'
+import { useMWAStore } from '@/Store/MWA'
 import moment from 'moment-timezone'
+import { toast } from 'react-toastify'
 
 const ViewModel = () => {
 	const selectedLang = useLang()
@@ -18,6 +21,14 @@ const ViewModel = () => {
 		return intl.formatMessage({ id: 'ZEROLOSS.HEADER.CURRENT_TIME' }) + ' ' + time
 	}, [intl, selectedLang])
 	const { mode } = useThemeMode()
+	const { buildingId } = useParams<{ buildingId?: string }>()
+
+	const { getSensor, getData, clearState } = useMWAStore(state => ({
+		getData: state.getStationMeasurementDetail,
+		getSensor: state.getStationMeasurementDetailSensor,
+		clearState: state.clearState,
+	}))
+	const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -26,53 +37,44 @@ const ViewModel = () => {
 		themeMode = mode
 	}
 
-	const datas: any = [
-		{
-			id: 1,
-			sensors: 'Sensor 1',
-			location: 'Location 1',
-			image: 'https://via.placeholder.com/50',
-			status: 0,
-			ppm: 100,
-			scale: 25,
-			scaleType: 'success',
-		},
-		{
-			id: 2,
-			sensors: 'Sensor 2',
-			location: 'Location 2',
-			image: 'https://via.placeholder.com/50',
-			status: 1,
-			ppm: 200,
-			scale: 40,
-			scaleType: 'warning',
-		},
-		{
-			id: 3,
-			sensors: 'Sensor 3',
-			location: 'Location 3',
-			image: 'https://via.placeholder.com/50',
-			status: 1,
-			ppm: 300,
-			scale: 75,
-			scaleType: 'danger',
-		},
-		{
-			id: 4,
-			sensors: 'Sensor 4',
-			location: 'Location 4',
-			image: 'https://via.placeholder.com/50',
-			status: 0,
-			ppm: 400,
-			scale: 12,
-			scaleType: 'success',
-		},
-	]
+	const fetchData = () => {
+		if (buildingId) {
+			getData(parseInt(buildingId)).then(({ data, success }) => {
+				if (!success) {
+					toast.error(data)
+					return
+				}
+			})
+
+			getSensor(parseInt(buildingId)).then(({ data, success }) => {
+				if (!success) {
+					toast.error(data)
+					return
+				}
+			})
+		}
+	}
+
+	useEffect(() => {
+		fetchData()
+
+		// Fetch getSensor every 5 seconds
+		intervalRef.current = setInterval(fetchData, 5000)
+
+		return () => {
+			clearState()
+
+			// Clear the interval when the component is unmounted
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current)
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	return {
 		timeStr,
 		themeMode,
-		datas,
 	}
 }
 

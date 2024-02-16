@@ -1,47 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Select from 'react-select'
-import { useIntl } from 'react-intl'
-import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import clsx from 'clsx'
 
+import useViewModel from './ViewModel'
+
 const Map: React.FC = () => {
-	const intl = useIntl()
-	// const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
-	// const [showStage, setShowStage] = useState(false)
-	const { mode } = useThemeMode()
-	const [expanded, setExpanded] = useState(false)
-
-	let themeMode = ''
-	if (mode === 'system') {
-		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-	} else {
-		themeMode = mode
-	}
-
-	// useEffect(() => {
-	// 	const updateStageDimensions = () => {
-	// 		const container = document.getElementById('measurement-map-container')
-
-	// 		if (container) {
-	// 			setStageDimensions({
-	// 				width: container.getBoundingClientRect().width,
-	// 				height: container.getBoundingClientRect().height,
-	// 			})
-	// 			setShowStage(true)
-	// 		}
-	// 	}
-
-	// 	// Update dimensions initially
-	// 	updateStageDimensions()
-
-	// 	// Update dimensions whenever the window is resized
-	// 	window.addEventListener('resize', updateStageDimensions)
-
-	// 	// Clean up event listener when the component is unmounted
-	// 	return () => {
-	// 		window.removeEventListener('resize', updateStageDimensions)
-	// 	}
-	// }, [])
+	const { intl, themeMode, currentDropdownOption, stationDropdownOptions, onSelectBuilding } =
+		useViewModel()
 
 	return (
 		<React.Fragment>
@@ -70,21 +35,7 @@ const Map: React.FC = () => {
 				<div className="w-200px">
 					<Select
 						className="shadow-sm"
-						defaultValue={{ label: '1. CHLORINE Station 1', value: '1' }}
-						options={[
-							{
-								label: '1. CHLORINE Station 1',
-								value: '1',
-							},
-							{
-								label: '2. CHLORINE Station 2',
-								value: '2',
-							},
-							{
-								label: '3. CHLORINE Station 3',
-								value: '3',
-							},
-						]}
+						options={stationDropdownOptions}
 						styles={{
 							container: provided => ({
 								...provided,
@@ -143,6 +94,10 @@ const Map: React.FC = () => {
 						}}
 						components={{
 							IndicatorSeparator: () => null,
+						}}
+						value={currentDropdownOption}
+						onChange={e => {
+							if (e) onSelectBuilding(e.value)
 						}}
 					/>
 				</div>
@@ -224,13 +179,6 @@ const Map: React.FC = () => {
 							</div>
 						</div>
 					</div>
-					{/* {showStage && (
-						<Stage width={stageDimensions.width} height={stageDimensions.height}>
-							<Layer>
-								<KonvaImage image="/media/maps/plant-station.svg" />
-							</Layer>
-						</Stage>
-					)} */}
 				</div>
 			</div>
 		</React.Fragment>

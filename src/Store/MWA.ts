@@ -5,12 +5,17 @@ interface MWAStore {
 	stations: any[]
 	dashboardSensors: any
 	selected: any
+	selectedSensors: any[]
 	setStations: (stations: any[]) => void
 	setDashboardSensors: (dashboardSensors: any) => void
 	setSelected: (selected: any) => void
+	setSelectedSensors: (selectedSensors: any[]) => void
 	getStations: () => Promise<{ data: any; success: boolean }>
 	getDashboardSensors: () => Promise<{ data: any; success: boolean }>
 	getStationMeasurementDetail: (buildingId: number) => Promise<{ data: any; success: boolean }>
+	getStationMeasurementDetailSensor: (
+		buildingId: number
+	) => Promise<{ data: any; success: boolean }>
 	clearState: () => void
 }
 
@@ -18,9 +23,11 @@ export const useMWAStore = create<MWAStore>(set => ({
 	stations: [],
 	dashboardSensors: {},
 	selected: {},
+	selectedSensors: [],
 	setStations: (stations: any[]) => set({ stations }),
 	setDashboardSensors: (dashboardSensors: any) => set({ dashboardSensors }),
 	setSelected: (selected: any) => set({ selected }),
+	setSelectedSensors: (selectedSensors: any[]) => set({ selectedSensors }),
 	getStations: async () => {
 		return axios
 			.get('/dashboard/stations')
@@ -45,7 +52,7 @@ export const useMWAStore = create<MWAStore>(set => ({
 	},
 	getStationMeasurementDetail: async (buildingId: number) => {
 		return axios
-			.get(`/sensor?dashboardId=${buildingId}`)
+			.get(`/dashboard/stations/${buildingId}`)
 			.then(response => {
 				set({ selected: response.data })
 				return { data: response.data, success: true }
@@ -54,5 +61,16 @@ export const useMWAStore = create<MWAStore>(set => ({
 				return { data: error.response.data.message?.toString(), success: false }
 			})
 	},
-	clearState: () => set({ stations: [], selected: {}, dashboardSensors: {} }),
+	getStationMeasurementDetailSensor: async (buildingId: number) => {
+		return axios
+			.get(`/sensor?dashboardId=${buildingId}`)
+			.then(response => {
+				set({ selectedSensors: response.data })
+				return { data: response.data, success: true }
+			})
+			.catch(error => {
+				return { data: error.response.data.message?.toString(), success: false }
+			})
+	},
+	clearState: () => set({ stations: [], selected: {}, selectedSensors: [], dashboardSensors: {} }),
 }))
