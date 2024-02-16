@@ -3305,7 +3305,7 @@ const PlantStation: React.FC<Props> = () => {
 							fill="#3C80D3"
 						/>
 					</g>
-					<g id="first-building-group" className="hover-opacity">
+					<g id="first-building-group" className="hover-opacity cursor-pointer">
 						<path
 							id="first-building"
 							className="cursor-pointer"

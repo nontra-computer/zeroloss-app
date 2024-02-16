@@ -1,22 +1,15 @@
 import React, { useEffect, useRef } from 'react'
 import NumberBox from '@/Presentation/Components/NumberBox/View'
 import ApexCharts, { ApexOptions } from 'apexcharts'
-import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { useIntl } from 'react-intl'
 import { getCSS } from '@/_metronic/assets/ts/_utils'
 import clsx from 'clsx'
 
+import useViewModel from './ViewModel'
+
 const Measurement: React.FC = () => {
-	const intl = useIntl()
-	const { mode } = useThemeMode()
 	const totalChartRef = useRef<HTMLDivElement | null>(null)
 
-	let themeMode = ''
-	if (mode === 'system') {
-		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-	} else {
-		themeMode = mode
-	}
+	const { data, intl, mode, themeMode } = useViewModel()
 
 	const refreshTotalChartRef = () => {
 		if (!totalChartRef.current) {
@@ -27,7 +20,7 @@ const Measurement: React.FC = () => {
 
 		const chart = new ApexCharts(
 			totalChartRef.current,
-			getTotalChartOptions(height, themeMode === 'dark')
+			getTotalChartOptions(height, themeMode === 'dark', data)
 		)
 		if (chart) {
 			chart.render()
@@ -45,7 +38,7 @@ const Measurement: React.FC = () => {
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [totalChartRef, mode, themeMode])
+	}, [totalChartRef, mode, themeMode, data])
 
 	return (
 		<div className="row">
@@ -103,7 +96,7 @@ const Measurement: React.FC = () => {
 				<NumberBox
 					id="mwa-exceeds"
 					title="ค่าเกินมาตรฐาน"
-					value={52000}
+					value={data?.totalDanger ?? 0}
 					type="danger"
 					height={200}
 				/>
@@ -111,20 +104,26 @@ const Measurement: React.FC = () => {
 			<div className="col-12 col-lg-3">
 				<NumberBox
 					id="mwa-inappropriate"
-					title="เหตุการณ์ผิดปกติ"
-					value={900}
+					title="ค่าใกล้เกินมาตรฐาน"
+					value={data?.totalWarning ?? 0}
 					type="warning"
 					height={200}
 				/>
 			</div>
 			<div className="col-12 col-lg-3">
-				<NumberBox id="mwa-normal" title="เหตุร้องเรียน" value={888} type="success" height={200} />
+				<NumberBox
+					id="mwa-normal"
+					title="ค่าอยู่ในเกณฑ์ปกติ"
+					value={data?.totalNormal ?? 0}
+					type="success"
+					height={200}
+				/>
 			</div>
 		</div>
 	)
 }
 
-function getTotalChartOptions(height: number, isDark: boolean): ApexOptions {
+function getTotalChartOptions(height: number, isDark: boolean, data: any): ApexOptions {
 	return {
 		// subtitle: {
 		// 	text: 'จำนวนตรวจวัดทั้งหมด',
@@ -135,8 +134,11 @@ function getTotalChartOptions(height: number, isDark: boolean): ApexOptions {
 		// 		fontFamily: 'Noto Sans Thai, sans-serif',
 		// 	},
 		// },
-		series: [12, 28, 40, 20],
-		labels: ['ค่าเกินมาตรฐาน', 'ค่าใกล้เกินมาตรฐาน', 'ค่าอยู่ในเกณฑ์ปกติ', 'เชื่อมโยงไม่ได้'],
+		series:
+			Object.keys(data).length > 0
+				? [data?.totalDanger, data?.totalWarning, data?.totalNormal, data?.total]
+				: [],
+		labels: ['ค่าเกินมาตรฐาน', 'ค่าใกล้เกินมาตรฐาน', 'ค่าอยู่ในเกณฑ์ปกติ', 'ไม่ทำงาน'],
 		chart: {
 			type: 'donut',
 			height: height,
@@ -152,7 +154,6 @@ function getTotalChartOptions(height: number, isDark: boolean): ApexOptions {
 						name: {
 							show: true,
 							fontFamily: 'Noto Sans Thai, sans-serif',
-							// @ts-ignore
 							formatter: function (val: any) {
 								return val
 							},
@@ -160,7 +161,6 @@ function getTotalChartOptions(height: number, isDark: boolean): ApexOptions {
 						value: {
 							show: true,
 							fontFamily: 'Noto Sans Thai, sans-serif',
-							// @ts-ignore
 							formatter: function (val: any) {
 								return val
 							},

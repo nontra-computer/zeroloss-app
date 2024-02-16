@@ -1,5 +1,8 @@
 {
-  "projects": {
-    "default": "zeroloss-app"
-  }
+	"projects": {
+		"default": "zeroloss-app",
+		"staging": "zeroloss-app"
+	},
+	"targets": {},
+	"etags": {}
 }

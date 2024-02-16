@@ -1,24 +1,16 @@
 import React, { useEffect, useRef } from 'react'
 import ApexCharts, { ApexOptions } from 'apexcharts'
-import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { useIntl } from 'react-intl'
 import { getCSS } from '@/_metronic/assets/ts/_utils'
 import clsx from 'clsx'
+
+import useViewModel from './ViewModel'
 
 interface Props {}
 
 const DataConnection: React.FC<Props> = () => {
-	const intl = useIntl()
 	const sensorChartRef = useRef<HTMLDivElement | null>(null)
 	const connectionChartRef = useRef<HTMLDivElement | null>(null)
-	const { mode } = useThemeMode()
-
-	let themeMode = ''
-	if (mode === 'system') {
-		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-	} else {
-		themeMode = mode
-	}
+	const { intl, themeMode, mode, isLoading, data } = useViewModel()
 
 	const refreshSensorChart = () => {
 		if (!sensorChartRef.current) {
@@ -29,7 +21,7 @@ const DataConnection: React.FC<Props> = () => {
 
 		const chart = new ApexCharts(
 			sensorChartRef.current,
-			getSensorChartOptions(height, themeMode === 'dark')
+			getSensorChartOptions(height, themeMode === 'dark', data)
 		)
 		if (chart) {
 			chart.render()
@@ -65,7 +57,7 @@ const DataConnection: React.FC<Props> = () => {
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sensorChartRef, mode, themeMode])
+	}, [sensorChartRef, mode, themeMode, data])
 
 	useEffect(() => {
 		const chart = refreshConnectionChart()
@@ -157,7 +149,7 @@ const DataConnection: React.FC<Props> = () => {
 																'text-zeroloss-base-white': themeMode === 'dark',
 																'text-zeroloss-success-700': themeMode === 'light',
 															})}>
-															80%
+															{data?.onlinePercentage}%
 														</span>
 													</div>
 												</div>
@@ -177,9 +169,9 @@ const DataConnection: React.FC<Props> = () => {
 														<span
 															className={clsx({
 																'text-zeroloss-base-white': themeMode === 'dark',
-																'text-zeroloss-success-700': themeMode === 'light',
+																'text-zeroloss-error-700': themeMode === 'light',
 															})}>
-															20%
+															{data?.offlinePercentage}%
 														</span>
 													</div>
 												</div>
@@ -201,7 +193,7 @@ const DataConnection: React.FC<Props> = () => {
 																'text-zeroloss-base-white': themeMode === 'dark',
 																'text-zeroloss-success-700': themeMode === 'light',
 															})}>
-															115
+															{data?.totalOnline}
 														</span>
 													</div>
 												</div>
@@ -223,7 +215,7 @@ const DataConnection: React.FC<Props> = () => {
 																'text-zeroloss-base-white': themeMode === 'dark',
 																'text-zeroloss-error-700': themeMode === 'light',
 															})}>
-															5
+															{data?.totalOffline}
 														</span>
 													</div>
 												</div>
@@ -371,7 +363,7 @@ const DataConnection: React.FC<Props> = () => {
 	)
 }
 
-function getSensorChartOptions(height: number, isDark: boolean): ApexOptions {
+function getSensorChartOptions(height: number, isDark: boolean, data: any): ApexOptions {
 	return {
 		// subtitle: {
 		// 	text: 'ยอดสมัครสมาชิก',
@@ -382,7 +374,7 @@ function getSensorChartOptions(height: number, isDark: boolean): ApexOptions {
 		// 		fontFamily: 'Noto Sans Thai, sans-serif',
 		// 	},
 		// },
-		series: [80, 20],
+		series: Object.keys(data).length > 0 ? [data?.onlinePercentage, data?.offlinePercentage] : [],
 		labels: ['Sensors', 'Offline Sensors'],
 		chart: {
 			type: 'donut',
@@ -403,7 +395,6 @@ function getSensorChartOptions(height: number, isDark: boolean): ApexOptions {
 							fontFamily: 'Noto Sans Thai, sans-serif',
 							fontWeight: 'bolder',
 							fontSize: '14px',
-							// @ts-ignore
 							formatter: function (val: any) {
 								return val
 							},
@@ -415,7 +406,6 @@ function getSensorChartOptions(height: number, isDark: boolean): ApexOptions {
 							fontWeight: 'bolder',
 							fontSize: '14px',
 							color: isDark ? '#ffffff' : '#666666',
-							// @ts-ignore
 							formatter: function (val: any) {
 								return val + ' %'
 							},

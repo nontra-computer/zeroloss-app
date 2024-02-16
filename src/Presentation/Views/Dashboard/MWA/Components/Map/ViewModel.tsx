@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
 import { useMWAStore } from '@/Store/MWA'
@@ -6,21 +7,23 @@ import { toast } from 'react-toastify'
 
 const ViewModel = () => {
 	const intl = useIntl()
+	const navigate = useNavigate()
 	const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
 	const [expanded, setExpanded] = useState(false)
 	const { mode } = useThemeMode()
 	const [isShowHover, setIsShowHover] = useState(true)
 
-	const { data, getData } = useMWAStore(state => ({
-		data: state.buildings,
-		getData: state.getBuildingMeasurement,
+	const [isLoading, setIsLoading] = useState(false)
+	const { stations, getStations } = useMWAStore(state => ({
+		stations: state.stations,
+		getStations: state.getStations,
 	}))
 
-	const buildingOne = data.find((b: any) => b.id === 1)
-	const buildingTwo = data.find((b: any) => b.id === 2)
-	const buildingThree = data.find((b: any) => b.id === 3)
+	const buildingOne = stations.find((b: any) => b.id === 1)
+	const buildingTwo = stations.find((b: any) => b.id === 2)
+	const buildingThree = stations.find((b: any) => b.id === 3)
 
-	const dropdownOptions = data.map((b: any) => ({
+	const stationDropdownOptions = stations.map((b: any) => ({
 		label: b.building,
 		value: b.id,
 	}))
@@ -33,15 +36,18 @@ const ViewModel = () => {
 	}
 
 	const fetchData = () => {
-		getData().then(({ data, success }) => {
+		setIsLoading(true)
+		getStations().then(({ data, success }) => {
 			if (!success) {
 				toast.error(data)
+			} else {
+				setIsLoading(false)
 			}
 		})
 	}
 
 	const generateIcon = (buildingId: number) => {
-		const building = data.find((b: any) => b.id === buildingId)
+		const building = stations.find((b: any) => b.id === buildingId)
 		if (building) {
 			// Sensor มีสถานะ Online ทั้งหมด และมีผลการตรวจวัดที่เกินมาตรฐาน || แต่หากมี Sensor บางตัวที่ยัง Online และอ่านค่าได้เกินมาตรฐาน ก็ให้แสดงเป็นสีแดงแทน
 			if (building.sumSensor > 0 && building.valueOverStd > 0) {
@@ -77,6 +83,18 @@ const ViewModel = () => {
 		setIsShowHover(true)
 	}
 
+	const onClickBuildingOne = () => {
+		navigate(`/dashboard/mwa/building/${buildingOne?.id}`)
+	}
+
+	const onClickBuildingTwo = () => {
+		navigate(`/dashboard/mwa/building/${buildingTwo?.id}`)
+	}
+
+	const onClickBuildingThree = () => {
+		navigate(`/dashboard/mwa/building/${buildingThree?.id}`)
+	}
+
 	useEffect(() => {
 		const updateStageDimensions = () => {
 			const container = document.getElementById('mwa-data-connection-container')
@@ -102,6 +120,25 @@ const ViewModel = () => {
 	}, [])
 
 	useEffect(() => {
+		const buildingOneGroup = document.querySelector('#first-building-group')
+		const buildingTwoGroup = document.querySelector('#second-building-group')
+		const buildingThreeGroup = document.querySelector('#third-building-group')
+
+		if (buildingOneGroup) {
+			buildingOneGroup.addEventListener('click', onClickBuildingOne)
+		}
+
+		if (buildingTwoGroup) {
+			buildingTwoGroup.addEventListener('click', onClickBuildingTwo)
+		}
+
+		if (buildingThreeGroup) {
+			buildingThreeGroup.addEventListener('click', onClickBuildingThree)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [buildingOne, buildingTwo, buildingThree])
+
+	useEffect(() => {
 		fetchData()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -109,10 +146,10 @@ const ViewModel = () => {
 	// const firstBuild = document.querySelectorAll('#first-building')
 
 	return {
+		isLoading,
 		themeMode,
 		intl,
-		data,
-		dropdownOptions,
+		stationDropdownOptions,
 		buildingOne,
 		buildingTwo,
 		buildingThree,

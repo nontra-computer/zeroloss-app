@@ -13,6 +13,7 @@ interface Props {
 
 const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 	const {
+		isLoading,
 		intl,
 		expanded,
 		setExpanded,
@@ -21,7 +22,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 		isShowHover,
 		onEndPanning,
 		onStartPanning,
-		dropdownOptions,
+		stationDropdownOptions,
 		buildingOne,
 		buildingTwo,
 		buildingThree,
@@ -56,7 +57,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 					<Select
 						className="shadow-sm transition-300"
 						placeholder={'Select Building to View Measurement'}
-						options={dropdownOptions}
+						options={stationDropdownOptions}
 						styles={{
 							container: provided => ({
 								...provided,
@@ -132,12 +133,25 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 				<React.Fragment>
 					<div
 						id="mwa-map-container"
-						className={clsx('card border-radius-12px border-1px p-0 overflow-hidden', {
-							// 'h-100': !showStage,
-							'bg-zeroloss-base-white border-zeroloss-grey-true-200': themeMode === 'light',
-							'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
-						})}
+						className={clsx(
+							'card border-radius-12px border-1px p-0 overflow-hidden position-relative',
+							{
+								// 'h-100': !showStage,
+								'bg-zeroloss-base-white border-zeroloss-grey-true-200': themeMode === 'light',
+								'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
+							}
+						)}
 						style={{ height: stageDimensions.height }}>
+						{isLoading && (
+							<div
+								className="position-absolute h-100 w-100 d-flex justify-content-center align-items-center"
+								style={{ zIndex: 1001, background: 'rgba(0,0,0,0.3)' }}>
+								<div className="card bg-zeroloss-base-white px-10 py-4 rounded fs-3 fw-bold w-max-content text-zeroloss-warning">
+									Loading
+								</div>
+							</div>
+						)}
+
 						{buildingOne && (
 							<Tooltip
 								place="top"

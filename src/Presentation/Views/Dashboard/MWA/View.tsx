@@ -1,8 +1,8 @@
 import React from 'react'
 import { PageTitle } from '@/_metronic/layout/core'
 import Map from './Components/Map/View'
-import DataConnection from './Components/DataConnection'
-import Measurement from './Components/Measurement'
+import DataConnection from './Components/DataConnection/View'
+import Measurement from './Components/Measurement/View'
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
 

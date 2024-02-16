@@ -2,41 +2,57 @@ import { create } from 'zustand'
 import axios from 'axios'
 
 interface MWAStore {
-	buildings: any[]
-	buildingData: any
-	setBuildings: (buildings: any[]) => void
-	setBuildingData: (buildingData: any) => void
-	getBuildingMeasurement: () => Promise<{ data: any; success: boolean }>
-	getBuildingMeasurementDetail: (buildingId: number) => Promise<{ data: any; success: boolean }>
+	stations: any[]
+	dashboardSensors: any
+	selected: any
+	setStations: (stations: any[]) => void
+	setDashboardSensors: (dashboardSensors: any) => void
+	setSelected: (selected: any) => void
+	getStations: () => Promise<{ data: any; success: boolean }>
+	getDashboardSensors: () => Promise<{ data: any; success: boolean }>
+	getStationMeasurementDetail: (buildingId: number) => Promise<{ data: any; success: boolean }>
 	clearState: () => void
 }
 
 export const useMWAStore = create<MWAStore>(set => ({
-	buildings: [],
-	buildingData: {},
-	setBuildings: (buildings: any[]) => set({ buildings }),
-	setBuildingData: (buildingData: any) => set({ buildingData }),
-	getBuildingMeasurement: async () => {
+	stations: [],
+	dashboardSensors: {},
+	selected: {},
+	setStations: (stations: any[]) => set({ stations }),
+	setDashboardSensors: (dashboardSensors: any) => set({ dashboardSensors }),
+	setSelected: (selected: any) => set({ selected }),
+	getStations: async () => {
 		return axios
-			.get('/dashboard/station')
+			.get('/dashboard/stations')
 			.then(response => {
-				set({ buildings: response.data })
+				set({ stations: response.data })
 				return { data: response.data, success: true }
 			})
 			.catch(error => {
 				return { data: error.response.data.message?.toString(), success: false }
 			})
 	},
-	getBuildingMeasurementDetail: async (buildingId: number) => {
+	getDashboardSensors: async () => {
+		return axios
+			.get('/dashboard/sensors')
+			.then(response => {
+				set({ dashboardSensors: response.data })
+				return { data: response.data, success: true }
+			})
+			.catch(error => {
+				return { data: error.response.data.message?.toString(), success: false }
+			})
+	},
+	getStationMeasurementDetail: async (buildingId: number) => {
 		return axios
 			.get(`/sensor?dashboardId=${buildingId}`)
 			.then(response => {
-				set({ buildingData: response.data })
+				set({ selected: response.data })
 				return { data: response.data, success: true }
 			})
 			.catch(error => {
 				return { data: error.response.data.message?.toString(), success: false }
 			})
 	},
-	clearState: () => set({ buildings: [], buildingData: {} }),
+	clearState: () => set({ stations: [], selected: {}, dashboardSensors: {} }),
 }))
