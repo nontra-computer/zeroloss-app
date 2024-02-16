@@ -4,9 +4,12 @@ import clsx from 'clsx'
 
 import useViewModel from './ViewModel'
 
-const Map: React.FC = () => {
-	const { intl, themeMode, currentDropdownOption, stationDropdownOptions, onSelectBuilding } =
-		useViewModel()
+interface Props {
+	onSelectBuilding: (id: string) => void
+}
+
+const Map: React.FC<Props> = ({ onSelectBuilding }) => {
+	const { intl, themeMode, currentDropdownOption, stationDropdownOptions } = useViewModel()
 
 	return (
 		<React.Fragment>

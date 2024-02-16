@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useCurrentTime } from '@/Hooks/useCurrentTime'
+import { useNavigate } from 'react-router-dom'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
@@ -11,6 +12,7 @@ import { toast } from 'react-toastify'
 const ViewModel = () => {
 	const selectedLang = useLang()
 	const intl = useIntl()
+	const navigate = useNavigate()
 	// const currentTime = useCurrentTime()
 	const timeStr = useMemo(() => {
 		const time = moment()
@@ -23,8 +25,9 @@ const ViewModel = () => {
 	const { mode } = useThemeMode()
 	const { buildingId } = useParams<{ buildingId?: string }>()
 
-	const { getSensor, getData, clearState } = useMWAStore(state => ({
+	const { getSensor, getData, getStations, clearState } = useMWAStore(state => ({
 		getData: state.getStationMeasurementDetail,
+		getStations: state.getStations,
 		getSensor: state.getStationMeasurementDetailSensor,
 		clearState: state.clearState,
 	}))
@@ -37,8 +40,23 @@ const ViewModel = () => {
 		themeMode = mode
 	}
 
+	const onSelectBuilding = (id: string) => {
+		navigate(`/dashboard/mwa/building/${id}`)
+
+		if (intervalRef.current) {
+			clearInterval(intervalRef.current)
+		}
+	}
+
 	const fetchData = () => {
 		if (buildingId) {
+			getStations().then(({ data, success }) => {
+				if (!success) {
+					toast.error(data)
+					return
+				}
+			})
+
 			getData(parseInt(buildingId)).then(({ data, success }) => {
 				if (!success) {
 					toast.error(data)
@@ -70,11 +88,12 @@ const ViewModel = () => {
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, [buildingId])
 
 	return {
 		timeStr,
 		themeMode,
+		onSelectBuilding,
 	}
 }
 

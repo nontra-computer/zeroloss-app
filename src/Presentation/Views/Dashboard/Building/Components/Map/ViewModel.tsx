@@ -2,16 +2,14 @@ import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useMWAStore } from '@/Store/MWA'
-import { useEffect } from 'react'
 
 const ViewModel = () => {
 	const intl = useIntl()
 	const navigate = useNavigate()
 	const { buildingId } = useParams<{ buildingId?: string }>()
 	const { mode } = useThemeMode()
-	const { stations, getStations } = useMWAStore(state => ({
+	const { stations } = useMWAStore(state => ({
 		stations: state.stations,
-		getStations: state.getStations,
 	}))
 
 	const stationDropdownOptions = stations.map((b: any) => ({
@@ -32,11 +30,6 @@ const ViewModel = () => {
 	} else {
 		themeMode = mode
 	}
-
-	useEffect(() => {
-		getStations()
-		// eslint-disable-next-line
-	}, [])
 
 	return {
 		mode,

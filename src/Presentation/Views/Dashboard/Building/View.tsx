@@ -8,7 +8,7 @@ import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
 const MWABuildingDashboardView: React.FC = () => {
-	const { timeStr, themeMode } = useViewModel()
+	const { timeStr, themeMode, onSelectBuilding } = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -30,7 +30,7 @@ const MWABuildingDashboardView: React.FC = () => {
 
 			<div className="row g-5 px-10 pb-10">
 				<div className="col-12">
-					<Map />
+					<Map onSelectBuilding={onSelectBuilding} />
 				</div>
 				<div className="col-12 col-lg-3">
 					<TotalMeasurement />
