@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
@@ -22,6 +22,25 @@ const ViewModel = () => {
 	const buildingOne = stations.find((b: any) => b.id === 1)
 	const buildingTwo = stations.find((b: any) => b.id === 2)
 	const buildingThree = stations.find((b: any) => b.id === 3)
+	const weatherInfo = useMemo(() => {
+		if (buildingOne) {
+			return {
+				wdText: buildingOne.wdText,
+				ws: buildingOne.ws,
+				temp: buildingOne.temp,
+				rh: buildingOne.rh,
+				bp: buildingOne.bp,
+			}
+		} else {
+			return {
+				wdText: '',
+				ws: 0,
+				temp: 0,
+				rh: 0,
+				bp: 0,
+			}
+		}
+	}, [buildingOne])
 
 	const stationDropdownOptions = stations.map((b: any) => ({
 		label: b.building,
@@ -150,6 +169,7 @@ const ViewModel = () => {
 		themeMode,
 		intl,
 		stationDropdownOptions,
+		weatherInfo,
 		buildingOne,
 		buildingTwo,
 		buildingThree,

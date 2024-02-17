@@ -23,6 +23,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 		onEndPanning,
 		onStartPanning,
 		stationDropdownOptions,
+		weatherInfo,
 		buildingOne,
 		buildingTwo,
 		buildingThree,
@@ -318,7 +319,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 																	'text-zeroloss-base-white': themeMode === 'dark',
 																	'text-zeroloss-grey-600': themeMode === 'light',
 																})}>
-																NE 2.6 m/s
+																{weatherInfo.wdText} {weatherInfo.ws} m/s
 															</div>
 														</div>
 													</div>
@@ -351,9 +352,9 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 																			'd-none': !expanded,
 																			'd-inline-block': expanded,
 																		})}>
-																		NE :{' '}
+																		{weatherInfo.wdText} :{' '}
 																	</span>
-																	<span>2.6 m/s</span>
+																	<span>{weatherInfo.ws} m/s</span>
 																</div>
 															</div>
 
@@ -382,7 +383,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 																		})}>
 																		Temperature :{' '}
 																	</span>
-																	<span> 30C</span>
+																	<span> {weatherInfo.temp}C</span>
 																</div>
 															</div>
 
@@ -404,7 +405,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 																		})}>
 																		RH :{' '}
 																	</span>
-																	<span> 60%</span>
+																	<span> {weatherInfo.rh}%</span>
 																</div>
 															</div>
 
@@ -427,7 +428,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 																		})}>
 																		Pressure :{' '}
 																	</span>
-																	<span> 1024 mBar</span>
+																	<span> {weatherInfo.bp} mBar</span>
 																</div>
 															</div>
 														</div>
