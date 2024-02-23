@@ -1,44 +1,12 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import NumberBox from '@/Presentation/Components/NumberBox/View'
-import ApexCharts, { ApexOptions } from 'apexcharts'
-import { getCSS } from '@/_metronic/assets/ts/_utils'
+import Chart from 'react-apexcharts'
 import clsx from 'clsx'
 
 import useViewModel from './ViewModel'
 
 const Measurement: React.FC = () => {
-	const totalChartRef = useRef<HTMLDivElement | null>(null)
-
-	const { data, intl, mode, themeMode } = useViewModel()
-
-	const refreshTotalChartRef = () => {
-		if (!totalChartRef.current) {
-			return
-		}
-
-		const height = parseInt(getCSS(totalChartRef.current, 'height'))
-
-		const chart = new ApexCharts(
-			totalChartRef.current,
-			getTotalChartOptions(height, themeMode === 'dark', data)
-		)
-		if (chart) {
-			chart.render()
-		}
-
-		return chart
-	}
-
-	useEffect(() => {
-		const chart = refreshTotalChartRef()
-
-		return () => {
-			if (chart) {
-				chart.destroy()
-			}
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [totalChartRef, mode, themeMode, data])
+	const { data, intl, themeMode } = useViewModel()
 
 	return (
 		<div className="row">
@@ -81,13 +49,96 @@ const Measurement: React.FC = () => {
 						</p>
 
 						{/* begin::Chart */}
-
-						<div
-							ref={totalChartRef}
-							id="kt_charts_total_measurement_chart"
-							className="card-rounded-bottom"
-							style={{ height: '180px' }}></div>
-
+						<Chart
+							type="donut"
+							width={'100%'}
+							height="160px"
+							series={[
+								data?.totalDanger ?? 0,
+								data?.totalWarning ?? 0,
+								data?.totalNormal ?? 0,
+								data?.total ?? 0,
+							]}
+							options={{
+								labels: ['ค่าเกินมาตรฐาน', 'ค่าใกล้เกินมาตรฐาน', 'ค่าอยู่ในเกณฑ์ปกติ', 'ไม่ทำงาน'],
+								chart: {
+									redrawOnWindowResize: true,
+									redrawOnParentResize: true,
+									offsetY: -10,
+									offsetX: 40,
+								},
+								plotOptions: {
+									pie: {
+										customScale: 0.8,
+										donut: {
+											labels: {
+												show: false,
+												name: {
+													show: true,
+													fontFamily: 'Noto Sans Thai, sans-serif',
+													formatter: function (val: any) {
+														return val
+													},
+												},
+												value: {
+													show: true,
+													fontFamily: 'Noto Sans Thai, sans-serif',
+													formatter: function (val: any) {
+														return val
+													},
+												},
+											},
+										},
+									},
+								},
+								colors: ['#DE5348', '#F79009', '#17B26A', '#667085'],
+								grid: {
+									padding: {
+										// bottom: -100,
+									},
+								},
+								dataLabels: {
+									enabled: false,
+								},
+								responsive: [
+									{
+										breakpoint: 480,
+										options: {
+											chart: {
+												width: 250,
+												height: 250,
+											},
+											legend: {
+												position: 'left',
+											},
+										},
+									},
+									{
+										breakpoint: 481,
+										options: {
+											chart: {
+												width: 250,
+												height: 250,
+											},
+											legend: {
+												position: 'left',
+											},
+										},
+									},
+								],
+								legend: {
+									fontFamily: 'Noto Sans Thai, sans-serif',
+									show: true,
+									position: 'left',
+									offsetY: 5,
+									offsetX: -30,
+									floating: true,
+									labels: {
+										colors: themeMode === 'dark' ? '#ffffff' : '#666666',
+									},
+								},
+							}}
+						/>
 						{/* end::Chart */}
 					</div>
 				</div>
@@ -121,100 +172,6 @@ const Measurement: React.FC = () => {
 			</div>
 		</div>
 	)
-}
-
-function getTotalChartOptions(height: number, isDark: boolean, data: any): ApexOptions {
-	return {
-		// subtitle: {
-		// 	text: 'จำนวนตรวจวัดทั้งหมด',
-		// 	margin: 0,
-		// 	style: {
-		// 		fontSize: '18px',
-		// 		fontWeight: 'bold',
-		// 		fontFamily: 'Noto Sans Thai, sans-serif',
-		// 	},
-		// },
-		series:
-			Object.keys(data).length > 0
-				? [data?.totalDanger, data?.totalWarning, data?.totalNormal, data?.total]
-				: [],
-		labels: ['ค่าเกินมาตรฐาน', 'ค่าใกล้เกินมาตรฐาน', 'ค่าอยู่ในเกณฑ์ปกติ', 'ไม่ทำงาน'],
-		chart: {
-			type: 'donut',
-			height: height,
-			redrawOnWindowResize: true,
-		},
-		plotOptions: {
-			pie: {
-				customScale: 0.8,
-				offsetX: 60,
-				donut: {
-					labels: {
-						show: false,
-						name: {
-							show: true,
-							fontFamily: 'Noto Sans Thai, sans-serif',
-							formatter: function (val: any) {
-								return val
-							},
-						},
-						value: {
-							show: true,
-							fontFamily: 'Noto Sans Thai, sans-serif',
-							formatter: function (val: any) {
-								return val
-							},
-						},
-					},
-				},
-			},
-		},
-		colors: ['#DE5348', '#F79009', '#17B26A', '#667085'],
-		grid: {
-			padding: {
-				// bottom: -100,
-			},
-		},
-		dataLabels: {
-			enabled: false,
-		},
-		responsive: [
-			{
-				breakpoint: 480,
-				options: {
-					chart: {
-						width: 250,
-						height: 250,
-					},
-					legend: {
-						position: 'left',
-					},
-				},
-			},
-			{
-				breakpoint: 481,
-				options: {
-					chart: {
-						width: 250,
-						height: 250,
-					},
-					legend: {
-						position: 'left',
-					},
-				},
-			},
-		],
-		legend: {
-			fontFamily: 'Noto Sans Thai, sans-serif',
-			show: true,
-			position: 'left',
-			offsetY: 5,
-			floating: true,
-			labels: {
-				colors: isDark ? '#ffffff' : '#666666',
-			},
-		},
-	}
 }
 
 export default Measurement

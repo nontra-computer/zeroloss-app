@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
 import { useMWAStore } from '@/Store/MWA'
@@ -25,6 +25,7 @@ const ViewModel = () => {
 			offlinePercentage,
 		}
 	}, [dashboardSensors])
+	const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -47,7 +48,17 @@ const ViewModel = () => {
 
 	useEffect(() => {
 		fetchData()
-		// eslint-disable-next-line
+		// Fetch getSensor every 5 seconds
+		intervalRef.current = setInterval(fetchData, 5000)
+
+		return () => {
+			// Clear the interval when the component is unmounted
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current)
+			}
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return {

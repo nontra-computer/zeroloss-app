@@ -1,41 +1,11 @@
-import React, { useEffect } from 'react'
-import ApexCharts, { ApexOptions } from 'apexcharts'
-import { getCSS } from '@/_metronic/assets/ts/_utils'
+import React from 'react'
+import Chart from 'react-apexcharts'
 import clsx from 'clsx'
 
 import useViewModel from './ViewModel'
 
 const TotalMeasurement: React.FC = () => {
-	const { intl, themeMode, mode, data, totalChartRef } = useViewModel()
-
-	const refreshTotalChartRef = () => {
-		if (!totalChartRef.current) {
-			return
-		}
-
-		const height = parseInt(getCSS(totalChartRef.current, 'height'))
-
-		const chart = new ApexCharts(
-			totalChartRef.current,
-			getTotalChartOptions(height, themeMode === 'dark', data)
-		)
-		if (chart) {
-			chart.render()
-		}
-
-		return chart
-	}
-
-	useEffect(() => {
-		const chart = refreshTotalChartRef()
-
-		return () => {
-			if (chart) {
-				chart.destroy()
-			}
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [totalChartRef, themeMode, mode, data])
+	const { intl, themeMode, data, totalChartRef } = useViewModel()
 
 	return (
 		<div className="row h-100">
@@ -78,110 +48,100 @@ const TotalMeasurement: React.FC = () => {
 						</p>
 
 						{/* begin::Chart */}
-
+						<Chart
+							type="donut"
+							width={'100%'}
+							height={150}
+							series={[data?.totalOnline ?? 0, data?.totalOffline ?? 0]}
+							options={{
+								labels: ['เชื่อมโยงได้', 'เชื่อมโยงไม่ได้'],
+								chart: {
+									redrawOnParentResize: true,
+									redrawOnWindowResize: true,
+								},
+								plotOptions: {
+									pie: {
+										customScale: 0.8,
+										offsetX: 60,
+										donut: {
+											labels: {
+												show: false,
+												name: {
+													show: true,
+													fontFamily: 'Noto Sans Thai, sans-serif',
+													formatter: function (val: any) {
+														return val
+													},
+												},
+												value: {
+													show: true,
+													fontFamily: 'Noto Sans Thai, sans-serif',
+													formatter: function (val: any) {
+														return val
+													},
+												},
+											},
+										},
+									},
+								},
+								colors: ['#17B26A', '#475467'],
+								grid: {
+									padding: {
+										// bottom: -100,
+									},
+								},
+								dataLabels: {
+									enabled: false,
+								},
+								responsive: [
+									{
+										breakpoint: 480,
+										options: {
+											chart: {
+												width: 250,
+												height: 250,
+											},
+											legend: {
+												position: 'left',
+											},
+										},
+									},
+									{
+										breakpoint: 481,
+										options: {
+											chart: {
+												width: 250,
+												height: 250,
+											},
+											legend: {
+												position: 'left',
+											},
+										},
+									},
+								],
+								legend: {
+									fontFamily: 'Noto Sans Thai, sans-serif',
+									show: true,
+									position: 'left',
+									offsetY: 20,
+									floating: true,
+									labels: {
+										colors: themeMode === 'dark' ? '#ffffff' : '#666666',
+									},
+								},
+							}}
+						/>
 						<div
 							ref={totalChartRef}
 							id="kt_charts_total_measurement_chart"
 							className="card-rounded-bottom"
 							style={{ height: '150px' }}></div>
-
 						{/* end::Chart */}
 					</div>
 				</div>
 			</div>
 		</div>
 	)
-}
-
-function getTotalChartOptions(height: number, isDark: boolean, data: any): ApexOptions {
-	return {
-		// subtitle: {
-		// 	text: 'จำนวนตรวจวัดทั้งหมด',
-		// 	margin: 0,
-		// 	style: {
-		// 		fontSize: '18px',
-		// 		fontWeight: 'bold',
-		// 		fontFamily: 'Noto Sans Thai, sans-serif',
-		// 	},
-		// },
-		series: Object.keys(data).length > 0 ? [data?.totalOnline, data?.totalOffline] : [],
-		labels: ['เชื่อมโยงได้', 'เชื่อมโยงไม่ได้'],
-		chart: {
-			type: 'donut',
-			height: height,
-			redrawOnWindowResize: true,
-		},
-		plotOptions: {
-			pie: {
-				customScale: 0.8,
-				offsetX: 60,
-				donut: {
-					labels: {
-						show: false,
-						name: {
-							show: true,
-							fontFamily: 'Noto Sans Thai, sans-serif',
-							formatter: function (val: any) {
-								return val
-							},
-						},
-						value: {
-							show: true,
-							fontFamily: 'Noto Sans Thai, sans-serif',
-							formatter: function (val: any) {
-								return val
-							},
-						},
-					},
-				},
-			},
-		},
-		colors: ['#17B26A', '#475467'],
-		grid: {
-			padding: {
-				// bottom: -100,
-			},
-		},
-		dataLabels: {
-			enabled: false,
-		},
-		responsive: [
-			{
-				breakpoint: 480,
-				options: {
-					chart: {
-						width: 250,
-						height: 250,
-					},
-					legend: {
-						position: 'left',
-					},
-				},
-			},
-			{
-				breakpoint: 481,
-				options: {
-					chart: {
-						width: 250,
-						height: 250,
-					},
-					legend: {
-						position: 'left',
-					},
-				},
-			},
-		],
-		legend: {
-			fontFamily: 'Noto Sans Thai, sans-serif',
-			show: true,
-			position: 'left',
-			offsetY: 20,
-			floating: true,
-			labels: {
-				colors: isDark ? '#ffffff' : '#666666',
-			},
-		},
-	}
 }
 
 export default TotalMeasurement

@@ -1,75 +1,14 @@
-import React, { useEffect, useRef } from 'react'
-import ApexCharts, { ApexOptions } from 'apexcharts'
+import React from 'react'
 import Chart from 'react-apexcharts'
-import { getCSS } from '@/_metronic/assets/ts/_utils'
 import clsx from 'clsx'
 
 import useViewModel from './ViewModel'
+import { formatNumberCommas } from '@/Utils/formatNumberCommas'
 
 interface Props {}
 
 const DataConnection: React.FC<Props> = () => {
-	const sensorChartRef = useRef<HTMLDivElement | null>(null)
-	const connectionChartRef = useRef<HTMLDivElement | null>(null)
-	const { intl, themeMode, mode, isLoading, data } = useViewModel()
-
-	const refreshSensorChart = () => {
-		if (!sensorChartRef.current) {
-			return
-		}
-
-		const height = parseInt(getCSS(sensorChartRef.current, 'height'))
-
-		const chart = new ApexCharts(
-			sensorChartRef.current,
-			getSensorChartOptions(height, themeMode === 'dark', data)
-		)
-		if (chart) {
-			chart.render()
-		}
-
-		return chart
-	}
-
-	const refreshConnectionChart = () => {
-		if (!connectionChartRef.current) {
-			return
-		}
-
-		const height = parseInt(getCSS(connectionChartRef.current, 'height'))
-
-		const chart = new ApexCharts(
-			connectionChartRef.current,
-			getConnectionChartOptions(height, themeMode === 'dark')
-		)
-		if (chart) {
-			chart.render()
-		}
-
-		return chart
-	}
-
-	useEffect(() => {
-		const chart = refreshSensorChart()
-
-		return () => {
-			if (chart) {
-				chart.destroy()
-			}
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sensorChartRef, mode, themeMode, data])
-
-	useEffect(() => {
-		const chart = refreshConnectionChart()
-
-		return () => {
-			if (chart) {
-				chart.destroy()
-			}
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionChartRef, mode, themeMode])
+	const { intl, themeMode, data } = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -124,12 +63,94 @@ const DataConnection: React.FC<Props> = () => {
 									{/* start:: Content */}
 									<div className="col-12 col-lg-7">
 										{/* begin::Chart */}
-										<div
-											ref={sensorChartRef}
-											id="kt_charts_sensor_chart"
-											className="card-rounded-bottom"
-											style={{ height: '180px' }}></div>
-										{/* end::Chart */}
+										<Chart
+											type="donut"
+											width={'300px'}
+											height={200}
+											series={[data?.onlinePercentage ?? 0, data?.offlinePercentage ?? 0]}
+											options={{
+												labels: ['Sensors', 'Offline Sensors'],
+												chart: {
+													offsetY: 30,
+												},
+												plotOptions: {
+													pie: {
+														startAngle: -90,
+														endAngle: 90,
+														donut: {
+															labels: {
+																show: true,
+																name: {
+																	show: true,
+																	offsetY: -20,
+																	fontFamily: 'Noto Sans Thai, sans-serif',
+																	fontWeight: 'bolder',
+																	fontSize: '14px',
+																	formatter: function (val: any) {
+																		return val
+																	},
+																},
+																value: {
+																	show: true,
+																	offsetY: -20,
+																	fontFamily: 'Noto Sans Thai, sans-serif',
+																	fontWeight: 'bolder',
+																	fontSize: '14px',
+																	color: themeMode === 'dark' ? '#ffffff' : '#666666',
+																	formatter: function (val: any) {
+																		return val + ' %'
+																	},
+																},
+															},
+														},
+													},
+												},
+												colors: ['#F79009', '#667085'],
+												grid: {
+													padding: {
+														top: 0,
+														bottom: -50,
+													},
+												},
+												dataLabels: {
+													enabled: false,
+												},
+												responsive: [
+													{
+														breakpoint: 480,
+														options: {
+															chart: {
+																width: 250,
+																height: 250,
+															},
+															legend: {
+																position: 'bottom',
+															},
+														},
+													},
+													{
+														breakpoint: 481,
+														options: {
+															chart: {
+																width: 350,
+																height: 250,
+															},
+															legend: {
+																position: 'bottom',
+															},
+														},
+													},
+												],
+												legend: {
+													show: false,
+													position: 'bottom',
+													floating: true,
+													labels: {
+														colors: themeMode === 'dark' ? '#ffffff' : '#666666',
+													},
+												},
+											}}
+										/>
 									</div>
 									<div className="col-12 col-lg-5">
 										<div className="d-flex flex-column align-items-end justify-content-center h-100">
@@ -150,7 +171,7 @@ const DataConnection: React.FC<Props> = () => {
 																'text-zeroloss-base-white': themeMode === 'dark',
 																'text-zeroloss-success-700': themeMode === 'light',
 															})}>
-															{data?.onlinePercentage}%
+															{formatNumberCommas(data?.onlinePercentage ?? 0)}%
 														</span>
 													</div>
 												</div>
@@ -172,7 +193,7 @@ const DataConnection: React.FC<Props> = () => {
 																'text-zeroloss-base-white': themeMode === 'dark',
 																'text-zeroloss-error-700': themeMode === 'light',
 															})}>
-															{data?.offlinePercentage}%
+															{formatNumberCommas(data?.offlinePercentage ?? 0)}%
 														</span>
 													</div>
 												</div>
@@ -257,11 +278,73 @@ const DataConnection: React.FC<Props> = () => {
 									{/* start:: Content */}
 									<div className="col-12">
 										{/* begin::Chart */}
-										<div
+										<Chart
+											type="line"
+											width={'100%'}
+											height={150}
+											series={[
+												{
+													name: 'Offline Sensor',
+													data: [30, 60, 70, 20, 90, 32, 12],
+												},
+												{
+													name: 'Online Sensor',
+													data: [10, 41, 35, 51, 49, 62, 69],
+												},
+											]}
+											options={{
+												chart: {
+													zoom: {
+														enabled: false,
+													},
+													toolbar: {
+														show: false,
+													},
+												},
+												colors: ['#F79009', '#17B26A'],
+												dataLabels: {
+													enabled: false,
+												},
+												stroke: {
+													curve: 'smooth',
+													lineCap: 'square',
+												},
+												grid: {
+													show: true,
+													row: {
+														// colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+														// opacity: 0.5,
+													},
+												},
+												legend: {
+													position: 'top',
+													labels: {
+														colors: themeMode === 'dark' ? '#ffffff' : '#666666',
+													},
+												},
+												xaxis: {
+													labels: {
+														show: false,
+														style: {
+															fontFamily: 'Noto Sans Thai, sans-serif',
+														},
+													},
+												},
+												yaxis: {
+													labels: {
+														show: false,
+														style: {
+															fontFamily: 'Noto Sans Thai, sans-serif',
+														},
+													},
+												},
+											}}
+										/>
+										{/* <div
 											ref={connectionChartRef}
 											id="kt_charts_connection_chart"
 											className="card-rounded-bottom mt-5"
-											style={{ height: '120px' }}></div>
+											style={{ height: '120px' }}></div> */}
 										{/* end::Chart */}
 									</div>
 									<div className="col-12">
@@ -362,185 +445,6 @@ const DataConnection: React.FC<Props> = () => {
 			</div>
 		</React.Fragment>
 	)
-}
-
-function getSensorChartOptions(height: number, isDark: boolean, data: any): ApexOptions {
-	return {
-		// subtitle: {
-		// 	text: 'ยอดสมัครสมาชิก',
-		// 	margin: 0,
-		// 	style: {
-		// 		fontSize: '18px',
-		// 		fontWeight: 'bold',
-		// 		fontFamily: 'Noto Sans Thai, sans-serif',
-		// 	},
-		// },
-		series: Object.keys(data).length > 0 ? [data?.onlinePercentage, data?.offlinePercentage] : [],
-		labels: ['Sensors', 'Offline Sensors'],
-		chart: {
-			type: 'donut',
-			height: height,
-			width: '100%',
-			offsetY: 60,
-		},
-		plotOptions: {
-			pie: {
-				startAngle: -90,
-				endAngle: 90,
-				donut: {
-					labels: {
-						show: true,
-						name: {
-							show: true,
-							offsetY: -30,
-							fontFamily: 'Noto Sans Thai, sans-serif',
-							fontWeight: 'bolder',
-							fontSize: '14px',
-							formatter: function (val: any) {
-								return val
-							},
-						},
-						value: {
-							show: true,
-							offsetY: -20,
-							fontFamily: 'Noto Sans Thai, sans-serif',
-							fontWeight: 'bolder',
-							fontSize: '14px',
-							color: isDark ? '#ffffff' : '#666666',
-							formatter: function (val: any) {
-								return val + ' %'
-							},
-						},
-					},
-				},
-			},
-		},
-		colors: ['#F79009', '#667085'],
-		grid: {
-			padding: {
-				// bottom: -100,
-			},
-		},
-		dataLabels: {
-			enabled: false,
-		},
-		responsive: [
-			{
-				breakpoint: 480,
-				options: {
-					chart: {
-						width: 250,
-						height: 250,
-					},
-					legend: {
-						position: 'bottom',
-					},
-				},
-			},
-			{
-				breakpoint: 481,
-				options: {
-					chart: {
-						width: 350,
-						height: 250,
-					},
-					legend: {
-						position: 'bottom',
-					},
-				},
-			},
-		],
-		legend: {
-			show: false,
-			position: 'bottom',
-			floating: true,
-			labels: {
-				colors: isDark ? '#ffffff' : '#666666',
-			},
-		},
-	}
-}
-
-function getConnectionChartOptions(height: number, isDark: boolean): ApexOptions {
-	return {
-		// subtitle: {
-		// 	text: 'ยอดขายรวม',
-		// 	margin: 0,
-		// 	style: {
-		// 		fontSize: '18px',
-		// 		fontWeight: 'bold',
-		// 		fontFamily: 'Noto Sans Thai, sans-serif',
-		// 	},
-		// },
-		series: [
-			{
-				name: 'Offline Sensor',
-				data: [30, 60, 70, 20, 90, 32, 12],
-			},
-			{
-				name: 'Online Sensor',
-				data: [10, 41, 35, 51, 49, 62, 69],
-			},
-		],
-		chart: {
-			height: height,
-			type: 'line',
-			zoom: {
-				enabled: false,
-			},
-			toolbar: {
-				show: false,
-			},
-		},
-		colors: ['#F79009', '#17B26A'],
-		dataLabels: {
-			enabled: false,
-		},
-		stroke: {
-			curve: 'smooth',
-			lineCap: 'square',
-		},
-		grid: {
-			show: true,
-			row: {
-				// colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-				// opacity: 0.5,
-			},
-		},
-		legend: {
-			position: 'top',
-			labels: {
-				colors: isDark ? '#ffffff' : '#666666',
-			},
-		},
-		xaxis: {
-			labels: {
-				show: false,
-				style: {
-					fontFamily: 'Noto Sans Thai, sans-serif',
-				},
-			},
-		},
-		yaxis: {
-			labels: {
-				show: false,
-				style: {
-					fontFamily: 'Noto Sans Thai, sans-serif',
-				},
-			},
-		},
-
-		// tooltip: {
-		// 	custom: function ({ dataPointIndex, w, seriesIndex }) {
-		// 		const datas = w.globals.initialSeries
-		// 		const dataColor = w.globals.colors
-
-		// 		const extractedData = extractAreaChart(datas, dataColor, dataPointIndex, seriesIndex)
-
-		// 		return `<div class="fw-medium">฿ ${formatNumberCommas(extractedData.value)}</div>`
-		// 	},
-		// },
-	}
 }
 
 export default DataConnection
