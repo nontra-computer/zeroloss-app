@@ -25,6 +25,7 @@ const ViewModel = () => {
 	const weatherInfo = useMemo(() => {
 		if (buildingOne) {
 			return {
+				metStatus: buildingOne.metStatus === 1,
 				wdText: buildingOne.wdText,
 				ws: buildingOne.ws,
 				temp: buildingOne.temp,
@@ -33,6 +34,7 @@ const ViewModel = () => {
 			}
 		} else {
 			return {
+				metStatus: 0,
 				wdText: '',
 				ws: 0,
 				temp: 0,

@@ -274,8 +274,11 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 															className={clsx(
 																'border-radius-6px badge text-zeroloss-grey-900 bg-zeroloss-base-white border border-zeroloss-grey-200'
 															)}>
-															<span className="me-2 bullet bullet-dot bg-success h-6px w-6px animation-blink"></span>
-															Online
+															<span className={clsx("me-2 bullet bullet-dot h-6px w-6px animation-blink", {
+																'bg-success': weatherInfo.metStatus,
+																'bg-danger': !weatherInfo.metStatus
+															})}></span>
+															{weatherInfo.metStatus ? 'Online' : 'Offline'}
 														</div>
 														<div
 															className="cursor-pointer ms-4 text-end"
@@ -454,7 +457,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 														})}>
 														<div className="card-body p-4">
 															<div className="d-flex flex-column justify-content-center h-100">
-																<div className="mb-3">
+																<div className="mb-3 d-flex flex-row align-items-center">
 																	<span className="me-2 bullet bullet-dot bg-zeroloss-error h-12px w-12px p-2"></span>
 																	<span className="fs-6">
 																		{intl.formatMessage({
@@ -463,7 +466,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 																	</span>
 																</div>
 
-																<div className="mb-3">
+																<div className="mb-3 d-flex flex-row align-items-center">
 																	<span className="me-2 bullet bullet-dot bg-zeroloss-success h-12px w-12px p-2"></span>
 																	<span className="fs-6">
 																		{intl.formatMessage({
@@ -472,7 +475,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 																	</span>
 																</div>
 
-																<div className="mb-3">
+																<div className="mb-3 d-flex flex-row align-items-center">
 																	<span className="me-2 bullet bullet-dot bg-zeroloss-warning h-12px w-12px p-2"></span>
 																	<span className="fs-6">
 																		{intl.formatMessage({
@@ -481,7 +484,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 																	</span>
 																</div>
 
-																<div className="mb-3">
+																<div className="mb-3 d-flex flex-row align-items-center">
 																	<span className="me-2 bullet bullet-dot bg-zeroloss-grey h-12px w-12px p-2"></span>
 																	<span className="fs-6">
 																		{intl.formatMessage({

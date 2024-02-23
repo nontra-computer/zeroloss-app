@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import ApexCharts, { ApexOptions } from 'apexcharts'
+import Chart from 'react-apexcharts'
 import { getCSS } from '@/_metronic/assets/ts/_utils'
 import clsx from 'clsx'
 

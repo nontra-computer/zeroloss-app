@@ -78,7 +78,7 @@ const ThemeModeSwitcher = ({
 				{/* end::Menu item */}
 
 				{/* begin::Menu item */}
-				<div className="menu-item px-3 my-0">
+				{/* <div className="menu-item px-3 my-0">
 					<a
 						href="#"
 						className={clsx('menu-link px-3 py-2', { active: menuMode === 'system' })}
@@ -88,7 +88,7 @@ const ThemeModeSwitcher = ({
 						</span>
 						<span className="menu-title">System</span>
 					</a>
-				</div>
+				</div> */}
 				{/* end::Menu item */}
 			</div>
 			{/* end::Menu */}

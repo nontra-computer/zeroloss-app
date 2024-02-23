@@ -1,5 +1,9 @@
 import React from 'react'
 import Select from 'react-select'
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
+import Station1 from '@/Presentation/Components/Building/Station1/View'
+import Station2 from '@/Presentation/Components/Building/Station2/View'
+import Station3 from '@/Presentation/Components/Building/Station3/View'
 import clsx from 'clsx'
 
 import useViewModel from './ViewModel'
@@ -9,7 +13,21 @@ interface Props {
 }
 
 const Map: React.FC<Props> = ({ onSelectBuilding }) => {
-	const { intl, themeMode, currentDropdownOption, stationDropdownOptions } = useViewModel()
+	const {
+		isStation1,
+		isStation2,
+		isStation3,
+		station1Sensor,
+		station2Sensor,
+		station3Sensor,
+		intl,
+		themeMode,
+		stageDimensions,
+		currentDropdownOption,
+		stationDropdownOptions,
+		onStartPanning,
+		onEndPanning,
+	} = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -108,80 +126,117 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 
 			<div
 				id="measurement-map-container"
-				className="card border-12px h-600px border border-zeroloss-grey-200 p-0 overflow-hidden">
-				<div
-					className="card-body position-relative"
-					style={{
-						backgroundImage: 'url("/media/maps/building.svg")',
-						backgroundOrigin: 'center',
-						backgroundPosition: 'center',
-						backgroundRepeat: 'no-repeat',
-						backgroundSize: 'contain',
-					}}>
-					<div className="row h-100">
-						<div className="col-9">
-							<div className="d-flex justify-content-start align-items-end h-100">
-								<div className="border-radius-4px overflow-hidden shadow transition-300 cursor-pointer">
-									<div className="bg-zeroloss-base-white p-3 hover-enabled transition-300">
-										<i className="bi bi-zoom-in text-zeroloss-grey-900 fs-5"></i>
-									</div>
-									<div className="bg-zeroloss-base-white p-3 hover-enabled transition-300">
-										<i className="bi bi-zoom-out text-zeroloss-grey-900 fs-5"></i>
+				className="card border-12px h-650px border border-zeroloss-grey-200 p-0 overflow-hidden">
+				<div className="card-body position-relative" style={{}}>
+					<TransformWrapper
+						initialScale={0.7}
+						minScale={0.7}
+						centerOnInit
+						disablePadding
+						limitToBounds={false}
+						onPanningStart={onStartPanning}
+						onPanningStop={onEndPanning}
+						zoomAnimation={{
+							animationType: 'easeInOutQuad',
+						}}
+						maxScale={1.5}>
+						{({ zoomIn, zoomOut }) => (
+							<React.Fragment>
+								<div
+									className="position-absolute d-flex justify-content-start align-items-end"
+									style={{ zIndex: 100, left: 20, top: stageDimensions.height - 100 }}>
+									<div className="border-radius-4px overflow-hidden shadow transition-300 cursor-pointer">
+										<div
+											className="bg-zeroloss-base-white p-3 hover-enabled transition-300"
+											onClick={() => zoomIn()}>
+											<i className="bi bi-zoom-in text-zeroloss-grey-900 fs-5"></i>
+										</div>
+										<div
+											className="bg-zeroloss-base-white p-3 hover-enabled transition-300"
+											onClick={() => zoomOut()}>
+											<i className="bi bi-zoom-out text-zeroloss-grey-900 fs-5"></i>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-						<div className="col-3 h-100">
-							<div className="d-flex justify-content-start align-items-end h-100 w-100">
-								{/* Status */}
-								<div className="card border-0 shadow-none w-100 bg-transparent">
-									<div className="card-body p-4 h-100">
-										<div className="card bg-zeroloss-grey border-radius-12px mb-3 h-100">
-											<div className="card-body p-4">
-												<div className="d-flex flex-column justify-content-center h-100">
-													<div className="mb-3">
-														<span className="me-2 bullet bullet-dot bg-zeroloss-error h-12px w-12px p-2"></span>
-														<span className="fs-4 text-zeroloss-base-white">
-															{intl.formatMessage({
-																id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_EXCEEDS',
-															})}
-														</span>
-													</div>
 
-													<div className="mb-3">
-														<span className="me-2 bullet bullet-dot bg-zeroloss-success h-12px w-12px p-2"></span>
-														<span className="fs-4 text-zeroloss-base-white">
-															{intl.formatMessage({
-																id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_NORMAL',
-															})}
-														</span>
-													</div>
+								<div
+									className="position-absolute p-4"
+									style={{ zIndex: 100, right: 20, top: stageDimensions.height - 220 }}>
+									<div
+										className="card border-radius-12px transition-300 overflow-hidden shadow-none"
+										style={{
+											height: 'auto',
+											borderColor: 'transparent',
+											backgroundColor:
+												themeMode === 'light' ? 'transparent' : 'rgba(16, 24, 40, 0.8)',
+										}}>
+										<div
+											className="card-body p-4 h-100"
+											style={{
+												backgroundColor:
+													themeMode === 'light' ? 'transparent' : 'rgba(16, 24, 40, 0.8)',
+											}}>
+											<div
+												className={clsx(
+													'card border-radius-12px mb-3 h-100 text-zeroloss-base-white',
+													{
+														'bg-zeroloss-grey': themeMode === 'light',
+														'bg-zeroloss-grey-950 border-1px border-zeroloss-grey-true-200':
+															themeMode === 'dark',
+													}
+												)}>
+												<div className="card-body p-4">
+													<div className="d-flex flex-column justify-content-center h-100">
+														<div className="mb-3 d-flex flex-row align-items-center">
+															<span className="me-2 bullet bullet-dot bg-zeroloss-error h-12px w-12px p-2 border-zeroloss-base-white border-1px"></span>
+															<span className="fs-6">
+																{intl.formatMessage({
+																	id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_EXCEEDS',
+																})}
+															</span>
+														</div>
 
-													<div className="mb-3">
-														<span className="me-2 bullet bullet-dot bg-zeroloss-warning h-12px w-12px p-2"></span>
-														<span className="fs-4 text-zeroloss-base-white">
-															{intl.formatMessage({
-																id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_CLOSE_TO_EXCEEDS',
-															})}
-														</span>
-													</div>
+														<div className="mb-3 d-flex flex-row align-items-center">
+															<span className="me-2 bullet bullet-dot bg-zeroloss-success h-12px w-12px p-2 border-zeroloss-base-white border-1px"></span>
+															<span className="fs-6">
+																{intl.formatMessage({
+																	id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_NORMAL',
+																})}
+															</span>
+														</div>
 
-													<div className="mb-3">
-														<span className="me-2 bullet bullet-dot bg-zeroloss-none h-12px w-12px p-2"></span>
-														<span className="fs-4 text-zeroloss-base-white">
-															{intl.formatMessage({
-																id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_UNAVAILABLE',
-															})}
-														</span>
+														<div className="mb-3 d-flex flex-row align-items-center">
+															<span className="me-2 bullet bullet-dot bg-zeroloss-warning h-12px w-12px p-2 border-zeroloss-base-white border-1px"></span>
+															<span className="fs-6">
+																{intl.formatMessage({
+																	id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_CLOSE_TO_EXCEEDS',
+																})}
+															</span>
+														</div>
+
+														<div className="mb-3 d-flex flex-row align-items-center">
+															<span className="me-2 bullet bullet-dot bg-zeroloss-grey h-12px w-12px p-2 border-zeroloss-base-white border-1px"></span>
+															<span className="fs-6">
+																{intl.formatMessage({
+																	id: 'ZEROLOSS.DASHBOARD.BUILDING_MWA_MEASUREMENT.WEATHER_UNAVAILABLE',
+																})}
+															</span>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-					</div>
+
+								<TransformComponent wrapperClass="">
+									{isStation1 && <Station1 isDark={themeMode === 'dark'} {...station1Sensor} />}
+									{isStation2 && <Station2 isDark={themeMode === 'dark'} {...station2Sensor} />}
+									{isStation3 && <Station3 isDark={themeMode === 'dark'} {...station3Sensor} />}
+								</TransformComponent>
+							</React.Fragment>
+						)}
+					</TransformWrapper>
 				</div>
 			</div>
 		</React.Fragment>
