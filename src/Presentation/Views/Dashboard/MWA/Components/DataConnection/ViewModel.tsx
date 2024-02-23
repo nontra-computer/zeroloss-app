@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
 import { useMWAStore } from '@/Store/MWA'
+import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { toast } from 'react-toastify'
 
 const ViewModel = () => {
@@ -25,6 +26,7 @@ const ViewModel = () => {
 			offlinePercentage,
 		}
 	}, [dashboardSensors])
+	const { is4K, is8K } = useResolutionDetection()
 	const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
 	let themeMode = ''
@@ -62,6 +64,8 @@ const ViewModel = () => {
 	}, [])
 
 	return {
+		is4K,
+		is8K,
 		intl,
 		themeMode,
 		mode,

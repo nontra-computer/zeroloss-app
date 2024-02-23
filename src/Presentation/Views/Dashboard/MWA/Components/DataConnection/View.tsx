@@ -4,11 +4,12 @@ import clsx from 'clsx'
 
 import useViewModel from './ViewModel'
 import { formatNumberCommas } from '@/Utils/formatNumberCommas'
+import { vhToPixels } from '@/Utils/vhToPixels'
 
 interface Props {}
 
 const DataConnection: React.FC<Props> = () => {
-	const { intl, themeMode, data } = useViewModel()
+	const { is4K, is8K, intl, themeMode, data } = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -35,11 +36,15 @@ const DataConnection: React.FC<Props> = () => {
 				</div>
 			</div>
 
-			<div className="row gy-5" id="mwa-data-connection-container">
+			<div
+				className={clsx('row gy-5')}
+				style={{ height: is4K || is8K ? '70vh' : undefined }}
+				id="mwa-data-connection-container">
 				{/* start:: Sensor Chart */}
 				<div className="col-12">
 					<div
 						className={clsx('card border-1px', {
+							'h-100': is4K || is8K,
 							'bg-zeroloss-base-white border-zeroloss-grey-true-200': themeMode === 'light',
 							'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 						})}>
@@ -65,8 +70,8 @@ const DataConnection: React.FC<Props> = () => {
 										{/* begin::Chart */}
 										<Chart
 											type="donut"
-											width={'300px'}
-											height={200}
+											width={is4K || is8K ? '100%' : '300px'}
+											height={is4K || is8K ? vhToPixels(25) : 200}
 											series={[data?.onlinePercentage ?? 0, data?.offlinePercentage ?? 0]}
 											options={{
 												labels: ['Sensors', 'Offline Sensors'],
@@ -109,7 +114,7 @@ const DataConnection: React.FC<Props> = () => {
 												grid: {
 													padding: {
 														top: 0,
-														bottom: -50,
+														bottom: is4K || is8K ? -200 : -50,
 													},
 												},
 												dataLabels: {
@@ -281,7 +286,7 @@ const DataConnection: React.FC<Props> = () => {
 										<Chart
 											type="line"
 											width={'100%'}
-											height={150}
+											height={is4K || is8K ? vhToPixels(30) : 150}
 											series={[
 												{
 													name: 'Offline Sensor',

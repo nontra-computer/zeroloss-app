@@ -6,7 +6,7 @@ const PlantStation: React.FC<Props> = () => {
 	return (
 		<React.Fragment>
 			<svg
-				width={1664}
+				width={'100%'}
 				height={922}
 				viewBox="0 0 1664 922"
 				fill="none"

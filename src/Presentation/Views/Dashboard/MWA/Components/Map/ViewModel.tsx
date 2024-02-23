@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { useIntl } from 'react-intl'
 import { useMWAStore } from '@/Store/MWA'
 import { toast } from 'react-toastify'
@@ -18,6 +19,7 @@ const ViewModel = () => {
 		stations: state.stations,
 		getStations: state.getStations,
 	}))
+	const { is4K, is8K } = useResolutionDetection()
 
 	const buildingOne = stations.find((b: any) => b.id === 1)
 	const buildingTwo = stations.find((b: any) => b.id === 2)
@@ -167,6 +169,8 @@ const ViewModel = () => {
 	// const firstBuild = document.querySelectorAll('#first-building')
 
 	return {
+		is4K,
+		is8K,
 		isLoading,
 		themeMode,
 		intl,

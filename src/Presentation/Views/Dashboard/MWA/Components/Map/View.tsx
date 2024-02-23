@@ -13,6 +13,8 @@ interface Props {
 
 const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 	const {
+		is4K,
+		is8K,
 		isLoading,
 		intl,
 		expanded,
@@ -130,7 +132,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 				</div>
 			</div>
 
-			{/* {stageDimensions.height > 0 && ( */}
+			{stageDimensions.height > 0 && (
 				<React.Fragment>
 					<div
 						id="mwa-map-container"
@@ -142,7 +144,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 								'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 							}
 						)}
-						style={{ height: stageDimensions.height }}>
+						style={{ height: is4K || is8K ? '70vh' : stageDimensions.height }}>
 						{isLoading && (
 							<div
 								className="position-absolute h-100 w-100 d-flex justify-content-center align-items-center"
@@ -215,14 +217,14 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 
 						<div className="card-body position-relative p-0">
 							<TransformWrapper
-								initialScale={0.8}
-								minScale={0.8}
+								initialScale={is4K || is8K ? 1.5 : 0.8}
+								minScale={is4K || is8K ? 1.5 : 0.8}
 								centerOnInit
 								disablePadding
 								limitToBounds={false}
 								onPanningStart={onStartPanning}
 								onPanningStop={onEndPanning}
-								maxScale={1.5}>
+								maxScale={is4K || is8K ? 3 : 1.5}>
 								{({ zoomIn, zoomOut }) => (
 									<React.Fragment>
 										<div
@@ -274,10 +276,14 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 															className={clsx(
 																'border-radius-6px badge text-zeroloss-grey-900 bg-zeroloss-base-white border border-zeroloss-grey-200'
 															)}>
-															<span className={clsx("me-2 bullet bullet-dot h-6px w-6px animation-blink", {
-																'bg-success': weatherInfo.metStatus,
-																'bg-danger': !weatherInfo.metStatus
-															})}></span>
+															<span
+																className={clsx(
+																	'me-2 bullet bullet-dot h-6px w-6px animation-blink',
+																	{
+																		'bg-success': weatherInfo.metStatus,
+																		'bg-danger': !weatherInfo.metStatus,
+																	}
+																)}></span>
 															{weatherInfo.metStatus ? 'Online' : 'Offline'}
 														</div>
 														<div
@@ -526,7 +532,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 						</div>
 					</div>
 				</React.Fragment>
-			{/* )} */}
+			)}
 		</React.Fragment>
 	)
 }
