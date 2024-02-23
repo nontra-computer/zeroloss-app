@@ -96,16 +96,16 @@ const DataConnection: React.FC<Props> = () => {
 				</div>
 			</div>
 
-			<div className="row gy-5 h-100" id="mwa-data-connection-container">
+			<div className="row gy-5" id="mwa-data-connection-container">
 				{/* start:: Sensor Chart */}
 				<div className="col-12">
 					<div
-						className={clsx('card border-1px h-100', {
+						className={clsx('card border-1px', {
 							'bg-zeroloss-base-white border-zeroloss-grey-true-200': themeMode === 'light',
 							'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 						})}>
 						<div className="card-body px-6">
-							<div className="d-flex flex-column justify-content-between px-0 h-100">
+							<div className="d-flex flex-column justify-content-between px-0">
 								<div className="row">
 									{/* start:: Header */}
 									<div className="col-12">
@@ -122,17 +122,17 @@ const DataConnection: React.FC<Props> = () => {
 									{/* end:: Header */}
 
 									{/* start:: Content */}
-									<div className="col-12 col-lg-7" style={{ height: '150px' }}>
+									<div className="col-12 col-lg-7">
 										{/* begin::Chart */}
 										<div
 											ref={sensorChartRef}
 											id="kt_charts_sensor_chart"
 											className="card-rounded-bottom"
-											style={{ height: '250px' }}></div>
+											style={{ height: '180px' }}></div>
 										{/* end::Chart */}
 									</div>
 									<div className="col-12 col-lg-5">
-										<div className="d-flex flex-column align-items-end justify-content-end h-100">
+										<div className="d-flex flex-column align-items-end justify-content-center h-100">
 											<div className="fs-5 mb-3 w-100">
 												<div className="row">
 													<div
@@ -238,7 +238,7 @@ const DataConnection: React.FC<Props> = () => {
 							'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 						})}>
 						<div className="card-body px-6">
-							<div className="d-flex flex-column justify-content-between px-0 h-100">
+							<div className="d-flex flex-column justify-content-between px-0">
 								<div className="row">
 									{/* start:: Header */}
 									<div className="col-12">
@@ -261,11 +261,11 @@ const DataConnection: React.FC<Props> = () => {
 											ref={connectionChartRef}
 											id="kt_charts_connection_chart"
 											className="card-rounded-bottom mt-5"
-											style={{ height: '250px' }}></div>
+											style={{ height: '120px' }}></div>
 										{/* end::Chart */}
 									</div>
 									<div className="col-12">
-										<div className="row fs-4 gy-5 text-start">
+										<div className="row fs-5 gy-5 text-start">
 											{/* Available */}
 											<div
 												className={clsx('col-5 col-lg-4', {
@@ -381,12 +381,12 @@ function getSensorChartOptions(height: number, isDark: boolean, data: any): Apex
 			type: 'donut',
 			height: height,
 			width: '100%',
+			offsetY: 60,
 		},
 		plotOptions: {
 			pie: {
 				startAngle: -90,
 				endAngle: 90,
-				offsetY: 30,
 				donut: {
 					labels: {
 						show: true,
@@ -418,7 +418,7 @@ function getSensorChartOptions(height: number, isDark: boolean, data: any): Apex
 		colors: ['#F79009', '#667085'],
 		grid: {
 			padding: {
-				bottom: -100,
+				// bottom: -100,
 			},
 		},
 		dataLabels: {
@@ -483,7 +483,7 @@ function getConnectionChartOptions(height: number, isDark: boolean): ApexOptions
 			},
 		],
 		chart: {
-			height: 250,
+			height: height,
 			type: 'line',
 			zoom: {
 				enabled: false,

@@ -130,7 +130,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 				</div>
 			</div>
 
-			{stageDimensions.height > 0 && (
+			{/* {stageDimensions.height > 0 && ( */}
 				<React.Fragment>
 					<div
 						id="mwa-map-container"
@@ -526,7 +526,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 						</div>
 					</div>
 				</React.Fragment>
-			)}
+			{/* )} */}
 		</React.Fragment>
 	)
 }

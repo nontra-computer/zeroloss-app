@@ -126,14 +126,18 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 
 			<div
 				id="measurement-map-container"
-				className="card border-12px h-650px border border-zeroloss-grey-200 p-0 overflow-hidden">
-				<div className="card-body position-relative" style={{}}>
+				className="card border-12px border border-zeroloss-grey-200 p-0 overflow-hidden">
+				<div
+					className="card-body position-relative"
+					style={{
+						height: '45vh',
+					}}>
 					<TransformWrapper
-						initialScale={0.7}
+						initialScale={0.8}
 						minScale={0.7}
 						centerOnInit
-						disablePadding
 						limitToBounds={false}
+						smooth
 						onPanningStart={onStartPanning}
 						onPanningStop={onEndPanning}
 						zoomAnimation={{

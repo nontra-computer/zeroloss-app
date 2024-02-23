@@ -28,7 +28,7 @@ const Station2: React.FC<Props> = ({
 
 	return (
 		<React.Fragment>
-			<div className="position-relative">
+			<div className="position-relative w-100">
 				<img src={buildingSrc} alt="Chlorine Station 2" />
 
 				<React.Fragment key="first-row">
