@@ -1,13 +1,16 @@
 import React from 'react'
 import Chart from 'react-apexcharts'
+import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 
 const SensorChart: React.FC = () => {
+	const { is4K, is8K } = useResolutionDetection()
+
 	return (
 		<div>
 			{/* begin::Chart */}
 			<Chart
 				type="line"
-				width={200}
+				width={is4K || is8K ? '45%' : '70%'}
 				height={100}
 				options={{
 					chart: {

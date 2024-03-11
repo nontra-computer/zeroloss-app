@@ -505,7 +505,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 											</div>
 										</div>
 
-										<TransformComponent wrapperClass="">
+										<TransformComponent wrapperClass="h-100 w-100">
 											<PlantStation />
 										</TransformComponent>
 									</React.Fragment>

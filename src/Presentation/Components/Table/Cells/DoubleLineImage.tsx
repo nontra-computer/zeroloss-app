@@ -22,10 +22,10 @@ const DoubleLineImage: React.FC<Props> = ({ img, label, description }) => {
 				<img
 					className="rounded-circle object-fit-cover"
 					alt="Logo"
-					src={img ?? '/media/icons/kumopack/default-placeholder.png'}
+					src={img ?? '/media/icons/zeroloss/default-placeholder.png'}
 					onError={(e: any) => {
-						e.target.onerror = null
 						e.target.src = '/media/icons/zeroloss/default-placeholder.png'
+						e.target.onerror = null
 					}}
 					width={40}
 					height={40}

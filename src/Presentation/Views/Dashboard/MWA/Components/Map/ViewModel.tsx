@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
@@ -14,12 +14,15 @@ const ViewModel = () => {
 	const { mode } = useThemeMode()
 	const [isShowHover, setIsShowHover] = useState(true)
 
+	const [hasFetchFirstTime, setHasFetchFirstTime] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const { stations, getStations } = useMWAStore(state => ({
 		stations: state.stations,
 		getStations: state.getStations,
 	}))
 	const { is4K, is8K } = useResolutionDetection()
+
+	const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
 	const buildingOne = stations.find((b: any) => b.id === 1)
 	const buildingTwo = stations.find((b: any) => b.id === 2)
@@ -59,12 +62,17 @@ const ViewModel = () => {
 	}
 
 	const fetchData = () => {
-		setIsLoading(true)
+		if (!hasFetchFirstTime) {
+			setIsLoading(true)
+		}
 		getStations().then(({ data, success }) => {
 			if (!success) {
 				toast.error(data)
 			} else {
-				setIsLoading(false)
+				if (!hasFetchFirstTime) {
+					setHasFetchFirstTime(true)
+					setIsLoading(false)
+				}
 			}
 		})
 	}
@@ -163,8 +171,18 @@ const ViewModel = () => {
 
 	useEffect(() => {
 		fetchData()
+		// Fetch getSensor every 5 seconds
+		intervalRef.current = setInterval(fetchData, 5000)
+
+		return () => {
+			// Clear the interval when the component is unmounted
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current)
+			}
+		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, [hasFetchFirstTime])
 
 	// const firstBuild = document.querySelectorAll('#first-building')
 

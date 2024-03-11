@@ -9,7 +9,7 @@ import { vhToPixels } from '@/Utils/vhToPixels'
 interface Props {}
 
 const DataConnection: React.FC<Props> = () => {
-	const { is4K, is8K, intl, themeMode, data } = useViewModel()
+	const { is4K, is8K, chartData, chartOffsetX, intl, themeMode, data } = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -66,17 +66,20 @@ const DataConnection: React.FC<Props> = () => {
 									{/* end:: Header */}
 
 									{/* start:: Content */}
-									<div className="col-12 col-lg-7">
+									<div className="col-12 col-lg-5">
 										{/* begin::Chart */}
 										<Chart
 											type="donut"
-											width={is4K || is8K ? '100%' : '300px'}
+											width={is4K || is8K ? '500px' : '300px'}
 											height={is4K || is8K ? vhToPixels(25) : 200}
-											series={[data?.onlinePercentage ?? 0, data?.offlinePercentage ?? 0]}
+											series={chartData}
 											options={{
 												labels: ['Sensors', 'Offline Sensors'],
 												chart: {
 													offsetY: 30,
+													offsetX: chartOffsetX,
+													redrawOnParentResize: true,
+													redrawOnWindowResize: true,
 												},
 												plotOptions: {
 													pie: {
@@ -157,7 +160,7 @@ const DataConnection: React.FC<Props> = () => {
 											}}
 										/>
 									</div>
-									<div className="col-12 col-lg-5">
+									<div className="col-12 col-lg-7">
 										<div className="d-flex flex-column align-items-end justify-content-center h-100">
 											<div className="fs-5 mb-3 w-100">
 												<div className="row">

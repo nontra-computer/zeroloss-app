@@ -233,7 +233,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 									</div>
 								</div>
 
-								<TransformComponent wrapperClass="">
+								<TransformComponent wrapperClass="w-100 h-100">
 									{isStation1 && <Station1 isDark={themeMode === 'dark'} {...station1Sensor} />}
 									{isStation2 && <Station2 isDark={themeMode === 'dark'} {...station2Sensor} />}
 									{isStation3 && <Station3 isDark={themeMode === 'dark'} {...station3Sensor} />}

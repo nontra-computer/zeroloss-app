@@ -21,7 +21,7 @@ import {
 
 import { TableProps } from '@/Types/Table'
 
-type ReactTableProps = TableInstance & UsePaginationInstanceProps<{}>
+type ReactTableProps = TableInstance & UsePaginationInstanceProps<any>
 
 const ClientSideTable: React.FC<TableProps> = ({
 	data,
@@ -96,7 +96,7 @@ const ClientSideTable: React.FC<TableProps> = ({
 									'border-zeroloss-base-white': themeMode === 'dark',
 								})}
 								style={{ borderStyle: 'solid' }}>
-								{headers.map((column: any, idx) => {
+								{headers.map((column: any) => {
 									let className: React.CSSProperties = {
 										color: '#475467',
 										textTransform: 'none',

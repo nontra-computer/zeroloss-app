@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl'
 import { useMWAStore } from '@/Store/MWA'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { toast } from 'react-toastify'
+import { vhToPixels } from '@/Utils/vhToPixels'
 
 const ViewModel = () => {
 	const intl = useIntl()
@@ -16,18 +17,47 @@ const ViewModel = () => {
 	const data = useMemo(() => {
 		if (!dashboardSensors) return {}
 
-		const offlinePercentage = Math.round(
-			(dashboardSensors?.onlinePercentage * dashboardSensors?.totalOffline) /
-				dashboardSensors?.totalOnline
-		)
+		let offlinePercentage = 0
+
+		if (
+			dashboardSensors?.totalOnline !== undefined &&
+			dashboardSensors?.totalOffline !== undefined &&
+			dashboardSensors?.onlinePercentage !== undefined
+		) {
+			offlinePercentage = Math.round(
+				(dashboardSensors?.onlinePercentage * dashboardSensors?.totalOffline) /
+					dashboardSensors?.totalOnline
+			)
+		}
 
 		return {
 			...dashboardSensors,
 			offlinePercentage,
 		}
 	}, [dashboardSensors])
-	const { is4K, is8K } = useResolutionDetection()
+	const { isFullHD, is4K, is8K } = useResolutionDetection()
 	const intervalRef = useRef<NodeJS.Timeout | null>(null)
+
+	const chartData = useMemo(
+		() => [data?.onlinePercentage ?? 0, data?.offlinePercentage ?? 0],
+		[data]
+	)
+	const chartOffsetX = useMemo(() => {
+		if (is8K) return 100
+		if (is4K) return 100
+		if (isFullHD) return -20
+		return -40
+	}, [isFullHD, is4K, is8K])
+	const chartWidth = useMemo(() => {
+		if (is8K || is4K) return '500px'
+		else return '300px'
+	}, [is4K, is8K])
+	const chartHeight = useMemo(() => {
+		const random = Math.random()
+
+		if (is8K || is4K) return vhToPixels(25) + random
+		else return 20 + random
+	}, [is4K, is8K])
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -64,8 +94,13 @@ const ViewModel = () => {
 	}, [])
 
 	return {
+		isFullHD,
 		is4K,
 		is8K,
+		chartData,
+		chartWidth,
+		chartHeight,
+		chartOffsetX,
 		intl,
 		themeMode,
 		mode,

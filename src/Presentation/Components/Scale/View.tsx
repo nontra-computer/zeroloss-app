@@ -11,7 +11,7 @@ interface Props {
 const Scale: React.FC<Props> = ({ min, max, value, type }) => {
 	return (
 		<div className="position-relative">
-			<div className="progress bg-zeroloss-grey-200 shadow-sm">
+			<div className="progress bg-zeroloss-grey-200 shadow-sm h-8px">
 				<div
 					className={clsx('progress-bar', {
 						'bg-zeroloss-success': type === 'success',

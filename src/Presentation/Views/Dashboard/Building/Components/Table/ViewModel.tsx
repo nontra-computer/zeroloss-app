@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useMWAStore } from '@/Store/MWA'
+import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { TableContext } from '@/Context/Table'
 
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
@@ -22,6 +23,7 @@ const ViewModel = () => {
 		themeMode = mode
 	}
 
+	const { is4K, is8K } = useResolutionDetection()
 	const { data } = useMWAStore(state => ({
 		data: state.selectedSensors,
 	}))
@@ -121,7 +123,7 @@ const ViewModel = () => {
 		{
 			Header: 'รายชื่อ Sensors',
 			accessor: 'sensors',
-			minWidth: 400,
+			minWidth: is4K || is8K ? 300 : 150,
 			Cell: (props: any) => {
 				return (
 					<DoubleLineImage
@@ -139,7 +141,7 @@ const ViewModel = () => {
 		{
 			Header: 'Status',
 			accessor: 'status',
-			minWidth: 40,
+			minWidth: is4K || is8K ? 80 : 40,
 			Cell: (props: any) => {
 				return (
 					<span
@@ -155,7 +157,7 @@ const ViewModel = () => {
 		{
 			Header: 'Value',
 			accessor: 'ppm',
-			minWidth: 80,
+			minWidth: is4K || is8K ? 200 : 100,
 			Cell: (props: any) => {
 				if (props.row.original.valueStatus !== 1) {
 					return <span>-</span>
@@ -181,15 +183,13 @@ const ViewModel = () => {
 		{
 			Header: '24 Hours',
 			accessor: 'graph',
-			minWidth: 50,
-			Cell: () => {
-				return <SensorChart />
-			},
+			minWidth: 100,
+			Cell: SensorChart,
 		},
 		{
 			Header: 'Scale',
 			accessor: 'scale',
-			minWidth: 250,
+			minWidth: is4K || is8K ? 200 : 100,
 			Cell: (props: any) => {
 				const type = findScale(props.row.original.id)
 

@@ -9,7 +9,7 @@ const Measurement: React.FC = () => {
 	const { data, intl, themeMode } = useViewModel()
 
 	return (
-		<div className="row">
+		<div className="row gy-5">
 			<div className="col-12">
 				<div
 					className={clsx('fs-2 fw-bolder', {
@@ -31,7 +31,7 @@ const Measurement: React.FC = () => {
 				</p>
 			</div>
 
-			<div className="col-12 col-lg-3">
+			<div className="col-12 col-lg-6 col-xxl-3">
 				<div
 					className={clsx('card border-radius-12px border-1px h-100', {
 						'bg-zeroloss-base-white border-zeroloss-grey-200': themeMode === 'light',
@@ -143,7 +143,7 @@ const Measurement: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<div className="col-12 col-lg-3">
+			<div className="col-12 col-lg-6 col-xxl-3">
 				<NumberBox
 					id="mwa-exceeds"
 					title="ค่าเกินมาตรฐาน"
@@ -152,7 +152,7 @@ const Measurement: React.FC = () => {
 					height={200}
 				/>
 			</div>
-			<div className="col-12 col-lg-3">
+			<div className="col-12 col-lg-6 col-xxl-3">
 				<NumberBox
 					id="mwa-inappropriate"
 					title="ค่าใกล้เกินมาตรฐาน"
@@ -161,7 +161,7 @@ const Measurement: React.FC = () => {
 					height={200}
 				/>
 			</div>
-			<div className="col-12 col-lg-3">
+			<div className="col-12 col-lg-6 col-xxl-3">
 				<NumberBox
 					id="mwa-normal"
 					title="ค่าอยู่ในเกณฑ์ปกติ"

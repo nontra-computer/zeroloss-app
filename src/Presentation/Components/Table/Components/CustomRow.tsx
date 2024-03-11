@@ -1,4 +1,4 @@
-// @ts-nocheck
+import React from 'react'
 import { Row } from 'react-table'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import clsx from 'clsx'
@@ -10,7 +10,7 @@ interface Prop {
 	isGrey?: boolean
 }
 
-const CustomRow: React.FC<Prop> = ({ row, rowKey, onClickRow, isGrey }) => {
+const CustomRow: React.FC<Prop> = React.memo(({ row, rowKey, onClickRow, isGrey }) => {
 	const { mode } = useThemeMode()
 
 	let themeMode = ''
@@ -25,11 +25,13 @@ const CustomRow: React.FC<Prop> = ({ row, rowKey, onClickRow, isGrey }) => {
 			{...row.getRowProps()}
 			onClick={() => {
 				if (onClickRow && rowKey) {
+					// @ts-ignore
 					onClickRow(row.original[rowKey])
 				}
 			}}
 			className={clsx(
 				{
+					// @ts-ignore
 					'bg-gray-100': row.isSelected || isGrey,
 					'border-zeroloss-base-white': themeMode === 'dark',
 				},
@@ -37,7 +39,7 @@ const CustomRow: React.FC<Prop> = ({ row, rowKey, onClickRow, isGrey }) => {
 			)}
 			style={{ borderStyle: 'solid' }}>
 			{row.cells.map(cell => {
-				let className: React.CSSProperties = {
+				const className: React.CSSProperties = {
 					width: cell.column.width,
 					minWidth: cell.column.minWidth,
 					maxWidth: cell.column.maxWidth,
@@ -54,6 +56,6 @@ const CustomRow: React.FC<Prop> = ({ row, rowKey, onClickRow, isGrey }) => {
 			})}
 		</tr>
 	)
-}
+})
 
 export default CustomRow
