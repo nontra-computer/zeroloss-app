@@ -24,7 +24,7 @@ const Station3: React.FC<Props> = ({
 	gd37 = 'default',
 	gd38 = 'default',
 }) => {
-	const bulidingSrc = isDark ? '/media/maps/building-3.png' : '/media/maps/building-3.png'
+	const bulidingSrc = isDark ? '/media/maps/dark-building-3.png' : '/media/maps/building-3.png'
 
 	return (
 		<React.Fragment>
@@ -36,7 +36,7 @@ const Station3: React.FC<Props> = ({
 					<div
 						id="gd38"
 						className="cursor-pointer position-absolute"
-						style={{ zIndex: 100, top: '21%', left: '32.8%' }}>
+						style={{ zIndex: 100, top: '19%', left: '30%' }}>
 						<img
 							src={`/media/maps/${translateSensorColor(gd38)}-time.svg`}
 							alt="GD 3-8 Sensor"
@@ -49,7 +49,7 @@ const Station3: React.FC<Props> = ({
 					<div
 						id="gd37"
 						className="cursor-pointer position-absolute"
-						style={{ zIndex: 100, top: '21%', left: '56.5%' }}>
+						style={{ zIndex: 100, top: '19%', left: '55.5%' }}>
 						<img
 							src={`/media/maps/${translateSensorColor(gd37)}-time.svg`}
 							alt="GD 3-7 Sensor"
@@ -62,7 +62,7 @@ const Station3: React.FC<Props> = ({
 					<div
 						id="gd36"
 						className="cursor-pointer position-absolute"
-						style={{ zIndex: 100, top: '21%', left: '88%' }}>
+						style={{ zIndex: 100, top: '19%', left: '88.5%' }}>
 						<img
 							src={`/media/maps/${translateSensorColor(gd36)}-time.svg`}
 							alt="GD 3-6 Sensor"
@@ -75,7 +75,7 @@ const Station3: React.FC<Props> = ({
 					<div
 						id="gd35"
 						className="cursor-pointer position-absolute"
-						style={{ zIndex: 100, top: '21%', left: '92%' }}>
+						style={{ zIndex: 100, top: '19%', left: '92.5%' }}>
 						<img
 							src={`/media/maps/${translateSensorColor(gd35)}-time.svg`}
 							alt="GD 3-5 Sensor"
@@ -90,7 +90,7 @@ const Station3: React.FC<Props> = ({
 					<div
 						id="gd31"
 						className="cursor-pointer position-absolute"
-						style={{ zIndex: 100, top: '63.5%', left: '45%' }}>
+						style={{ zIndex: 100, top: '65.5%', left: '43%' }}>
 						<img
 							src={`/media/maps/${translateSensorColor(gd31)}-time.svg`}
 							alt="GD 3-1 Sensor"
@@ -103,7 +103,7 @@ const Station3: React.FC<Props> = ({
 					<div
 						id="gd32"
 						className="cursor-pointer position-absolute"
-						style={{ zIndex: 100, top: '63.5%', left: '50.5%' }}>
+						style={{ zIndex: 100, top: '65.5%', left: '49%' }}>
 						<img
 							src={`/media/maps/${translateSensorColor(gd32)}-time.svg`}
 							alt="GD 3-2 Sensor"
@@ -116,7 +116,7 @@ const Station3: React.FC<Props> = ({
 					<div
 						id="gd33"
 						className="cursor-pointer position-absolute"
-						style={{ zIndex: 100, top: '63.5%', left: '77.5%' }}>
+						style={{ zIndex: 100, top: '65.5%', left: '77.5%' }}>
 						<img
 							src={`/media/maps/${translateSensorColor(gd33)}-time.svg`}
 							alt="GD 3-3 Sensor"
@@ -129,7 +129,7 @@ const Station3: React.FC<Props> = ({
 					<div
 						id="gd34"
 						className="cursor-pointer position-absolute"
-						style={{ zIndex: 100, top: '63.5%', left: '92%' }}>
+						style={{ zIndex: 100, top: '64.8%', left: '92.5%' }}>
 						<img
 							src={`/media/maps/${translateSensorColor(gd34)}-time.svg`}
 							alt="GD 3-4 Sensor"

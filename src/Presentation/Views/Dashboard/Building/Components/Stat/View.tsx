@@ -36,20 +36,20 @@ const Stat: React.FC = () => {
 					type="danger"
 					value={data?.totalDanger ?? 0}
 					height={200}
-					infos={[
-						{
-							label: 'แจ้งเหตุ',
-							value: 50,
-						},
-						{
-							label: 'แจ้งเหตุ',
-							value: 50,
-						},
-						{
-							label: 'แจ้งเหตุ',
-							value: 50,
-						},
-					]}
+					// infos={[
+					// 	{
+					// 		label: 'แจ้งเหตุ',
+					// 		value: 50,
+					// 	},
+					// 	{
+					// 		label: 'แจ้งเหตุ',
+					// 		value: 50,
+					// 	},
+					// 	{
+					// 		label: 'แจ้งเหตุ',
+					// 		value: 50,
+					// 	},
+					// ]}
 				/>
 			</div>
 			<div className="col-12 col-lg-4">
@@ -59,20 +59,20 @@ const Stat: React.FC = () => {
 					type="warning"
 					value={data?.totalWarning ?? 0}
 					height={200}
-					infos={[
-						{
-							label: 'แจ้งเหตุ',
-							value: 50,
-						},
-						{
-							label: 'แจ้งเหตุ',
-							value: 50,
-						},
-						{
-							label: 'แจ้งเหตุ',
-							value: 50,
-						},
-					]}
+					// infos={[
+					// 	{
+					// 		label: 'แจ้งเหตุ',
+					// 		value: 50,
+					// 	},
+					// 	{
+					// 		label: 'แจ้งเหตุ',
+					// 		value: 50,
+					// 	},
+					// 	{
+					// 		label: 'แจ้งเหตุ',
+					// 		value: 50,
+					// 	},
+					// ]}
 				/>
 			</div>
 			<div className="col-12 col-lg-4">
@@ -82,20 +82,20 @@ const Stat: React.FC = () => {
 					type="success"
 					value={data?.totalNormal ?? 0}
 					height={200}
-					infos={[
-						{
-							label: 'แจ้งเหตุ',
-							value: 50,
-						},
-						{
-							label: 'แจ้งเหตุ',
-							value: 50,
-						},
-						{
-							label: 'แจ้งเหตุ',
-							value: 50,
-						},
-					]}
+					// infos={[
+					// 	{
+					// 		label: 'แจ้งเหตุ',
+					// 		value: 50,
+					// 	},
+					// 	{
+					// 		label: 'แจ้งเหตุ',
+					// 		value: 50,
+					// 	},
+					// 	{
+					// 		label: 'แจ้งเหตุ',
+					// 		value: 50,
+					// 	},
+					// ]}
 				/>
 			</div>
 		</div>
