@@ -3,10 +3,13 @@ import clsx from 'clsx'
 import { Link } from 'react-router-dom'
 import { useLayout } from '../../../core/LayoutProvider'
 import { usePageData } from '../../../core/PageData'
+import { useLocation } from 'react-router-dom'
 
 const DefaultTitle: React.FC = () => {
 	const { pageTitle, pageDescription, pageBreadcrumbs, additionalPageDescription } = usePageData()
 	const { config } = useLayout()
+	const location = useLocation()
+	const isMWA = location.pathname.includes('mwa')
 
 	return (
 		<div
@@ -15,7 +18,7 @@ const DefaultTitle: React.FC = () => {
 			data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_wrapper'}"
 			className="page-title d-flex flex-row align-items-center justify-content-center flex-wrap me-lg-20 pb-2 pb-lg-0"
 			style={{ columnGap: '12px' }}>
-			<img src="/media/icons/zeroloss/customer.svg" alt="Customer Icon" />
+			{isMWA && <img src="/media/icons/zeroloss/customer.svg" alt="Customer Icon" />}
 
 			{/* begin::Heading */}
 			{pageTitle && (

@@ -1,0 +1,61 @@
+.white-button {
+	background-color: #ffffff !important;
+	border: 1px solid #d0d5dd !important;
+	border-radius: 8px !important;
+	box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.white-button.active {
+	background-color: #f2f4f7 !important;
+	border: 1px solid #d0d5dd !important;
+}
+
+.white-button:hover {
+	background-color: #f2f4f7 !important;
+}
+
+.zeroloss-button-group {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.zeroloss-button-group .left {
+	border-top-left-radius: 8px !important;
+	border-bottom-left-radius: 8px !important;
+
+	border-top-right-radius: 0 !important;
+	border-bottom-right-radius: 0 !important;
+}
+
+.zeroloss-button-group .middle {
+	border-top-left-radius: 0 !important;
+	border-bottom-left-radius: 0 !important;
+
+	border-top-right-radius: 0 !important;
+	border-bottom-right-radius: 0 !important;
+}
+
+.zeroloss-button-group .right {
+	border-top-right-radius: 8px !important;
+	border-bottom-right-radius: 8px !important;
+
+	border-top-left-radius: 0 !important;
+	border-bottom-left-radius: 0 !important;
+}
+
+.zeroloss-button-group .zeroloss-button-1 {
+	border-top-left-radius: 8px !important;
+	border-bottom-left-radius: 8px !important;
+
+	border-top-right-radius: 0 !important;
+	border-bottom-right-radius: 0 !important;
+}
+
+.zeroloss-button-group .zeroloss-button-2 {
+	border-top-right-radius: 8px !important;
+	border-bottom-right-radius: 8px !important;
+
+	border-top-left-radius: 0 !important;
+	border-bottom-left-radius: 0 !important;
+}

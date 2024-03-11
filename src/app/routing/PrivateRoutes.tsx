@@ -7,11 +7,8 @@ import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils'
 import { WithChildren } from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 
-// Zeroloss Views
-import DashboardOverviewView from '@/Presentation/Views/Dashboard/Overview/View'
-import MeasurementDashboardView from '@/Presentation/Views/Dashboard/Measurement/View'
-import MwaMeasurementDashboardView from '@/Presentation/Views/Dashboard/MWA/View'
-import MwaBuildingDashboardView from '@/Presentation/Views/Dashboard/Building/View'
+// Zeroloss
+import DashboardRoutes from './Routes/Dashboard'
 
 import Error404View from '@/Presentation/Views/Error/404/View'
 
@@ -30,14 +27,7 @@ const PrivateRoutes = () => {
 				<Route path="auth/*" element={<Navigate to="/dashboard" />} />
 				{/* Pages */}
 
-				<Route path="dashboard/*">
-					<Route path="overview" element={<DashboardOverviewView />} />
-					<Route path="measurement" element={<MeasurementDashboardView />} />
-					<Route path="mwa" element={<MwaMeasurementDashboardView />} />
-					<Route path="mwa/building/:buildingId" element={<MwaBuildingDashboardView />} />
-
-					<Route index element={<Navigate to="/dashboard/mwa" />} />
-				</Route>
+				<Route path="dashboard/*" element={<DashboardRoutes />} />
 
 				<Route path="builder" element={<BuilderPageWrapper />} />
 				<Route path="menu-test" element={<MenuTestPage />} />

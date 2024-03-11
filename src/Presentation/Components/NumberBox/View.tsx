@@ -8,7 +8,7 @@ import clsx from 'clsx'
 interface Props {
 	id: string
 	title: string
-	type: 'success' | 'warning' | 'danger' | 'none'
+	type: 'success' | 'warning' | 'danger' | 'primary' | 'info' | 'soft-info' | 'none'
 	value: number
 	infos?: {
 		label: string
@@ -37,16 +37,22 @@ const NumberBox: React.FC<Props> = ({ id, title, type, value, infos, height }) =
 			<div
 				style={{ minHeight: '15px' }}
 				className={clsx('card-header px-0 h-15px', {
+					'bg-zeroloss-primary': type === 'primary',
 					'bg-zeroloss-success': type === 'success',
 					'bg-zeroloss-warning': type === 'warning',
 					'bg-zeroloss-error': type === 'danger',
+					'bg-zeroloss-purple-1': type === 'info',
+					'bg-zeroloss-primary-500': type === 'soft-info',
 					'bg-zeroloss-none': type === 'none',
 				})}></div>
 			<div
 				className={clsx('card-body px-4 py-4 border-radius-12px', {
+					'bg-zeroloss-primary-25':
+						(type === 'primary' || type === 'soft-info') && themeMode === 'light',
 					'bg-zeroloss-success-25': type === 'success' && themeMode === 'light',
 					'bg-zeroloss-warning-25': type === 'warning' && themeMode === 'light',
 					'bg-zeroloss-error-25': type === 'danger' && themeMode === 'light',
+					'bg-zeroloss-purple-1-25': type === 'info' && themeMode === 'light',
 					'bg-zeroloss-none-25': type === 'none' && themeMode === 'light',
 					'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 				})}>
