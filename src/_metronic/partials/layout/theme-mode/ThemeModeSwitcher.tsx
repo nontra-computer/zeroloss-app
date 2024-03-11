@@ -1,7 +1,8 @@
-import clsx from 'clsx'
 import { KTIcon } from '../../../helpers'
 import { ThemeModeComponent } from '../../../assets/ts/layout'
 import { ThemeModeType, useThemeMode } from './ThemeModeProvider'
+import Switch from 'react-switch'
+import clsx from 'clsx'
 
 type Props = {
 	toggleBtnClass?: string
@@ -12,12 +13,15 @@ type Props = {
 
 const systemMode = ThemeModeComponent.getSystemMode() as 'light' | 'dark'
 
-const ThemeModeSwitcher = ({
-	toggleBtnClass = '',
-	toggleBtnIconClass = 'fs-1',
-	menuPlacement = 'bottom-end',
-	menuTrigger = "{default: 'click', lg: 'hover'}",
-}: Props) => {
+const ThemeModeSwitcher = (
+	// eslint-disable-next-line no-empty-pattern
+	{
+		// toggleBtnClass = '',
+		// toggleBtnIconClass = 'fs-1',
+		// menuPlacement = 'bottom-end',
+		// menuTrigger = "{default: 'click', lg: 'hover'}",
+	}: Props
+) => {
 	const { mode, menuMode, updateMode, updateMenuMode } = useThemeMode()
 	const calculatedMode = mode === 'system' ? systemMode : mode
 	const switchMode = (_mode: ThemeModeType) => {
@@ -28,7 +32,47 @@ const ThemeModeSwitcher = ({
 	return (
 		<>
 			{/* begin::Menu toggle */}
-			<a
+			<Switch
+				onChange={() => {
+					switchMode(calculatedMode === 'light' ? 'dark' : 'light')
+				}}
+				checked={calculatedMode === 'light'}
+				checkedIcon={false}
+				uncheckedIcon={false}
+				onColor="#C3CED5"
+				offColor="#525252"
+				onHandleColor="#ffffff"
+				offHandleColor="#141414"
+				boxShadow={
+					calculatedMode === 'light' ? '0px 1px 5px rgba(0, 0, 0, 0.6)' : '0px 1px 5px #FFFFFF'
+				}
+				activeBoxShadow={'0px 0px 1px 10px rgba(0, 0, 0, 0.2)'}
+				checkedHandleIcon={
+					<div
+						className={clsx(
+							'd-flex flex-col align-items-center justify-content-center h-100 w-100'
+						)}>
+						<img
+							src={'/media/icons/zeroloss/day.svg'}
+							alt="Theme Mode Icon"
+							style={{ marginRight: '0.05rem' }}
+						/>
+					</div>
+				}
+				uncheckedHandleIcon={
+					<div
+						className={clsx(
+							'd-flex flex-col align-items-center justify-content-center h-100 w-100'
+						)}>
+						<img
+							src={'/media/icons/zeroloss/night.svg'}
+							alt="Theme Mode Icon"
+							style={{ marginRight: '0.05rem' }}
+						/>
+					</div>
+				}
+			/>
+			{/* <a
 				href="#"
 				className={clsx('btn btn-icon ', toggleBtnClass)}
 				data-kt-menu-trigger={menuTrigger}
@@ -41,7 +85,7 @@ const ThemeModeSwitcher = ({
 				{calculatedMode === 'light' && (
 					<KTIcon iconName="night-day" className={clsx('theme-dark-hide', toggleBtnIconClass)} />
 				)}
-			</a>
+			</a> */}
 			{/* begin::Menu toggle */}
 
 			{/* begin::Menu */}
