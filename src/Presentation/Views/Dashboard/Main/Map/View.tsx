@@ -4,6 +4,8 @@ import { KTSVG } from '@/_metronic/helpers'
 import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
 import LocationWithStatus from '@/Presentation/Components/LeafletMap/LocationWithStatus'
 import IncidentPopup from '@/Presentation/Components/LeafletMap/IncidentPopup'
+import WindDirection from '@/Presentation/Components/LeafletMap/WindDirection'
+import WindPopup from '@/Presentation/Components/LeafletMap/WindPopup'
 import InfoBoard from '../../Components/InfoBoard/View'
 import Alert from '../../Components/Alert/View'
 import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
@@ -48,7 +50,7 @@ const MainDashboardMapView: React.FC = () => {
 								inputType="plain"
 								containerClassName="w-400px d-inline-block"
 								additionalClassName="shadow-sm"
-								placeholder="พิมพ์ค้นหาที่นี่"
+								placeholder="ค้นหาสถานที่/เหตุการณ์"
 								label="ค้นหาเหตุการณ์"
 							/>
 							<div>
@@ -141,7 +143,7 @@ const MainDashboardMapView: React.FC = () => {
 											: 'media/icons/zeroloss/white-filter-lines.svg'
 									}
 								/>
-								Filter
+								ตัวกรอง
 							</button>
 						</div>
 					</div>
@@ -163,7 +165,14 @@ const MainDashboardMapView: React.FC = () => {
 									<h3>&nbsp;</h3>
 									<div className="card h-800px">
 										<div className="card-body p-0 position-relative">
-											{/* Location Dropdown */}
+											{(type === 'all' || type === 'simulation') && (
+												<React.Fragment>
+													<Alert />
+												</React.Fragment>
+											)}
+
+											{type === 'measurement' && <React.Fragment></React.Fragment>}
+
 											<Select
 												placeholder="เลือกสถานที่"
 												noOptionsMessage={() => 'ไม่พบข้อมูล'}
@@ -200,11 +209,7 @@ const MainDashboardMapView: React.FC = () => {
 													IndicatorSeparator: () => null,
 												}}
 											/>
-
 											<InfoBoard />
-
-											<Alert />
-
 											<MapContainer
 												center={{
 													lat: 13.7563,
@@ -216,8 +221,13 @@ const MainDashboardMapView: React.FC = () => {
 													url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 												/>
 
-												{data.map((location, index) => (
-													<LocationWithStatus key={index} {...location} popup={IncidentPopup} />
+												{data.map((d, index) => (
+													<React.Fragment key={`map-data-${index}`}>
+														{type === 'all' && <LocationWithStatus {...d} popup={IncidentPopup} />}
+														{type === 'wind-direction' && (
+															<WindDirection {...d} popup={WindPopup} />
+														)}
+													</React.Fragment>
 												))}
 											</MapContainer>
 										</div>
@@ -226,7 +236,7 @@ const MainDashboardMapView: React.FC = () => {
 
 								<div className="col-12 col-lg-4">
 									<h3 className="mx-auto" style={{ width: '95%' }}>
-										ข่าวสารล่าสุด
+										เหตุการณ์ที่เกี่ยวข้อง
 									</h3>
 									<div className="main-dashboard-news-container h-800px overflow-y-scroll ps-0">
 										{[...Array(10)].map((_, index) => (

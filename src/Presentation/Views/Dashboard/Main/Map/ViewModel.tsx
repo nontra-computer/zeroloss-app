@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const TYPE_OPTIONS = [
@@ -30,6 +30,7 @@ const MOCK_DATA: any[] = [
 			lat: 13.7473729,
 			lng: 100.5137062,
 		},
+		degree: 0,
 	},
 	{
 		id: 2,
@@ -40,6 +41,7 @@ const MOCK_DATA: any[] = [
 			lat: 13.8527366,
 			lng: 100.6882377,
 		},
+		degree: 78,
 	},
 	{
 		id: 3,
@@ -50,6 +52,7 @@ const MOCK_DATA: any[] = [
 			lat: 13.7374361,
 			lng: 100.7136729,
 		},
+		degree: 20,
 	},
 	{
 		id: 4,
@@ -60,6 +63,7 @@ const MOCK_DATA: any[] = [
 			lat: 13.7723976,
 			lng: 100.5680649,
 		},
+		degree: 110,
 	},
 	{
 		id: 5,
@@ -70,6 +74,7 @@ const MOCK_DATA: any[] = [
 			lat: 13.8010716,
 			lng: 100.5355079,
 		},
+		degree: 140,
 	},
 	{
 		id: 6,
@@ -80,6 +85,7 @@ const MOCK_DATA: any[] = [
 			lat: 13.7374361,
 			lng: 100.7136729,
 		},
+		degree: 270,
 	},
 	{
 		id: 7,
@@ -90,6 +96,7 @@ const MOCK_DATA: any[] = [
 			lat: 13.7473729,
 			lng: 100.5137062,
 		},
+		degree: 150,
 	},
 	{
 		id: 8,
@@ -100,6 +107,7 @@ const MOCK_DATA: any[] = [
 			lat: 13.8221382,
 			lng: 100.4998724,
 		},
+		degree: 290,
 	},
 	{
 		id: 9,
@@ -120,6 +128,7 @@ const MOCK_DATA: any[] = [
 			lat: 13.7093509,
 			lng: 100.4475244,
 		},
+		degree: 310,
 	},
 	{
 		id: 11,
@@ -130,6 +139,7 @@ const MOCK_DATA: any[] = [
 			lat: 13.6126487,
 			lng: 100.5380794,
 		},
+		degree: 340,
 	},
 ]
 
@@ -144,6 +154,21 @@ const ViewModel = () => {
 		themeMode = mode
 	}
 
+	const data = useMemo(() => {
+		switch (type) {
+			case 'all':
+				return MOCK_DATA
+			case 'wind-direction':
+				return MOCK_DATA
+			case 'simulation':
+				return MOCK_DATA
+			case 'measurement':
+				return MOCK_DATA
+			default:
+				return MOCK_DATA
+		}
+	}, [type])
+
 	const onTypeChange = (value: 'all' | 'wind-direction' | 'simulation' | 'measurement') => {
 		setType(value)
 	}
@@ -151,7 +176,7 @@ const ViewModel = () => {
 	return {
 		TYPE_OPTIONS,
 		themeMode,
-		data: MOCK_DATA,
+		data: data,
 		type,
 		onTypeChange,
 	}

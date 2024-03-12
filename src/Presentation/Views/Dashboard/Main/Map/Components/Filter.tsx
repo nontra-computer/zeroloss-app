@@ -20,7 +20,7 @@ const Filter: React.FC = () => {
 						{/* begin:: Title */}
 						<div className="d-flex justify-content-center flex-column me-3">
 							<span className="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1">
-								Filter
+								ตัวกรอง
 							</span>
 						</div>
 						{/* end:: Title */}
