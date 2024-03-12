@@ -18,7 +18,7 @@ import './_metronic/assets/keenicons/solid/style.css'
 import './Styles/main.scss'
 import 'react-tooltip/dist/react-tooltip.css'
 import 'react-toastify/dist/ReactToastify.css'
-
+import 'leaflet/dist/leaflet.css'
 /**
  * TIP: Replace this style import with rtl styles to enable rtl mode
  *

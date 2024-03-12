@@ -46,7 +46,7 @@ const NumberBox: React.FC<Props> = ({ id, title, type, value, infos, height }) =
 					'bg-zeroloss-none': type === 'none',
 				})}></div>
 			<div
-				className={clsx('card-body px-4 py-4 border-radius-12px', {
+				className={clsx('card-body px-4 py-4 border-radius-12px rounded-0 rounded-bottom', {
 					'bg-zeroloss-primary-25':
 						(type === 'primary' || type === 'soft-info') && themeMode === 'light',
 					'bg-zeroloss-success-25': type === 'success' && themeMode === 'light',
