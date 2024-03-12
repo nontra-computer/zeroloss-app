@@ -25,6 +25,7 @@ const MOCK_DATA: any[] = [
 		id: 1,
 		type: 'success',
 		draggable: false,
+		shapeType: 'circle',
 		popup: null,
 		position: {
 			lat: 13.7473729,
@@ -36,6 +37,7 @@ const MOCK_DATA: any[] = [
 		id: 2,
 		type: 'error',
 		draggable: false,
+		shapeType: 'circle',
 		popup: null,
 		position: {
 			lat: 13.8527366,
@@ -47,6 +49,7 @@ const MOCK_DATA: any[] = [
 		id: 3,
 		type: 'warning',
 		draggable: false,
+		shapeType: 'circle',
 		popup: null,
 		position: {
 			lat: 13.7374361,
@@ -58,6 +61,7 @@ const MOCK_DATA: any[] = [
 		id: 4,
 		type: 'success',
 		draggable: false,
+		shapeType: 'circle',
 		popup: null,
 		position: {
 			lat: 13.7723976,
@@ -69,6 +73,7 @@ const MOCK_DATA: any[] = [
 		id: 5,
 		type: 'error',
 		draggable: false,
+		shapeType: 'circle',
 		popup: null,
 		position: {
 			lat: 13.8010716,
@@ -80,6 +85,7 @@ const MOCK_DATA: any[] = [
 		id: 6,
 		type: 'warning',
 		draggable: false,
+		shapeType: 'circle',
 		popup: null,
 		position: {
 			lat: 13.7374361,
@@ -90,6 +96,7 @@ const MOCK_DATA: any[] = [
 	{
 		id: 7,
 		type: 'success',
+		shapeType: 'circle',
 		draggable: false,
 		popup: null,
 		position: {
@@ -101,6 +108,7 @@ const MOCK_DATA: any[] = [
 	{
 		id: 8,
 		type: 'error',
+		shapeType: 'circle',
 		draggable: false,
 		popup: null,
 		position: {
@@ -112,6 +120,7 @@ const MOCK_DATA: any[] = [
 	{
 		id: 9,
 		type: 'warning',
+		shapeType: 'circle',
 		draggable: false,
 		popup: null,
 		position: {
@@ -122,6 +131,7 @@ const MOCK_DATA: any[] = [
 	{
 		id: 10,
 		type: 'success',
+		shapeType: 'circle',
 		draggable: false,
 		popup: null,
 		position: {
@@ -133,6 +143,7 @@ const MOCK_DATA: any[] = [
 	{
 		id: 11,
 		type: 'error',
+		shapeType: 'circle',
 		draggable: false,
 		popup: null,
 		position: {

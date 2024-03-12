@@ -6,8 +6,10 @@ import LocationWithStatus from '@/Presentation/Components/LeafletMap/LocationWit
 import IncidentPopup from '@/Presentation/Components/LeafletMap/IncidentPopup'
 import WindDirection from '@/Presentation/Components/LeafletMap/WindDirection'
 import WindPopup from '@/Presentation/Components/LeafletMap/WindPopup'
+import LocationPolygon from '@/Presentation/Components/LeafletMap/LocationPolygon'
 import InfoBoard from '../../Components/InfoBoard/View'
 import Alert from '../../Components/Alert/View'
+import FeatureNews from '@/Presentation/Components/News/FeatureNews'
 import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
 import Select from 'react-select'
 import Filter from './Components/Filter'
@@ -227,6 +229,14 @@ const MainDashboardMapView: React.FC = () => {
 														{type === 'wind-direction' && (
 															<WindDirection {...d} popup={WindPopup} />
 														)}
+														{type === 'simulation' && (
+															<LocationPolygon
+																type={d.shapeType}
+																position={[d.position]}
+																radius={1500}
+															/>
+														)}
+														{type === 'measurement'}
 													</React.Fragment>
 												))}
 											</MapContainer>
@@ -239,6 +249,12 @@ const MainDashboardMapView: React.FC = () => {
 										เหตุการณ์ที่เกี่ยวข้อง
 									</h3>
 									<div className="main-dashboard-news-container h-800px overflow-y-scroll ps-0">
+										{type === 'simulation' && (
+											<div style={{ width: '95%' }} className="mx-auto mb-5">
+												<FeatureNews />
+											</div>
+										)}
+
 										{[...Array(10)].map((_, index) => (
 											<div
 												key={index}
