@@ -69,9 +69,33 @@ const StatZoneView: React.FC = () => {
 				</div>
 				<div className="col-6 col-lg-2">
 					<NumberBox id="maintenance" title="Maintenance" type="primary" value={3} />
+					<div className="mt-2 d-flex flex-row justify-content-between">
+						<div>
+							รอดำเนินการ{' '}
+							<span
+								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
+									'text-zeroloss-success-500': themeMode === 'dark',
+									'text-zeroloss-success-700': themeMode === 'light',
+								})}>
+								2
+							</span>
+						</div>
+					</div>
 				</div>
 				<div className="col-6 col-lg-2">
 					<NumberBox id="activities" title="Activities" type="info" value={2} />
+					<div className="mt-2 d-flex flex-row justify-content-between">
+						<div>
+							รอดำเนินการ{' '}
+							<span
+								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
+									'text-zeroloss-success-500': themeMode === 'dark',
+									'text-zeroloss-success-700': themeMode === 'light',
+								})}>
+								2
+							</span>
+						</div>
+					</div>
 				</div>
 				<div className="col-6 col-lg-2">
 					<NumberBox id="measurement" title="Measurement" type="soft-info" value={1} />
