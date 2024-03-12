@@ -210,10 +210,8 @@ const MainDashboardMapView: React.FC = () => {
 													lat: 13.7563,
 													lng: 100.5018,
 												}}
-												zoom={13}
-												className="rounded overflow-hidden">
+												zoom={13}>
 												<TileLayer
-													className="rounded overflow-hidden"
 													attribution="@Copyright 2024 Zeroloss"
 													url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 												/>
