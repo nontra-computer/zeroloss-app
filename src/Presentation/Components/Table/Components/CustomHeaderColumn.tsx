@@ -25,8 +25,9 @@ const CustomHeaderColumn: React.FC<Prop> = ({ headerRight, column, additionalSty
 	return (
 		<>
 			<th
-				className={clsx('pt-2 pb-3', {
+				className={clsx('py-3', {
 					'text-end': headerRight,
+					'bg-zeroloss-grey-100': themeMode === 'light',
 					'text-zeroloss-base-white': themeMode === 'dark',
 				})}
 				{...column.getHeaderProps(column.getSortByToggleProps())}

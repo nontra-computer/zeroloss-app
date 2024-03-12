@@ -1,7 +1,18 @@
 import React from 'react'
 import NumberBox from '@/Presentation/Components/NumberBox/View'
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import clsx from 'clsx'
 
 const StatZoneView: React.FC = () => {
+	const { mode } = useThemeMode()
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
+
 	return (
 		<React.Fragment>
 			<div className="row g-5">
@@ -9,16 +20,44 @@ const StatZoneView: React.FC = () => {
 					<NumberBox id="accident" title="Accident" type="danger" value={51} />
 					<div className="mt-2 d-flex flex-row justify-content-between">
 						<div>
-							แจ้งเหตุ <span className="ms-1 fw-bolder text-zeroloss-success-700">3</span>
+							แจ้งเหตุ{' '}
+							<span
+								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
+									'text-zeroloss-success-500': themeMode === 'dark',
+									'text-zeroloss-success-700': themeMode === 'light',
+								})}>
+								3
+							</span>
 						</div>
 						<div>
-							Lv. 1 <span className="ms-1 fw-bolder text-zeroloss-success-700">3</span>
+							Lv. 1{' '}
+							<span
+								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
+									'text-zeroloss-success-500': themeMode === 'dark',
+									'text-zeroloss-success-700': themeMode === 'light',
+								})}>
+								3
+							</span>
 						</div>
 						<div>
-							Lv. 2 <span className="ms-1 fw-bolder text-zeroloss-success-700">3</span>
+							Lv. 2{' '}
+							<span
+								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
+									'text-zeroloss-success-500': themeMode === 'dark',
+									'text-zeroloss-success-700': themeMode === 'light',
+								})}>
+								3
+							</span>
 						</div>
 						<div>
-							Lv. 3 <span className="ms-1 fw-bolder text-zeroloss-success-700">3</span>
+							Lv. 3{' '}
+							<span
+								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
+									'text-zeroloss-success-500': themeMode === 'dark',
+									'text-zeroloss-success-700': themeMode === 'light',
+								})}>
+								3
+							</span>
 						</div>
 					</div>
 				</div>

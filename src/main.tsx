@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import axios from 'axios'
 import { Chart, registerables } from 'chart.js'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
+// import { ReactQueryDevtools } from 'react-query/devtools'
 
 // Apps
 import { MetronicI18nProvider } from './_metronic/i18n/Metronici18n'
@@ -42,7 +42,7 @@ import { setupAxios } from './Configuration/Axios'
 setupAxios(axios)
 Chart.register(...registerables)
 
-const isProduction = process.env.NODE_ENV === 'production'
+// const isProduction = process.env.NODE_ENV === 'production'
 const queryClient = new QueryClient()
 const container = document.getElementById('root')
 if (container) {
@@ -55,7 +55,7 @@ if (container) {
 					</AppContext>
 				</AuthProvider>
 			</MetronicI18nProvider>
-			{!isProduction && <ReactQueryDevtools initialIsOpen={false} />}
+			{/* {!isProduction && <ReactQueryDevtools initialIsOpen={false} />} */}
 		</QueryClientProvider>
 	)
 }

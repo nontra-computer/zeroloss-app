@@ -2,6 +2,7 @@ import isValidClassName from '@/Utils/isValidClassName'
 import { FormInputProp } from '@/Types/Form'
 import { Tooltip } from 'react-tooltip'
 import ReactInputMask from 'react-input-mask'
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import clsx from 'clsx'
 
 const FormInput: React.FC<FormInputProp> = ({
@@ -26,6 +27,14 @@ const FormInput: React.FC<FormInputProp> = ({
 	markChar,
 }) => {
 	const validClassName: string = isValidClassName(isShowValid, false, disabled)
+	const { mode } = useThemeMode()
+
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
 
 	return (
 		<>
@@ -67,6 +76,7 @@ const FormInput: React.FC<FormInputProp> = ({
 						<input
 							className={clsx(`form-control ${additionalClassName ?? ''} ${validClassName}`, {
 								'is-invalid': isShowValid,
+								'text-zeroloss-base-white': themeMode === 'dark',
 							})}
 							type={type}
 							value={value}
@@ -101,7 +111,7 @@ const FormInput: React.FC<FormInputProp> = ({
 						</Tooltip>
 					)}
 
-					{messageUnderBox && <div className="fs-8 mt-2 ml-2 w-100">{underBoxMessage}</div>}
+					{messageUnderBox && <div className="fs-8 mt-2 ml-2 w-100">{messageUnderBox}</div>}
 				</div>
 			</div>
 

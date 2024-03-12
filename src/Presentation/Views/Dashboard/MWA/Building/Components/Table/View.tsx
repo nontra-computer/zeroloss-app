@@ -36,7 +36,7 @@ const MeasurementTable: React.FC = () => {
 							'bg-zeroloss-base-white border-zeroloss-grey-200': themeMode === 'light',
 							'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 						})}>
-						<div className="card-body px-0 pt-2">
+						<div className="card-body px-0 py-0">
 							<ClientSideTable columns={columns} data={data} items_per_page={10} />
 						</div>
 					</div>

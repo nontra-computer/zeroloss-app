@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import { KTSVG } from '@/_metronic/helpers'
 import { CustomTablePaginationProp } from '@/Types/Table'
 
 import { usePagination, DOTS } from '@/Hooks/usePagination'
@@ -9,7 +7,6 @@ import clsx from 'clsx'
 const CustomTablePagination: React.FC<CustomTablePaginationProp> = ({
 	totalCountData,
 	page,
-	links = [],
 	updatePage,
 	isLoading,
 	items_per_page,
@@ -38,17 +35,16 @@ const CustomTablePagination: React.FC<CustomTablePaginationProp> = ({
 	return (
 		<div className="row mt-3">
 			<div id="kt_table_users_paginate">
-				<ul className="pagination px-5">
+				<ul className="pagination px-5 justify-content-between">
 					{/* Next */}
 					<button
-						className={clsx('btn btn-sm white-button', {
+						className={clsx('btn btn-sm', {
 							disabled: page === 1 || isLoading,
+							'white-button': themeMode === 'light',
+							'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
+								themeMode === 'dark',
 						})}
 						onClick={() => updatePage(page - 1)}>
-						<KTSVG
-							path={'/media/icons/kumopack/arrow-left.svg'}
-							className="svg-icon svg-icon-light-primary svg-icon-1x"
-						/>
 						<span
 							className={clsx('d-none d-xl-inline-block text-zeroloss-grey-700 fw-bold', {
 								'text-zeroloss-base-white': themeMode === 'dark' && (page !== 1 || !isLoading),
@@ -61,13 +57,10 @@ const CustomTablePagination: React.FC<CustomTablePaginationProp> = ({
 
 					{/* Mobile Pagination */}
 					<div
-						className={clsx(
-							'd-flex d-xl-none align-items-center justify-content-center',
-							{
-								'text-zeroloss-grey-700': themeMode === 'light',
-								'text-zeroloss-grey-400': themeMode === 'dark',
-							}
-						)}>
+						className={clsx('d-flex d-xl-none align-items-center justify-content-center', {
+							'text-zeroloss-grey-700': themeMode === 'light',
+							'text-zeroloss-grey-400': themeMode === 'dark',
+						})}>
 						<div>
 							Page {page} of {paginationRange[paginationRange.length - 1]}
 						</div>
@@ -88,9 +81,10 @@ const CustomTablePagination: React.FC<CustomTablePaginationProp> = ({
 										disabled: isLoading || page === parseInt(range.toString()),
 										previous: range === 'Previous',
 										next: range === 'Next',
+										'text-zeroloss-base-white': themeMode === 'dark',
 									})}>
 									<a
-										className={clsx('page-link text-kumopack-grey-600', {
+										className={clsx('page-link text-zeroloss-grey-600', {
 											'page-text': range === 'Previous' || range === 'Next',
 											'me-5': range === 'Previous',
 										})}
@@ -111,8 +105,11 @@ const CustomTablePagination: React.FC<CustomTablePaginationProp> = ({
 
 					{/* Previous */}
 					<button
-						className={clsx('btn btn-sm white-button', {
+						className={clsx('btn btn-sm', {
 							disabled: page === paginationRange[paginationRange.length - 1] || isLoading,
+							'white-button': themeMode === 'light',
+							'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
+								themeMode === 'dark',
 						})}
 						onClick={() => updatePage(page + 1)}>
 						<span
@@ -129,10 +126,6 @@ const CustomTablePagination: React.FC<CustomTablePaginationProp> = ({
 							})}>
 							Next
 						</span>
-						<KTSVG
-							path={'/media/icons/kumopack/arrow-right.svg'}
-							className="svg-icon svg-icon-light-primary svg-icon-1x me-0"
-						/>
 					</button>
 				</ul>
 			</div>
