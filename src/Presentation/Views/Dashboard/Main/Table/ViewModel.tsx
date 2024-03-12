@@ -102,7 +102,7 @@ const ViewModel = () => {
 			Cell: () => {
 				return (
 					<span className={clsx('badge badge-light-danger', {})}>
-						<span className="bg-zeroloss-error-500 p-1 rounded-circle w-2px h-2px me-2" />{' '}
+						<span className="bg-zeroloss-error-500 p-1 rounded-circle w-2px h-2px me-2 animation-blink" />{' '}
 						งานซ่อมบำรุง
 					</span>
 				)

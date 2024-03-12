@@ -7,8 +7,10 @@ import IncidentPopup from '@/Presentation/Components/LeafletMap/IncidentPopup'
 import WindDirection from '@/Presentation/Components/LeafletMap/WindDirection'
 import WindPopup from '@/Presentation/Components/LeafletMap/WindPopup'
 import LocationPolygon from '@/Presentation/Components/LeafletMap/LocationPolygon'
+import LocationMeasurementStation from '@/Presentation/Components/LeafletMap/LocationMeasurementStation'
 import InfoBoard from '../../Components/InfoBoard/View'
 import Alert from '../../Components/Alert/View'
+import MeasurementTable from '../../Components/MeasurementTable/View'
 import FeatureNews from '@/Presentation/Components/News/FeatureNews'
 import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
 import Select from 'react-select'
@@ -173,7 +175,11 @@ const MainDashboardMapView: React.FC = () => {
 												</React.Fragment>
 											)}
 
-											{type === 'measurement' && <React.Fragment></React.Fragment>}
+											{type === 'measurement' && (
+												<React.Fragment>
+													<MeasurementTable />
+												</React.Fragment>
+											)}
 
 											<Select
 												placeholder="เลือกสถานที่"
@@ -236,7 +242,7 @@ const MainDashboardMapView: React.FC = () => {
 																radius={1500}
 															/>
 														)}
-														{type === 'measurement'}
+														{type === 'measurement' && <LocationMeasurementStation {...d} />}
 													</React.Fragment>
 												))}
 											</MapContainer>
