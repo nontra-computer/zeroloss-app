@@ -1,10 +1,14 @@
+import React from 'react'
 import { TableContextProvider } from './Table'
+import { IncidentEventContextProvider } from './IncidentEvent'
 
 const AppContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	return (
-		<>
-			<TableContextProvider>{children}</TableContextProvider>
-		</>
+		<React.Fragment>
+			<IncidentEventContextProvider>
+				<TableContextProvider>{children}</TableContextProvider>
+			</IncidentEventContextProvider>
+		</React.Fragment>
 	)
 }
 
