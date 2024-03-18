@@ -19,6 +19,7 @@ import './Styles/main.scss'
 import 'react-tooltip/dist/react-tooltip.css'
 import 'react-toastify/dist/ReactToastify.css'
 import 'leaflet/dist/leaflet.css'
+import { ToastContainer } from 'react-toastify'
 /**
  * TIP: Replace this style import with rtl styles to enable rtl mode
  *
@@ -52,6 +53,7 @@ if (container) {
 				<AuthProvider>
 					<AppContext>
 						<AppRoutes />
+						<ToastContainer />
 					</AppContext>
 				</AuthProvider>
 			</MetronicI18nProvider>

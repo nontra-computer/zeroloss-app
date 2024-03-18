@@ -171,7 +171,11 @@ const MainDashboardMapView: React.FC = () => {
 										<div className="card-body p-0 position-relative">
 											{(type === 'all' || type === 'simulation') && (
 												<React.Fragment>
-													<Alert />
+													<div
+														className="position-absolute w-50"
+														style={{ right: '1.5%', top: '2%', zIndex: 999 }}>
+														<Alert />
+													</div>
 												</React.Fragment>
 											)}
 

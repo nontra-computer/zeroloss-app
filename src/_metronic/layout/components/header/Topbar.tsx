@@ -2,7 +2,7 @@ import { FC } from 'react'
 import clsx from 'clsx'
 import { KTIcon } from '../../../helpers'
 import {
-	HeaderNotificationsMenu,
+	// HeaderNotificationsMenu,
 	// HeaderUserMenu,
 	// QuickLinks,
 	// Search,
@@ -12,6 +12,8 @@ import { useLayout } from '../../core'
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 // import { useLocation } from 'react-router-dom'
+
+import ZerolossNotificationView from '@/Presentation/Views/Notification/View'
 
 const itemClass = 'ms-1 ms-lg-3',
 	// btnClass =
@@ -79,7 +81,8 @@ const Topbar: FC = () => {
 
 					<span className="bullet bullet-dot bg-danger h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
 				</div>
-				<HeaderNotificationsMenu />
+				<ZerolossNotificationView />
+				{/* <HeaderNotificationsMenu /> */}
 				{/* end::Menu wrapper */}
 			</div>
 

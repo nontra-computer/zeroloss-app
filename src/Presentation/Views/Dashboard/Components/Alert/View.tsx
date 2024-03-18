@@ -17,11 +17,12 @@ const Alert: React.FC = () => {
 	return (
 		<React.Fragment>
 			<div
-				className={clsx('alert-map-card card position-absolute w-50 min-h-80px overflow-hidden', {
-					'bg-zeroloss-base-white border-0': themeMode === 'light',
+				className={clsx('alert-map-card card w-100 min-h-80px overflow-hidden shadow', {
+					'bg-zeroloss-base-white border-1px border-zeroloss-grey-100': themeMode === 'light',
 					'bg-zeroloss-grey-true-800 border-zeroloss-base-white border-1px': themeMode === 'dark',
 				})}
-				style={{ right: '2%', top: '1.5%', zIndex: 1000 }}>
+				// style={{ right: '2%', top: '1.5%', zIndex: 1000 }}
+				>
 				<div className="card-body p-0">
 					<div className="row min-h-80px w-100 gx-0">
 						<div className="col-4">

@@ -1,10 +1,12 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
+import { toast } from 'react-toastify'
 import moment from 'moment-timezone'
+import Alert from '../Components/Alert/View'
 
 const ViewModel = () => {
 	const location = useLocation()
@@ -37,6 +39,19 @@ const ViewModel = () => {
 	const onClickView = (path: string) => {
 		navigate(path)
 	}
+
+	const handleShowAlertTemp = () => {
+		toast.success(<Alert />, {
+			className: 'zeroloss-toast',
+			bodyClassName: 'zeroloss-toast-body',
+			icon: false,
+			hideProgressBar: true,
+		})
+	}
+
+	useEffect(() => {
+		handleShowAlertTemp()
+	}, [])
 
 	return {
 		timeStr,
