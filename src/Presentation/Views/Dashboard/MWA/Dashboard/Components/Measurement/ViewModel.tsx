@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
 import { useMWAStore } from '@/Store/MWA'
+import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 
 const ViewModel = () => {
 	const intl = useIntl()
@@ -9,6 +10,7 @@ const ViewModel = () => {
 	const { dashboardSensors } = useMWAStore(state => ({
 		dashboardSensors: state.dashboardSensors,
 	}))
+	const { isMobile, isTablet, isLargeMobile } = useResolutionDetection()
 
 	const data = useMemo(() => {
 		if (!dashboardSensors) return {}
@@ -32,6 +34,9 @@ const ViewModel = () => {
 	}
 
 	return {
+		isMobile,
+		isTablet,
+		isLargeMobile,
 		intl,
 		themeMode,
 		mode,

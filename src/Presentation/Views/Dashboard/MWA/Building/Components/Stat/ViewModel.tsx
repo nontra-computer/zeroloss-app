@@ -1,9 +1,11 @@
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { useMWAStore } from '@/Store/MWA'
 
 const ViewModel = () => {
 	const intl = useIntl()
+	const { isMobile, isLargeMobile } = useResolutionDetection()
 	const { mode } = useThemeMode()
 	let themeMode = ''
 	if (mode === 'system') {
@@ -17,6 +19,8 @@ const ViewModel = () => {
 	}))
 
 	return {
+		isMobile,
+		isLargeMobile,
 		intl,
 		themeMode,
 		data,

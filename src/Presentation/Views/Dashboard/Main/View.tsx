@@ -30,8 +30,8 @@ const MainDashboardView: React.FC = () => {
 				Main Dashboard
 			</PageTitle>
 
-			<div className="row g-5 gy-10 px-10 pb-10">
-				<div className="col-12">
+			<div className="row g-5 gy-10 px-10 pb-10 pt-10">
+				<div className="col-12 mt-20 mt-lg-0">
 					<div>
 						<div className="zeroloss-button-group w-fit-content shadow">
 							<button
@@ -57,7 +57,7 @@ const MainDashboardView: React.FC = () => {
 								Maps
 							</button>
 							<button
-								className={clsx('btn btn-sm middle cursor-pointer', {
+								className={clsx('btn btn-sm right cursor-pointer', {
 									'white-button': themeMode === 'light',
 									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px': themeMode === 'dark',
 								})}
@@ -67,13 +67,13 @@ const MainDashboardView: React.FC = () => {
 								)}
 								Calendar
 							</button>
-							<button
+							{/* <button
 								className={clsx('btn btn-sm right cursor-pointer', {
 									'white-button': themeMode === 'light',
 									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px': themeMode === 'dark',
 								})}>
 								<img src="/media/icons/zeroloss/plus.svg" alt="Plus Icon" width={18} height={18} />
-							</button>
+							</button> */}
 						</div>
 					</div>
 				</div>

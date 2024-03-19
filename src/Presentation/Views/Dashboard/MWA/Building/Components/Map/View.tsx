@@ -4,6 +4,7 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import Station1 from '@/Presentation/Components/Building/Station1/View'
 import Station2 from '@/Presentation/Components/Building/Station2/View'
 import Station3 from '@/Presentation/Components/Building/Station3/View'
+import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
 import clsx from 'clsx'
 
 import useViewModel from './ViewModel'
@@ -14,6 +15,7 @@ interface Props {
 
 const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 	const {
+		isLargeMobile,
 		isStation1,
 		isStation2,
 		isStation3,
@@ -31,7 +33,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 
 	return (
 		<React.Fragment>
-			<div className="d-flex flex-row justify-content-between align-items-center">
+			<div className="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-5 mb-lg-0">
 				<div>
 					<div
 						className={clsx('fs-2 fw-bolder', {
@@ -53,7 +55,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 					</p>
 				</div>
 
-				<div className="w-200px">
+				<div className="w-100 w-lg-200px">
 					<Select
 						className="shadow-sm"
 						options={stationDropdownOptions}
@@ -124,13 +126,14 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 				</div>
 			</div>
 
+			{/* begin:: Building */}
 			<div
 				id="measurement-map-container"
-				className="card border-12px border border-zeroloss-grey-200 p-0 overflow-hidden">
+				className="d-none d-sm-block card border-12px border border-zeroloss-grey-200 p-0 overflow-hidden">
 				<div
 					className="card-body position-relative"
 					style={{
-						height: '45vh',
+						height: isLargeMobile ? "500px" : '45vh',
 					}}>
 					<TransformWrapper
 						initialScale={0.8}
@@ -243,6 +246,11 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 					</TransformWrapper>
 				</div>
 			</div>
+			{/* end:: Building */}
+
+			{/* begin:: Mobile Caution */}
+			<PhoneRotateCaution />
+			{/* end:: Mobile Caution */}
 		</React.Fragment>
 	)
 }

@@ -13,13 +13,15 @@ import Alert from '../../Components/Alert/View'
 import MeasurementTable from '../../Components/MeasurementTable/View'
 import FeatureNews from '@/Presentation/Components/News/FeatureNews'
 import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
+import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
 import Select from 'react-select'
 import Filter from './Components/Filter'
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
 const MainDashboardMapView: React.FC = () => {
-	const { themeMode, data, type, onTypeChange, TYPE_OPTIONS } = useViewModel()
+	const { isMobile, isLargeMobile, isTablet, themeMode, data, type, onTypeChange, TYPE_OPTIONS } =
+		useViewModel()
 
 	return (
 		<React.Fragment>
@@ -28,7 +30,7 @@ const MainDashboardMapView: React.FC = () => {
 			<div className="row gy-5">
 				{/* Header */}
 				<div className="col-12">
-					<div className="d-flex flex-row justify-content-between align-items-center">
+					<div className="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
 						<div>
 							<div
 								className={clsx('fs-2 fw-bolder', {
@@ -47,26 +49,25 @@ const MainDashboardMapView: React.FC = () => {
 						</div>
 
 						<div
-							className="d-flex flex-row justify-content-between align-items-end"
+							className="w-100 w-lg-auto d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-end"
 							style={{ gap: '12px' }}>
 							<FormGenerator
 								formKey="search"
 								inputType="plain"
-								containerClassName="w-400px d-inline-block"
+								containerClassName="w-100 w-lg-400px d-inline-block"
 								additionalClassName="shadow-sm"
 								placeholder="ค้นหาสถานที่/เหตุการณ์"
 								label="ค้นหาเหตุการณ์"
 							/>
-							<div>
+							<div className="w-100 w-lg-auto">
 								<label className="form-label">ประเภทเหตุการณ์</label>
 								<Select
 									placeholder="เลือกประเภทเหตุการณ์"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
-									className="shadow-sm"
+									className="shadow-sm w-100 w-lg-200px"
 									styles={{
 										container: styles => ({
 											...styles,
-											width: '200px',
 											height: '44px',
 										}),
 										control: styles => ({
@@ -91,7 +92,7 @@ const MainDashboardMapView: React.FC = () => {
 									}}
 								/>
 							</div>
-							<div>
+							<div className="w-100 w-lg-auto">
 								<label className="form-label">รูปแบบการมองเห็น</label>
 								<Select
 									placeholder="เลือกรูปแบบการมองเห็น"
@@ -102,11 +103,10 @@ const MainDashboardMapView: React.FC = () => {
 										// @ts-ignore
 										if (option?.value) onTypeChange(option?.value ?? 'all')
 									}}
-									className="shadow-sm"
+									className="shadow-sm w-100 w-lg-200px"
 									styles={{
 										container: styles => ({
 											...styles,
-											width: '200px',
 											height: '44px',
 										}),
 										control: styles => ({
@@ -133,7 +133,7 @@ const MainDashboardMapView: React.FC = () => {
 							</div>
 							<button
 								id="kt_main_dashboard_map_filter_toggle"
-								className={clsx('btn btn-sm', {
+								className={clsx('btn btn-sm w-100 w-lg-auto', {
 									'white-button': themeMode === 'light',
 									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
 										themeMode === 'dark',
@@ -163,9 +163,10 @@ const MainDashboardMapView: React.FC = () => {
 							</div>
 						</div>
 
-						<div className="card-body pe-0">
+						<div className="card-body px-3 pe-lg-0">
 							<div className="row gy-5 gx-0">
-								<div className="col-12 col-lg-8">
+								{/* begin:: Map */}
+								<div className="d-none d-sm-block col-12 col-lg-8">
 									<h3>&nbsp;</h3>
 									<div className="card h-800px">
 										<div className="card-body p-0 position-relative">
@@ -174,7 +175,8 @@ const MainDashboardMapView: React.FC = () => {
 													<div
 														className="position-absolute w-50"
 														style={{ right: '1.5%', top: '2%', zIndex: 999 }}>
-														<Alert />
+														{/* @ts-ignore */}
+														<Alert {...{}} />
 													</div>
 												</React.Fragment>
 											)}
@@ -194,7 +196,7 @@ const MainDashboardMapView: React.FC = () => {
 														...styles,
 														width: '200px',
 														height: '44px',
-														left: '5%',
+														left: isMobile || isLargeMobile ? '7%' : isTablet ? '9%' : '5%',
 														top: '1.5%',
 														zIndex: 1000,
 													}),
@@ -253,6 +255,11 @@ const MainDashboardMapView: React.FC = () => {
 										</div>
 									</div>
 								</div>
+								{/* end:: Map */}
+
+								{/* begin:: Mobile Caution */}
+								<PhoneRotateCaution />
+								{/* end:: Mobile Caution */}
 
 								<div className="col-12 col-lg-4">
 									<h3 className="mx-auto" style={{ width: '95%' }}>
@@ -280,6 +287,7 @@ const MainDashboardMapView: React.FC = () => {
 							</div>
 						</div>
 					</div>
+					{/* end:: Map */}
 				</div>
 			</div>
 

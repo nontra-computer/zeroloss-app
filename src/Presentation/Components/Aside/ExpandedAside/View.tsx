@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
+import { isMobileDevice } from '@/_metronic/assets/ts/_utils'
 
 const ExpandedAside: React.FC = () => {
 	const { intl, isAsideExpanded, onClickLinkAside, subMenu, themeMode } = useViewModel()
@@ -19,14 +20,14 @@ const ExpandedAside: React.FC = () => {
 
 			<div
 				className={clsx('position-fixed h-100 transition-300 overflow-hidden text-nowrap', {
-					'w-300px border-1px border-l-0 border-t-0 border-b-0': isAsideExpanded,
+					'w-100 w-lg-300px border-1px border-l-0 border-t-0 border-b-0': isAsideExpanded,
 					'w-0': !isAsideExpanded,
 					'border-zeroloss-grey-200': isAsideExpanded && themeMode === 'light',
 					'border-zeroloss-grey-800': isAsideExpanded && themeMode === 'dark',
 					'bg-zeroloss-base-white': themeMode === 'light',
 					'bg-zeroloss-base-grey-carbon': themeMode === 'dark',
 				})}
-				style={{ marginLeft: 100, zIndex: 199 }}>
+				style={{ marginLeft: isMobileDevice() ? 45 : 100, zIndex: 9999 }}>
 				<div className="row p-6 py-10 gy-3">
 					{/* Logo */}
 					<div className="col-12 mb-5">

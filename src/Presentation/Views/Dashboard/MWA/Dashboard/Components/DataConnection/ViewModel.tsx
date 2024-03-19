@@ -35,7 +35,7 @@ const ViewModel = () => {
 			offlinePercentage,
 		}
 	}, [dashboardSensors])
-	const { isFullHD, is4K, is8K } = useResolutionDetection()
+	const { isMobile, isLargeMobile, isFullHD, is4K, is8K } = useResolutionDetection()
 	const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
 	const chartData = useMemo(
@@ -46,8 +46,10 @@ const ViewModel = () => {
 		if (is8K) return 100
 		if (is4K) return 100
 		if (isFullHD) return -20
-		return -40
-	}, [isFullHD, is4K, is8K])
+		if (isLargeMobile) return 100
+		if (isMobile) return 20
+		return 0
+	}, [isFullHD, is4K, is8K, isMobile, isLargeMobile])
 	const chartWidth = useMemo(() => {
 		if (is8K || is4K) return '500px'
 		else return '300px'
@@ -94,6 +96,7 @@ const ViewModel = () => {
 	}, [])
 
 	return {
+		isLargeMobile,
 		isFullHD,
 		is4K,
 		is8K,

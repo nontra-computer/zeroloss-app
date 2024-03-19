@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import useViewModel from './ViewModel'
 
 const Measurement: React.FC = () => {
-	const { data, intl, themeMode } = useViewModel()
+	const { isMobile, isLargeMobile, data, intl, themeMode } = useViewModel()
 
 	return (
 		<div className="row gy-5">
@@ -37,7 +37,7 @@ const Measurement: React.FC = () => {
 						'bg-zeroloss-base-white border-zeroloss-grey-200': themeMode === 'light',
 						'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 					})}>
-					<div className="card-body px-6 h-200px">
+					<div className="card-body px-6 min-h-200px">
 						<p
 							className={clsx('fs-3 fw-bolder my-0', {
 								'text-zeroloss-grey-900': themeMode === 'light',
@@ -51,8 +51,8 @@ const Measurement: React.FC = () => {
 						{/* begin::Chart */}
 						<Chart
 							type="donut"
-							width={'100%'}
-							height="160px"
+							width={isLargeMobile ? '50%' : '100%'}
+							height={isMobile || isLargeMobile ? undefined : '160px'}
 							series={[
 								data?.totalDanger ?? 0,
 								data?.totalWarning ?? 0,
@@ -65,7 +65,7 @@ const Measurement: React.FC = () => {
 									redrawOnWindowResize: true,
 									redrawOnParentResize: true,
 									offsetY: -10,
-									offsetX: 40,
+									offsetX: isMobile ? 0 : isLargeMobile ? 180 : 50,
 								},
 								plotOptions: {
 									pie: {
@@ -94,7 +94,7 @@ const Measurement: React.FC = () => {
 								colors: ['#DE5348', '#F79009', '#17B26A', '#667085'],
 								grid: {
 									padding: {
-										// bottom: -100,
+										bottom: isMobile || isLargeMobile ? 50 : 0,
 									},
 								},
 								dataLabels: {
@@ -102,26 +102,14 @@ const Measurement: React.FC = () => {
 								},
 								responsive: [
 									{
-										breakpoint: 480,
+										breakpoint: 835,
 										options: {
 											chart: {
-												width: 250,
-												height: 250,
+												// width: '100%',
+												// height: 250,
 											},
 											legend: {
-												position: 'left',
-											},
-										},
-									},
-									{
-										breakpoint: 481,
-										options: {
-											chart: {
-												width: 250,
-												height: 250,
-											},
-											legend: {
-												position: 'left',
+												position: 'bottom',
 											},
 										},
 									},
@@ -130,8 +118,8 @@ const Measurement: React.FC = () => {
 									fontFamily: 'Noto Sans Thai, sans-serif',
 									show: true,
 									position: 'left',
-									offsetY: 5,
-									offsetX: -30,
+									// offsetY: isMobile || isLargeMobile ? 70 : 5,
+									offsetX: !isMobile && !isLargeMobile ? -30 : undefined,
 									floating: true,
 									labels: {
 										colors: themeMode === 'dark' ? '#ffffff' : '#666666',
@@ -143,31 +131,31 @@ const Measurement: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<div className="col-12 col-lg-6 col-xxl-3">
+			<div className="col-12 col-xxl-3">
 				<NumberBox
 					id="mwa-exceeds"
 					title="ค่าเกินมาตรฐาน"
 					value={data?.totalDanger ?? 0}
 					type="danger"
-					height={200}
+					height={isMobile || isLargeMobile ? 140 : 200}
 				/>
 			</div>
-			<div className="col-12 col-lg-6 col-xxl-3">
+			<div className="col-12 col-xxl-3">
 				<NumberBox
 					id="mwa-inappropriate"
 					title="ค่าใกล้เกินมาตรฐาน"
 					value={data?.totalWarning ?? 0}
 					type="warning"
-					height={200}
+					height={isMobile || isLargeMobile ? 140 : 200}
 				/>
 			</div>
-			<div className="col-12 col-lg-6 col-xxl-3">
+			<div className="col-12 col-xxl-3">
 				<NumberBox
 					id="mwa-normal"
 					title="ค่าอยู่ในเกณฑ์ปกติ"
 					value={data?.totalNormal ?? 0}
 					type="success"
-					height={200}
+					height={isMobile || isLargeMobile ? 140 : 200}
 				/>
 			</div>
 		</div>

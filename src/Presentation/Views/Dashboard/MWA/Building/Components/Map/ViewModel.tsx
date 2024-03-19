@@ -16,7 +16,7 @@ const ViewModel = () => {
 	}))
 	const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
 	const [isShowHover, setIsShowHover] = useState(true)
-	const { isFullHD, is4K, is8K } = useResolutionDetection()
+	const { isLargeMobile, isFullHD, is4K, is8K } = useResolutionDetection()
 
 	const isStation1 = useMemo(() => buildingId === '1', [buildingId])
 	const isStation2 = useMemo(() => buildingId === '2', [buildingId])
@@ -184,6 +184,7 @@ const ViewModel = () => {
 	}, [])
 
 	return {
+		isLargeMobile,
 		canZoomAndPan,
 		isStation1,
 		isStation2,

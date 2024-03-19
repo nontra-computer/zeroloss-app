@@ -13,15 +13,15 @@ const ViewModel = () => {
 	const selectedLang = useLang()
 	const intl = useIntl()
 	const navigate = useNavigate()
-	// const currentTime = useCurrentTime()
+	const currentTime = useCurrentTime()
 	const timeStr = useMemo(() => {
-		const time = moment()
+		const time = moment(currentTime)
 			.tz('Asia/Bangkok')
 			.add(selectedLang === 'th' ? 543 : 0, 'year')
 			.format('DD/MM/YYYY HH:mm')
 
 		return intl.formatMessage({ id: 'ZEROLOSS.HEADER.CURRENT_TIME' }) + ' ' + time
-	}, [intl, selectedLang])
+	}, [currentTime, intl, selectedLang])
 	const { mode } = useThemeMode()
 	const { buildingId } = useParams<{ buildingId?: string }>()
 

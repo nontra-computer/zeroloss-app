@@ -16,10 +16,10 @@ const StatZoneView: React.FC = () => {
 	return (
 		<React.Fragment>
 			<div className="row g-5">
-				<div className="col-6 col-lg-2">
+				<div className="col-6 col-lg-4 col-xxl-2 h-100">
 					<NumberBox id="accident" title="Accident" type="danger" value={51} />
-					<div className="mt-2 d-flex flex-row justify-content-between">
-						<div>
+					<div className="mt-2 row">
+						<div className='col-6 col-lg-3'>
 							แจ้งเหตุ{' '}
 							<span
 								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
@@ -29,7 +29,7 @@ const StatZoneView: React.FC = () => {
 								3
 							</span>
 						</div>
-						<div>
+						<div className='col-6 col-lg-3'>
 							Lv. 1{' '}
 							<span
 								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
@@ -39,7 +39,7 @@ const StatZoneView: React.FC = () => {
 								3
 							</span>
 						</div>
-						<div>
+						<div className='col-6 col-lg-3'>
 							Lv. 2{' '}
 							<span
 								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
@@ -49,7 +49,7 @@ const StatZoneView: React.FC = () => {
 								3
 							</span>
 						</div>
-						<div>
+						<div className='col-6 col-lg-3'>
 							Lv. 3{' '}
 							<span
 								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
@@ -61,13 +61,13 @@ const StatZoneView: React.FC = () => {
 						</div>
 					</div>
 				</div>
-				<div className="col-6 col-lg-2">
+				<div className="col-6 col-lg-4 col-xxl-2 h-100">
 					<NumberBox id="nearMiss" title="Near Miss" type="warning" value={0} />
 				</div>
-				<div className="col-6 col-lg-2">
+				<div className="col-6 col-lg-4 col-xxl-2 h-100">
 					<NumberBox id="surveillance" title="Surveillance" type="success" value={1} />
 				</div>
-				<div className="col-6 col-lg-2">
+				<div className="col-6 col-lg-4 col-xxl-2 h-100">
 					<NumberBox id="maintenance" title="Maintenance" type="primary" value={3} />
 					<div className="mt-2 d-flex flex-row justify-content-between">
 						<div>
@@ -82,7 +82,7 @@ const StatZoneView: React.FC = () => {
 						</div>
 					</div>
 				</div>
-				<div className="col-6 col-lg-2">
+				<div className="col-6 col-lg-4 col-xxl-2 h-100">
 					<NumberBox id="activities" title="Activities" type="info" value={2} />
 					<div className="mt-2 d-flex flex-row justify-content-between">
 						<div>
@@ -97,7 +97,7 @@ const StatZoneView: React.FC = () => {
 						</div>
 					</div>
 				</div>
-				<div className="col-6 col-lg-2">
+				<div className="col-6 col-lg-4 col-xxl-2 h-100">
 					<NumberBox id="measurement" title="Measurement" type="soft-info" value={1} />
 				</div>
 			</div>

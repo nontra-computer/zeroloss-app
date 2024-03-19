@@ -27,7 +27,7 @@ const MwaMeasurementDashboardView: React.FC = () => {
 				การประปานครหลวง
 			</PageTitle>
 
-			<div className="row g-5 px-10 pb-10">
+			<div className="row g-5 px-10 pb-10 pt-20 pt-lg-10">
 				<div className="col-12 col-lg-8">
 					<Map onSelectBuilding={onSelectBuilding} />
 				</div>

@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import useViewModel from './ViewModel'
 
 const TotalMeasurement: React.FC = () => {
-	const { intl, themeMode, data, totalChartRef } = useViewModel()
+	const { isMobile, isLargeMobile, isTablet, intl, themeMode, data, totalChartRef } = useViewModel()
 
 	return (
 		<div className="row h-100">
@@ -36,7 +36,7 @@ const TotalMeasurement: React.FC = () => {
 						'bg-zeroloss-base-white border-zeroloss-grey-200': themeMode === 'light',
 						'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 					})}>
-					<div className="card-body px-6 h-200px">
+					<div className="card-body px-6 h-300px h-lg-350px h-xxl-200px">
 						<p
 							className={clsx('fs-3 fw-bolder my-0', {
 								'text-zeroloss-grey-900': themeMode === 'light',
@@ -50,14 +50,15 @@ const TotalMeasurement: React.FC = () => {
 						{/* begin::Chart */}
 						<Chart
 							type="donut"
-							width={'100%'}
-							height={150}
+							width={isLargeMobile ? '40%' : '100%'}
+							height={isMobile || isLargeMobile ? '220px' : isTablet ? '300px' : '150px'}
 							series={[data?.totalOnline ?? 0, data?.totalOffline ?? 0]}
 							options={{
 								labels: ['เชื่อมโยงได้', 'เชื่อมโยงไม่ได้'],
 								chart: {
 									redrawOnParentResize: true,
 									redrawOnWindowResize: true,
+									offsetX: isMobile ? -50 : isLargeMobile ? 150 : isTablet ? -50 : 50,
 								},
 								plotOptions: {
 									pie: {
@@ -66,6 +67,7 @@ const TotalMeasurement: React.FC = () => {
 										donut: {
 											labels: {
 												show: false,
+
 												name: {
 													show: true,
 													fontFamily: 'Noto Sans Thai, sans-serif',
@@ -87,7 +89,7 @@ const TotalMeasurement: React.FC = () => {
 								colors: ['#17B26A', '#475467'],
 								grid: {
 									padding: {
-										// bottom: -100,
+										bottom: isMobile || isLargeMobile || isTablet ? 10 : 0,
 									},
 								},
 								dataLabels: {
@@ -95,26 +97,14 @@ const TotalMeasurement: React.FC = () => {
 								},
 								responsive: [
 									{
-										breakpoint: 480,
+										breakpoint: 1195,
 										options: {
 											chart: {
-												width: 250,
-												height: 250,
+												// width: 250,
+												// height: 250,
 											},
 											legend: {
-												position: 'left',
-											},
-										},
-									},
-									{
-										breakpoint: 481,
-										options: {
-											chart: {
-												width: 250,
-												height: 250,
-											},
-											legend: {
-												position: 'left',
+												position: 'bottom',
 											},
 										},
 									},
@@ -123,7 +113,9 @@ const TotalMeasurement: React.FC = () => {
 									fontFamily: 'Noto Sans Thai, sans-serif',
 									show: true,
 									position: 'left',
-									offsetY: 20,
+									horizontalAlign: 'center',
+									// offsetY: 20,
+									offsetX: !isMobile && !isLargeMobile ? -30 : undefined,
 									floating: true,
 									labels: {
 										colors: themeMode === 'dark' ? '#ffffff' : '#666666',

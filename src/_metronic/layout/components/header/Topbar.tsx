@@ -14,6 +14,7 @@ import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModePr
 // import { useLocation } from 'react-router-dom'
 
 import ZerolossNotificationView from '@/Presentation/Views/Notification/View'
+import { isMobileDevice } from '@/_metronic/assets/ts/_utils'
 
 const itemClass = 'ms-1 ms-lg-3',
 	// btnClass =
@@ -133,7 +134,9 @@ const Topbar: FC = () => {
 				<button className="btn btn-sm btn-zeroloss-base-white text-zeroloss-error-800 border-1px border-zeroloss-brand-600 fw-bold">
 					<i className="bi bi-chat-left-text fs-5 me-2 mt-1 text-zeroloss-error-800"></i>
 
-					{`4 ${intl.formatMessage({ id: 'ZEROLOSS.HEADER.NEW_MESSAGE' })}`}
+					{isMobileDevice()
+						? '4'
+						: `4 ${intl.formatMessage({ id: 'ZEROLOSS.HEADER.NEW_MESSAGE' })}`}
 				</button>
 			</div>
 

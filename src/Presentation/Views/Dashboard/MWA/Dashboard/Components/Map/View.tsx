@@ -1,11 +1,13 @@
 import React from 'react'
 import Select from 'react-select'
 import PlantStation from '@/Presentation/Components/PlantStation/View'
+import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import { Tooltip } from 'react-tooltip'
 
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
+import { isMobileDevice } from '@/_metronic/assets/ts/_utils'
 
 interface Props {
 	onSelectBuilding: (id: string) => void
@@ -34,7 +36,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 
 	return (
 		<React.Fragment>
-			<div className="d-flex flex-row justify-content-between align-items-center">
+			<div className="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-5 mb-lg-0">
 				<div>
 					<div
 						className={clsx('fs-2 fw-bolder', {
@@ -56,10 +58,12 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 					</p>
 				</div>
 
-				<div className="w-300px">
+				<div className="w-100 w-lg-300px">
 					<Select
 						className="shadow-sm transition-300"
-						placeholder={'Select Building to View Measurement'}
+						placeholder={
+							isMobileDevice() ? 'View Measurement' : 'Select Building to View Measurement'
+						}
 						options={stationDropdownOptions}
 						styles={{
 							container: provided => ({
@@ -132,12 +136,13 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 				</div>
 			</div>
 
+			{/* begin:: Map */}
 			{stageDimensions.height > 0 && (
 				<React.Fragment>
 					<div
 						id="mwa-map-container"
 						className={clsx(
-							'card border-radius-12px border-1px p-0 overflow-hidden position-relative',
+							'd-none d-sm-block card border-radius-12px border-1px p-0 overflow-hidden position-relative',
 							{
 								// 'h-100': !showStage,
 								'bg-zeroloss-base-white border-zeroloss-grey-true-200': themeMode === 'light',
@@ -533,6 +538,11 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 					</div>
 				</React.Fragment>
 			)}
+			{/* end:: Map */}
+
+			{/* begin:: Mobile Caution */}
+			<PhoneRotateCaution />
+			{/* end:: Mobile Caution */}
 		</React.Fragment>
 	)
 }

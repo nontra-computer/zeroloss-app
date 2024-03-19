@@ -5,10 +5,10 @@ import clsx from 'clsx'
 import useViewModel from './ViewModel'
 
 const Stat: React.FC = () => {
-	const { intl, themeMode, data } = useViewModel()
+	const { isMobile, isLargeMobile, intl, themeMode, data } = useViewModel()
 
 	return (
-		<div className="row h-100 justify-content-start">
+		<div className="row gy-5 h-100 justify-content-start">
 			<div className="col-12" style={{ height: 'fit-content' }}>
 				<div
 					className={clsx('fs-2 fw-bolder', {
@@ -29,13 +29,13 @@ const Stat: React.FC = () => {
 					})}
 				</p>
 			</div>
-			<div className="col-12 col-lg-4">
+			<div className="col-6 col-lg-4">
 				<NumberBox
 					id="measurement-exceeds"
 					title="ค่าเกินมาตรฐาน"
 					type="danger"
 					value={data?.totalDanger ?? 0}
-					height={200}
+					height={isMobile || isLargeMobile ? 140 : 200}
 					// infos={[
 					// 	{
 					// 		label: 'แจ้งเหตุ',
@@ -52,13 +52,13 @@ const Stat: React.FC = () => {
 					// ]}
 				/>
 			</div>
-			<div className="col-12 col-lg-4">
+			<div className="col-6 col-lg-4">
 				<NumberBox
 					id="measurement-close-to-exceeds"
 					title="ค่าใกล้เกินมาตรฐาน"
 					type="warning"
 					value={data?.totalWarning ?? 0}
-					height={200}
+					height={isMobile || isLargeMobile ? 140 : 200}
 					// infos={[
 					// 	{
 					// 		label: 'แจ้งเหตุ',
@@ -75,13 +75,13 @@ const Stat: React.FC = () => {
 					// ]}
 				/>
 			</div>
-			<div className="col-12 col-lg-4">
+			<div className="col-6 col-lg-4">
 				<NumberBox
 					id="measurement-normal"
 					title="ค่าอยู่ในเกณฑ์ปกติ"
 					type="success"
 					value={data?.totalNormal ?? 0}
-					height={200}
+					height={isMobile || isLargeMobile ? 140 : 200}
 					// infos={[
 					// 	{
 					// 		label: 'แจ้งเหตุ',

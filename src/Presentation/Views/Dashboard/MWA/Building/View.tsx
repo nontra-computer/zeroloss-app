@@ -28,14 +28,14 @@ const MWABuildingDashboardView: React.FC = () => {
 				การประปานครหลวง
 			</PageTitle>
 
-			<div className="row g-5 px-10 pb-10">
+			<div className="row g-5 px-10 pb-10 pt-20 pt-lg-10">
 				<div className="col-12">
 					<Map onSelectBuilding={onSelectBuilding} />
 				</div>
-				<div className="col-12 col-lg-3">
+				<div className="col-12 col-xxl-3">
 					<TotalMeasurement />
 				</div>
-				<div className="col-12 col-lg-9">
+				<div className="col-12 col-xxl-9">
 					<Stat />
 				</div>
 				<div className="col-12">

@@ -15,7 +15,11 @@ const AsideDefault: FC = () => {
 	return (
 		<div
 			id="kt_aside"
-			className={clsx('aside overflow-y-auto overflow-x-visible bg-zeroloss-primary', classes.aside.join(' '))}
+			className={clsx(
+				'aside overflow-y-auto overflow-x-visible bg-zeroloss-primary',
+				classes.aside.join(' ')
+			)}
+			style={{ zIndex: 9999 }}
 			data-kt-drawer="true"
 			data-kt-drawer-name="aside"
 			data-kt-drawer-activate="{default: true, lg: false}"
@@ -64,9 +68,7 @@ const AsideDefault: FC = () => {
 					</div>
 				))}
 
-				<div
-					className={clsx('d-flex align-items-center', 'mb-10')}
-					id="kt_header_user_menu_toggle">
+				<div className={clsx('d-flex align-items-center', 'mb-10')} id="kt_header_user_menu_toggle">
 					{/* begin::Toggle */}
 					<div
 						className={clsx('cursor-pointer symbol', 'symbol-30px symbol-md-40px')}

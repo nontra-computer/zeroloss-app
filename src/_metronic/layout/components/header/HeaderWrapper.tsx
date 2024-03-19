@@ -1,6 +1,6 @@
 import clsx from 'clsx'
-import { Link } from 'react-router-dom'
-import { KTIcon, toAbsoluteUrl } from '../../../helpers'
+import { Link, useLocation } from 'react-router-dom'
+import { KTIcon } from '../../../helpers'
 import { useLayout } from '../../core'
 import { Header } from './Header'
 import { DefaultTitle } from './page-title/DefaultTitle'
@@ -9,16 +9,14 @@ import { Topbar } from './Topbar'
 export function HeaderWrapper() {
 	const { config, classes, attributes } = useLayout()
 	const { header, pageTitle } = config
+	const location = useLocation()
+	const isMWA = location.pathname.includes('mwa')
 
 	return (
 		<div
 			id="kt_header"
-			className={clsx(
-				'header',
-				classes.header.join(' '),
-				' align-items-stretch h-100px'
-			)}
-			style={{ minHeight: '80px' }}
+			className={clsx('header', classes.header.join(' '), ' align-items-stretch h-100px')}
+			style={{ minHeight: '80px', zIndex: 9998 }}
 			{...attributes.headerMenu}>
 			{/* begin::Container */}
 			<div
@@ -36,15 +34,17 @@ export function HeaderWrapper() {
 				{/* end::Aside mobile toggle */}
 
 				{/* begin::Mobile logo */}
+
 				<div className="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
 					<Link to="/dashboard" className="d-lg-none">
 						<img
-							alt="Logo"
-							src={toAbsoluteUrl('media/logos/demo4-mobile.svg')}
+							alt="Customer Icon"
+							src={isMWA ? '/media/icons/zeroloss/customer.svg' : '/media/icons/zeroloss/logo.svg'}
 							className="h-30px"
 						/>
 					</Link>
 				</div>
+
 				{/* end::Mobile logo */}
 
 				{pageTitle?.display && (

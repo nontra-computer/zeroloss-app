@@ -3,6 +3,7 @@ import { ThemeModeComponent } from '../../../assets/ts/layout'
 import { ThemeModeType, useThemeMode } from './ThemeModeProvider'
 import Switch from 'react-switch'
 import clsx from 'clsx'
+import { isMobileDevice } from '@/_metronic/assets/ts/_utils'
 
 type Props = {
 	toggleBtnClass?: string
@@ -71,6 +72,8 @@ const ThemeModeSwitcher = (
 						/>
 					</div>
 				}
+				width={isMobileDevice() ? 40 : undefined}
+				height={isMobileDevice() ? 20 : undefined}
 			/>
 			{/* <a
 				href="#"

@@ -9,7 +9,8 @@ import { vhToPixels } from '@/Utils/vhToPixels'
 interface Props {}
 
 const DataConnection: React.FC<Props> = () => {
-	const { is4K, is8K, chartData, chartOffsetX, intl, themeMode, data } = useViewModel()
+	const { isLargeMobile, is4K, is8K, chartData, chartOffsetX, intl, themeMode, data } =
+		useViewModel()
 
 	return (
 		<React.Fragment>
@@ -66,11 +67,11 @@ const DataConnection: React.FC<Props> = () => {
 									{/* end:: Header */}
 
 									{/* start:: Content */}
-									<div className="col-12 col-lg-5">
+									<div className="col-12 col-xxl-5">
 										{/* begin::Chart */}
 										<Chart
 											type="donut"
-											width={is4K || is8K ? '500px' : '300px'}
+											width={is4K || is8K || isLargeMobile ? '500px' : '300px'}
 											height={is4K || is8K ? vhToPixels(25) : 200}
 											series={chartData}
 											options={{
@@ -160,15 +161,14 @@ const DataConnection: React.FC<Props> = () => {
 											}}
 										/>
 									</div>
-									<div className="col-12 col-lg-7">
+									<div className="col-12 col-xxl-7 mt-5 mt-lg-0">
 										<div className="d-flex flex-column align-items-end justify-content-center h-100">
 											<div className="fs-5 mb-3 w-100">
 												<div className="row">
 													<div
-														className={clsx('col-8 text-end text-zeroloss-warning fw-bold', {
-															// 'text-zeroloss-warning': themeMode === 'dark',
-															// 'text-zeroloss-warning': themeMode === 'light',
-														})}>
+														className={clsx(
+															'col-5 col-xxl-8 text-xxl-end text-zeroloss-warning fw-bold'
+														)}>
 														{intl.formatMessage({
 															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_SENSOR_LABEL',
 														})}
@@ -187,10 +187,13 @@ const DataConnection: React.FC<Props> = () => {
 											<div className="fs-5 mb-3 w-100">
 												<div className="row">
 													<div
-														className={clsx('col-8 text-end text-zeroloss-error fw-bold', {
-															// 'text-zeroloss-warning': themeMode === 'dark',
-															// 'text-zeroloss-warning': themeMode === 'light',
-														})}>
+														className={clsx(
+															'col-5 col-xxl-8 text-xxl-end text-zeroloss-error fw-bold',
+															{
+																// 'text-zeroloss-warning': themeMode === 'dark',
+																// 'text-zeroloss-warning': themeMode === 'light',
+															}
+														)}>
 														{intl.formatMessage({
 															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_OFFLINE_SENSOR_LABEL',
 														})}
@@ -209,7 +212,7 @@ const DataConnection: React.FC<Props> = () => {
 											<div className="fs-5 mb-3 w-100">
 												<div className="row">
 													<div
-														className={clsx('col-8 text-end', {
+														className={clsx('col-5 col-xxl-8 text-xxl-end', {
 															'text-zeroloss-base-white': themeMode === 'dark',
 															'text-zeroloss-grey-600': themeMode === 'light',
 														})}>
@@ -231,7 +234,7 @@ const DataConnection: React.FC<Props> = () => {
 											<div className="fs-5 w-100">
 												<div className="row">
 													<div
-														className={clsx('col-8 text-end', {
+														className={clsx('col-5 col-xxl-8 text-xxl-end', {
 															'text-zeroloss-base-white': themeMode === 'dark',
 															'text-zeroloss-grey-600': themeMode === 'light',
 														})}>
@@ -359,7 +362,7 @@ const DataConnection: React.FC<Props> = () => {
 										<div className="row fs-5 gy-5 text-start">
 											{/* Available */}
 											<div
-												className={clsx('col-5 col-lg-4', {
+												className={clsx('col-5 col-xxl-4', {
 													'text-zeroloss-base-white': themeMode === 'dark',
 													'text-zeroloss-grey-600': themeMode === 'light',
 												})}>
@@ -368,14 +371,14 @@ const DataConnection: React.FC<Props> = () => {
 												})}
 											</div>
 											<div
-												className={clsx('col-7 col-lg-2', {
+												className={clsx('col-7 col-xxl-2', {
 													'text-zeroloss-success-700': themeMode === 'light',
 													'text-zeroloss-success-400': themeMode === 'dark',
 												})}>
 												55.7%
 											</div>
 											<div
-												className={clsx('col-6 col-lg-2', {
+												className={clsx('col-5 col-xxl-2', {
 													'text-zeroloss-grey-600': themeMode === 'light',
 													'text-zeroloss-base-white': themeMode === 'dark',
 												})}>
@@ -384,14 +387,14 @@ const DataConnection: React.FC<Props> = () => {
 												})}
 											</div>
 											<div
-												className={clsx('col-2 col-lg-2', {
+												className={clsx('col-2', {
 													'text-zeroloss-success-700': themeMode === 'light',
 													'text-zeroloss-success-400': themeMode === 'dark',
 												})}>
 												93
 											</div>
 											<div
-												className={clsx('col-4 col-lg-2', {
+												className={clsx('col-4 col-xxl-2 text-end text-lg-start', {
 													'text-zeroloss-base-white': themeMode === 'dark',
 													'text-zeroloss-grey-600': themeMode === 'light',
 												})}>
@@ -402,7 +405,7 @@ const DataConnection: React.FC<Props> = () => {
 
 											{/* Unavailable */}
 											<div
-												className={clsx('col-5 col-lg-4', {
+												className={clsx('col-5 col-xxl-4', {
 													'text-zeroloss-base-white': themeMode === 'dark',
 													'text-zeroloss-grey-600': themeMode === 'light',
 												})}>
@@ -411,14 +414,14 @@ const DataConnection: React.FC<Props> = () => {
 												})}
 											</div>
 											<div
-												className={clsx('col-7 col-lg-2', {
+												className={clsx('col-7 col-xxl-2', {
 													'text-zeroloss-error-500': themeMode === 'dark',
 													'text-zeroloss-error-700': themeMode === 'light',
 												})}>
 												55.7%
 											</div>
 											<div
-												className={clsx('col-6 col-lg-2', {
+												className={clsx('col-5 col-xxl-2', {
 													'text-zeroloss-grey-600': themeMode === 'light',
 													'text-zeroloss-base-white': themeMode === 'dark',
 												})}>
@@ -427,14 +430,14 @@ const DataConnection: React.FC<Props> = () => {
 												})}
 											</div>
 											<div
-												className={clsx('col-2 col-lg-2', {
+												className={clsx('col-2 col-xxl-2', {
 													'text-zeroloss-error-500': themeMode === 'dark',
 													'text-zeroloss-error-700': themeMode === 'light',
 												})}>
 												93
 											</div>
 											<div
-												className={clsx('col-4 col-lg-2', {
+												className={clsx('col-4 col-xxl-2 text-end text-lg-start', {
 													'text-zeroloss-base-white': themeMode === 'dark',
 													'text-zeroloss-grey-600': themeMode === 'light',
 												})}>

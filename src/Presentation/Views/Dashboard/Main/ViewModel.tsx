@@ -41,12 +41,12 @@ const ViewModel = () => {
 	}
 
 	const handleShowAlertTemp = () => {
-		toast.success(<Alert />, {
-			className: 'zeroloss-toast',
-			bodyClassName: 'zeroloss-toast-body',
-			icon: false,
-			hideProgressBar: true,
-		})
+		// toast.success(toastProps => <Alert {...toastProps} />, {
+		// 	className: 'zeroloss-toast',
+		// 	bodyClassName: 'zeroloss-toast-body',
+		// 	icon: false,
+		// 	hideProgressBar: true,
+		// })
 	}
 
 	useEffect(() => {

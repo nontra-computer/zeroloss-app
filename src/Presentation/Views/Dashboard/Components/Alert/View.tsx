@@ -1,17 +1,26 @@
 import React from 'react'
 import { KTSVG } from '@/_metronic/helpers'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { ToastContentProps } from 'react-toastify'
 import clsx from 'clsx'
 import moment from 'moment'
 import 'moment/locale/th'
 
-const Alert: React.FC = () => {
+interface Props extends ToastContentProps {}
+
+const Alert: React.FC<Props> = ({ closeToast }) => {
 	const { mode } = useThemeMode()
 	let themeMode = ''
 	if (mode === 'system') {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 	} else {
 		themeMode = mode
+	}
+
+	const onClose = () => {
+		if (closeToast) {
+			closeToast()
+		}
 	}
 
 	return (
@@ -22,7 +31,7 @@ const Alert: React.FC = () => {
 					'bg-zeroloss-grey-true-800 border-zeroloss-base-white border-1px': themeMode === 'dark',
 				})}
 				// style={{ right: '2%', top: '1.5%', zIndex: 1000 }}
-				>
+			>
 				<div className="card-body p-0">
 					<div className="row min-h-80px w-100 gx-0">
 						<div className="col-4">
@@ -42,7 +51,7 @@ const Alert: React.FC = () => {
 										})}>
 										{moment().format('DD/MM/YYYY HH:mm')}
 									</div>
-									<button className="btn btn-sm btn-icon btn-active-light">
+									<button className="btn btn-sm btn-icon btn-active-light" onClick={onClose}>
 										<KTSVG path="media/icons/zeroloss/x-close.svg" />
 									</button>
 								</div>

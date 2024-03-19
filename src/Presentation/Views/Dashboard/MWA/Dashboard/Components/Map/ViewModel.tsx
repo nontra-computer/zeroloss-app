@@ -20,7 +20,7 @@ const ViewModel = () => {
 		stations: state.stations,
 		getStations: state.getStations,
 	}))
-	const { is4K, is8K } = useResolutionDetection()
+	const { isLargeMobile, is4K, is8K } = useResolutionDetection()
 
 	const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -187,6 +187,7 @@ const ViewModel = () => {
 	// const firstBuild = document.querySelectorAll('#first-building')
 
 	return {
+		isLargeMobile,
 		is4K,
 		is8K,
 		isLoading,

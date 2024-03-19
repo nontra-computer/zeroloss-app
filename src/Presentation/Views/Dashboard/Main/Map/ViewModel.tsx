@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 
 const TYPE_OPTIONS = [
 	{
@@ -156,6 +157,7 @@ const MOCK_DATA: any[] = [
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
+	const { isMobile, isLargeMobile, isTablet, } = useResolutionDetection()
 	const [type, setType] = useState<'all' | 'wind-direction' | 'simulation' | 'measurement'>('all')
 
 	let themeMode = ''
@@ -186,6 +188,9 @@ const ViewModel = () => {
 
 	return {
 		TYPE_OPTIONS,
+		isMobile,
+		isLargeMobile,
+		isTablet,
 		themeMode,
 		data: data,
 		type,

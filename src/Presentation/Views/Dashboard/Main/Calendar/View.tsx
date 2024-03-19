@@ -36,7 +36,7 @@ const MainDashboardCalendarView: React.FC = () => {
 
 			<div className="row gy-5">
 				<div className="col-12">
-					<div className="d-flex flex-row justify-content-between align-items-center">
+					<div className="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
 						<div>
 							<div
 								className={clsx('fs-2 fw-bolder', {
@@ -54,25 +54,26 @@ const MainDashboardCalendarView: React.FC = () => {
 							</p>
 						</div>
 
-						<div className="d-flex flex-row justify-content-between" style={{ gap: '12px' }}>
+						<div
+							className="w-100 w-lg-auto d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between"
+							style={{ gap: '12px' }}>
 							<FormGenerator
 								formKey="search"
 								inputType="plain"
-								containerClassName="w-400px d-inline-block"
+								containerClassName="w-100 w-lg-400px d-inline-block"
 								additionalClassName="shadow-sm"
 								placeholder="พิมพ์ค้นหาที่นี่"
 								label="ค้นหาเหตุการณ์"
 							/>
-							<div>
+							<div className="w-100 w-lg-auto">
 								<label className="form-label">ประเภทเหตุการณ์</label>
 								<Select
 									placeholder="เลือกประเภทเหตุการณ์"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
-									className="shadow-sm"
+									className="w-100 shadow-sm w-lg-200px"
 									styles={{
 										container: styles => ({
 											...styles,
-											width: '200px',
 											height: '44px',
 										}),
 										control: styles => ({
@@ -103,25 +104,29 @@ const MainDashboardCalendarView: React.FC = () => {
 
 				<div className="col-12">
 					<div className="card">
-						<div className="card-header">
-							<div className="card-title">
-								<button className="btn btn-sm white-button me-4" onClick={prevMonth}>
-									<i className="bi bi-arrow-left fs-2"></i>
-								</button>
-								<h2 className="fs-2 fw-bold">{currentMonth}</h2>
-								<button className="btn btn-sm white-button mx-4" onClick={nextMonth}>
-									<i className="bi bi-arrow-right fs-2"></i>
-								</button>
+						<div className="card-header px-4 px-10">
+							<div
+								className="card-title flex-column flex-lg-row w-100 w-lg-auto align-items-center"
+								style={{ gap: '12px' }}>
+								<div className="d-flex flex-row align-items-center justify-content-between w-100 w-lg-auto">
+									<button className="btn btn-sm white-button me-4" onClick={prevMonth}>
+										<i className="bi bi-arrow-left fs-2"></i>
+									</button>
+									<h2 className="fs-2 fw-bold">{currentMonth}</h2>
+									<button className="btn btn-sm white-button ms-4" onClick={nextMonth}>
+										<i className="bi bi-arrow-right fs-2"></i>
+									</button>
+								</div>
 								<button
-									className="btn btn-sm btn-zeroloss-primary text-zeroloss-base-white fw-bold fs-5"
+									className="btn btn-sm btn-zeroloss-primary text-zeroloss-base-white fw-bold fs-5 w-100 w-lg-auto"
 									onClick={goToToday}>
-									<i className="bi bi-flag-fill me-2 text-zeroloss-base-white"></i>
-									Today
+									<i className="bi bi-flag-fill text-zeroloss-base-white d-inline-block"></i>
+									<span>Today</span>
 								</button>
 							</div>
-							<div className="card-tooolbar">
+							<div className="card-toolbar w-100 w-md-auto my-5 my-xxl-0">
 								<div
-									className="d-flex flex-row align-items-center justify-content-between h-100"
+									className="mx-auto d-flex flex-column flex-sm-row align-items-sm-center justify-content-center justify-content-md-between h-100"
 									style={{ gap: '24px' }}>
 									<div className="fs-6">
 										<span

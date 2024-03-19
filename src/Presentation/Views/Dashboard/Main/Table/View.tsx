@@ -13,10 +13,10 @@ const MainDashboardTableView: React.FC = () => {
 			<div className="row gy-5">
 				{/* Header */}
 				<div className="col-12">
-					<div className="d-flex flex-row justify-content-between align-items-center">
+					<div className="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
 						<div>
 							<div
-								className={clsx('fs-2 fw-bolder', {
+								className={clsx('fs-2 fw-bolder w-100', {
 									'text-zeroloss-grey-900': themeMode === 'light',
 									'text-zeroloss-base-white': themeMode === 'dark',
 								})}>
@@ -31,25 +31,24 @@ const MainDashboardTableView: React.FC = () => {
 							</p>
 						</div>
 
-						<div className="d-flex flex-row justify-content-between" style={{ gap: '12px' }}>
+						<div className="w-100 w-lg-auto d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between" style={{ gap: '12px' }}>
 							<FormGenerator
 								formKey="search"
 								inputType="plain"
-								containerClassName="w-400px d-inline-block"
+								containerClassName="w-100 w-lg-400px d-inline-block"
 								additionalClassName="shadow-sm"
 								placeholder="พิมพ์ค้นหาที่นี่"
 								label="ค้นหาเหตุการณ์"
 							/>
-							<div>
+							<div className='w-100 w-lg-auto'>
 								<label className="form-label">ประเภทเหตุการณ์</label>
 								<Select
 									placeholder="เลือกประเภทเหตุการณ์"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
-									className="shadow-sm"
+									className="w-100 shadow-sm w-lg-200px"
 									styles={{
 										container: styles => ({
 											...styles,
-											width: '200px',
 											height: '44px',
 										}),
 										control: styles => ({
