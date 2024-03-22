@@ -6,7 +6,16 @@ import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
 const MainDashboardTableView: React.FC = () => {
-	const { themeMode, data, TABLE_CONFIGS } = useViewModel()
+	const {
+		themeMode,
+		isLoading,
+		filter,
+		setFilter,
+		data,
+		dataTypeOptions,
+		TABLE_CONFIGS,
+		LOADING_TABLE_CONFIGS,
+	} = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -31,7 +40,9 @@ const MainDashboardTableView: React.FC = () => {
 							</p>
 						</div>
 
-						<div className="w-100 w-lg-auto d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between" style={{ gap: '12px' }}>
+						<div
+							className="w-100 w-lg-auto d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between"
+							style={{ gap: '12px' }}>
 							<FormGenerator
 								formKey="search"
 								inputType="plain"
@@ -39,13 +50,18 @@ const MainDashboardTableView: React.FC = () => {
 								additionalClassName="shadow-sm"
 								placeholder="พิมพ์ค้นหาที่นี่"
 								label="ค้นหาเหตุการณ์"
+								value={filter.search}
+								onChange={e => setFilter({ ...filter, search: e.target.value })}
 							/>
-							<div className='w-100 w-lg-auto'>
+							<div className="w-100 w-lg-auto">
 								<label className="form-label">ประเภทเหตุการณ์</label>
 								<Select
 									placeholder="เลือกประเภทเหตุการณ์"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
 									className="w-100 shadow-sm w-lg-200px"
+									options={dataTypeOptions}
+									value={dataTypeOptions.find(option => option.value === filter.type) ?? null}
+									onChange={option => setFilter({ ...filter, type: option?.value })}
 									styles={{
 										container: styles => ({
 											...styles,
@@ -87,7 +103,12 @@ const MainDashboardTableView: React.FC = () => {
 							</div>
 						</div>
 						<div className="card-body p-0 pb-5">
-							<ClientSideTable pagination columns={TABLE_CONFIGS} data={data} items_per_page={10} />
+							<ClientSideTable
+								pagination
+								columns={isLoading ? LOADING_TABLE_CONFIGS : TABLE_CONFIGS}
+								data={data}
+								items_per_page={10}
+							/>
 						</div>
 					</div>
 				</div>
