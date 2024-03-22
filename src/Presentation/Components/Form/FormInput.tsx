@@ -25,6 +25,7 @@ const FormInput: React.FC<FormInputProp> = ({
 	markInput,
 	mark = '',
 	markChar,
+	onPressEnter,
 }) => {
 	const validClassName: string = isValidClassName(isShowValid, false, disabled)
 	const { mode } = useThemeMode()
@@ -71,6 +72,11 @@ const FormInput: React.FC<FormInputProp> = ({
 								'is-invalid': isShowValid,
 							})}
 							maskChar={markChar}
+							onKeyDown={e => {
+								if (e.key === 'Enter' && onPressEnter) {
+									onPressEnter()
+								}
+							}}
 						/>
 					) : (
 						<input
@@ -85,6 +91,11 @@ const FormInput: React.FC<FormInputProp> = ({
 							disabled={disabled}
 							aria-label="form-input-component"
 							data-testid="form-input-component"
+							onKeyDown={e => {
+								if (e.key === 'Enter' && onPressEnter) {
+									onPressEnter()
+								}
+							}}
 						/>
 					)}
 					{additionalComInput}

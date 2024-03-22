@@ -26,6 +26,7 @@ export interface FormInputProp {
 	markInput?: boolean
 	mark?: string
 	markChar?: string | null
+	onPressEnter?: () => void
 }
 
 export interface FormInputPrefixProp {

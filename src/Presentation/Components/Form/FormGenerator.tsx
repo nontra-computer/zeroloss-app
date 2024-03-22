@@ -80,6 +80,7 @@ const FormGenerator: React.FC<Prop> = ({
 	markInput,
 	mark,
 	markChar,
+	onPressEnter,
 }) => {
 	switch (inputType) {
 		case 'plain':
@@ -105,6 +106,7 @@ const FormGenerator: React.FC<Prop> = ({
 					markInput={markInput}
 					mark={mark}
 					markChar={markChar}
+					onPressEnter={onPressEnter}
 				/>
 			)
 		case 'prefix':

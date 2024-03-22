@@ -4,15 +4,20 @@ import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
+import { useEventStore } from '@/Store/Event'
 import { toast } from 'react-toastify'
 import moment from 'moment-timezone'
-import Alert from '../Components/Alert/View'
+// import Alert from '../Components/Alert/View'
 
 const ViewModel = () => {
 	const location = useLocation()
 	const navigate = useNavigate()
 	const selectedLang = useLang()
 	const intl = useIntl()
+	const { summary, getSummary } = useEventStore(state => ({
+		summary: state.summary,
+		getSummary: state.getSummary,
+	}))
 
 	const currentTime = useCurrentTime()
 	const timeStr = useMemo(() => {
@@ -36,6 +41,14 @@ const ViewModel = () => {
 	const isShowMap = location.pathname === '/dashboard/overview/map'
 	const isShowCalendar = location.pathname === '/dashboard/overview/calendar'
 
+	const fetchData = () => {
+		getSummary().then(({ data, success }) => {
+			if (!success) {
+				toast.error(data)
+			}
+		})
+	}
+
 	const onClickView = (path: string) => {
 		navigate(path)
 	}
@@ -53,12 +66,18 @@ const ViewModel = () => {
 		handleShowAlertTemp()
 	}, [])
 
+	useEffect(() => {
+		fetchData()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
 	return {
 		timeStr,
 		themeMode,
 		isShowTable,
 		isShowMap,
 		isShowCalendar,
+		summary,
 		onClickView,
 	}
 }

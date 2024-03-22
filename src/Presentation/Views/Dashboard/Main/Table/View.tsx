@@ -1,7 +1,7 @@
 import React from 'react'
 import { ClientSideTable } from '@/Presentation/Components/Table'
 import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
-import Select from 'react-select'
+import Select, { components } from 'react-select'
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
@@ -9,8 +9,13 @@ const MainDashboardTableView: React.FC = () => {
 	const {
 		themeMode,
 		isLoading,
+		isMobile,
 		filter,
-		setFilter,
+		displayFilter,
+		searchText,
+		setSearchText,
+		onAddFilter,
+		onRemoveFilter,
 		data,
 		dataTypeOptions,
 		TABLE_CONFIGS,
@@ -50,8 +55,12 @@ const MainDashboardTableView: React.FC = () => {
 								additionalClassName="shadow-sm"
 								placeholder="พิมพ์ค้นหาที่นี่"
 								label="ค้นหาเหตุการณ์"
-								value={filter.search}
-								onChange={e => setFilter({ ...filter, search: e.target.value })}
+								value={searchText}
+								onChange={e => setSearchText(e.target.value)}
+								onPressEnter={() => {
+									onAddFilter('search', searchText)
+									setSearchText('')
+								}}
 							/>
 							<div className="w-100 w-lg-auto">
 								<label className="form-label">ประเภทเหตุการณ์</label>
@@ -61,7 +70,7 @@ const MainDashboardTableView: React.FC = () => {
 									className="w-100 shadow-sm w-lg-200px"
 									options={dataTypeOptions}
 									value={dataTypeOptions.find(option => option.value === filter.type) ?? null}
-									onChange={option => setFilter({ ...filter, type: option?.value })}
+									onChange={option => onAddFilter('type', option?.value)}
 									styles={{
 										container: styles => ({
 											...styles,
@@ -86,6 +95,34 @@ const MainDashboardTableView: React.FC = () => {
 									}}
 									components={{
 										IndicatorSeparator: () => null,
+										SingleValue: props => (
+											<components.SingleValue {...props} className="cursor-pointer">
+												<span
+													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
+														'bg-zeroloss-error': props.data.value === 1,
+														'bg-zeroloss-warning': props.data.value === 2,
+														'bg-zeroloss-success': props.data.value === 3,
+														'bg-zeroloss-primary': props.data.value === 4,
+														'bg-zeroloss-brand-600': props.data.value === 5,
+														'bg-zeroloss-primary-400': props.data.value === 6,
+													})}></span>
+												{props.data.label}
+											</components.SingleValue>
+										),
+										Option: props => (
+											<components.Option {...props} className="cursor-pointer">
+												<span
+													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
+														'bg-zeroloss-error': props.data.value === 1,
+														'bg-zeroloss-warning': props.data.value === 2,
+														'bg-zeroloss-success': props.data.value === 3,
+														'bg-zeroloss-primary': props.data.value === 4,
+														'bg-zeroloss-brand-600': props.data.value === 5,
+														'bg-zeroloss-primary-400': props.data.value === 6,
+													})}></span>
+												{props.data.label}
+											</components.Option>
+										),
 									}}
 								/>
 							</div>
@@ -97,9 +134,58 @@ const MainDashboardTableView: React.FC = () => {
 				<div className="col-12">
 					<div className="card">
 						<div className="card-header">
-							<div className="card-title fw-bold">
-								Current Filter:
-								<span className="ms-3 fw-normal">None</span>
+							<div className="card-title fw-bold w-100 w-lg-auto flex-column flex-lg-row align-items-lg-center">
+								<div className="d-none d-lg-block">Current Filter:</div>
+								{(displayFilter?.search ?? []).length + (displayFilter?.type ?? []).length === 0 ? (
+									<span
+										className={clsx('fw-normal', {
+											'ms-3': !isMobile,
+											'mt-3': isMobile,
+										})}>
+										<span className="d-inine-block d-lg-none">Current Filter: </span> None
+									</span>
+								) : (
+									<React.Fragment>
+										<div
+											className="d-flex flex-column flex-lg-row align-items-center w-100 w-lg-auto ms-3"
+											style={{ gap: '12px' }}>
+											{(displayFilter?.search ?? []).map((item: any, index: number) => (
+												<div
+													key={index}
+													className={clsx(
+														'btn btn-sm btn-light-danger text-zeroloss-error fw-bolder d-flex',
+														{
+															'w-100': isMobile,
+															'flex-row justify-content-between': isMobile,
+														}
+													)}>
+													<span>{item}</span>
+													<button
+														className="btn-close ms-2 text-zeroloss-error"
+														onClick={() => onRemoveFilter('search', item)}
+													/>
+												</div>
+											))}
+											{(displayFilter?.type ?? []).map((item: any, index: number) => (
+												<div
+													key={index}
+													className={clsx(
+														'btn btn-sm btn-light-danger text-zeroloss-error fw-bolder d-flex',
+														{
+															'w-100': isMobile,
+															'flex-row justify-content-between': isMobile,
+														}
+													)}>
+													<span>{item?.name}</span>
+													<button
+														className="btn-close ms-2 text-zeroloss-error"
+														onClick={() => onRemoveFilter('type', item?.id)}
+													/>
+												</div>
+											))}
+										</div>
+									</React.Fragment>
+								)}
 							</div>
 						</div>
 						<div className="card-body p-0 pb-5">

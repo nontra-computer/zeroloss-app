@@ -37,7 +37,8 @@ const MainDashboardView: React.FC = () => {
 							<button
 								className={clsx('btn btn-sm left cursor-pointer', {
 									'white-button': themeMode === 'light',
-									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px': themeMode === 'dark',
+									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
+										themeMode === 'dark',
 								})}
 								onClick={() => onClickView('/dashboard/overview/table')}>
 								{isShowTable && (
@@ -48,7 +49,8 @@ const MainDashboardView: React.FC = () => {
 							<button
 								className={clsx('btn btn-sm middle cursor-pointer', {
 									'white-button': themeMode === 'light',
-									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px': themeMode === 'dark',
+									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
+										themeMode === 'dark',
 								})}
 								onClick={() => onClickView('/dashboard/overview/map')}>
 								{isShowMap && (
@@ -59,7 +61,8 @@ const MainDashboardView: React.FC = () => {
 							<button
 								className={clsx('btn btn-sm right cursor-pointer', {
 									'white-button': themeMode === 'light',
-									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px': themeMode === 'dark',
+									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
+										themeMode === 'dark',
 								})}
 								onClick={() => onClickView('/dashboard/overview/calendar')}>
 								{isShowCalendar && (

@@ -11,14 +11,17 @@ import 'moment/locale/th'
 import Skeleton from 'react-loading-skeleton'
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
 
-const INITIAL_STATE_FILTER = {
-	type: 'all',
-	search: '',
+const INITIAL_STATE_FILTER: {
+	type: any[]
+	search: any[]
+} = {
+	type: [],
+	search: [],
 }
 
 const ViewModel = () => {
 	const { updatePagination, updateDefaultSorting, updateLoading } = useContext(TableContext)
-	const { is4K, is8K } = useResolutionDetection()
+	const { isMobile, is4K, is8K } = useResolutionDetection()
 	const { mode } = useThemeMode()
 	const { rawData, dataTypes, getAll, getTypes, clearState } = useEventStore(state => ({
 		rawData: state.data,
@@ -28,42 +31,83 @@ const ViewModel = () => {
 		clearState: state.clearState,
 	}))
 	const [isLoading, setIsLoading] = useState(false)
+	const [searchText, setSearchText] = useState('')
 	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
 
 	const data = useMemo(
 		() =>
 			rawData.filter(d => {
-				if (filter.type === 'all') {
-					return true
-				} else {
-					return d.idEventType === filter.type
+				if (filter.search.length > 0) {
+					const search = filter.search.join(' ').toLowerCase()
+					const searchValues = Object.values(d).join(' ').toLowerCase()
+					if (!searchValues.includes(search)) return false
 				}
+
+				if (filter.type.length > 0) {
+					const type = filter.type.map((t: any) => t)
+					if (!type.includes(d.eventType.id)) return false
+				}
+
+				return true
 			}),
 		[rawData, filter]
 	)
+	const displayFilter = useMemo(() => {
+		const results: any = {}
+
+		Object.keys(filter).forEach(key => {
+			if (key === 'type') {
+				results[key] = dataTypes.filter((d: any) => filter[key].includes(d.id))
+			} else if (key === 'search') {
+				results[key] = filter[key]
+			}
+		})
+
+		return results
+	}, [filter, dataTypes])
 
 	const dataTypeOptions: {
 		label: string
 		value: any
-	}[] = [
-		{
-			label: 'ทั้งหมด',
-			value: 'all',
-		},
-		...dataTypes.map(
-			(d: any) => ({
-				label: d.name,
-				value: d.id,
-			}),
-			[]
-		),
-	]
+	}[] = dataTypes.map(
+		(d: any) => ({
+			label: d.name,
+			value: d.id,
+		}),
+		[]
+	)
 
 	let themeMode = ''
 	if (mode === 'system') {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 	} else {
 		themeMode = mode
+	}
+
+	const onAddFilter = (key: string, value: any) => {
+		setFilter((prev: any) => ({
+			...prev,
+			[key]: [...prev[key], value],
+		}))
+
+		if (key === 'search') {
+			setSearchText('')
+		}
+	}
+
+	const onRemoveFilter = (key: string, value: any) => {
+		if (key === 'search') {
+			setSearchText('')
+			setFilter(prevState => ({
+				...prevState,
+				[key]: prevState[key].filter((v: any) => v !== value),
+			}))
+		} else if (key === 'type') {
+			setFilter(prevState => ({
+				...prevState,
+				[key]: prevState[key].filter((v: any) => v !== value),
+			}))
+		}
 	}
 
 	const fetchData = () => {
@@ -92,8 +136,8 @@ const ViewModel = () => {
 			Cell: (props: any) => (
 				<DoubleLineImage
 					img={props.row.original?.img}
-					label={props.row.original?.title}
-					description={props.row.original?.title}
+					label={props.row.original?.eventSubTypeTitle ?? '-'}
+					description={props.row.original?.title ?? '-'}
 				/>
 			),
 		},
@@ -102,7 +146,15 @@ const ViewModel = () => {
 			accessor: 'locationName',
 			minWidth: is4K || is8K ? 60 : 40,
 			Cell: (props: any) => {
-				return <span>{props.row.original.locationName}</span>
+				return (
+					<span
+						className={clsx({
+							'text-zeroloss-base-white': themeMode === 'dark',
+							'text-zeroloss-grey-900': themeMode === 'light',
+						})}>
+						{props.row.original.locationName}
+					</span>
+				)
 			},
 		},
 		{
@@ -111,7 +163,11 @@ const ViewModel = () => {
 			minWidth: is4K || is8K ? 60 : 40,
 			Cell: (props: any) => {
 				return (
-					<span>
+					<span
+						className={clsx({
+							'text-zeroloss-base-white': themeMode === 'dark',
+							'text-zeroloss-grey-900': themeMode === 'light',
+						})}>
 						{props.row.original?.start
 							? moment(props.row.original?.start).format('DD/MM/YYYY HH:mm')
 							: '-'}
@@ -177,7 +233,7 @@ const ViewModel = () => {
 				return (
 					<DoubleLineImage
 						img={'/media/icons/zeroloss/default-placeholder.png'}
-						label={props.row.original.longDescriptionHeader ?? '-'}
+						label={props.row.original.detail ?? '-'}
 						description={props.row.original.longDescription ?? ''}
 					/>
 				)
@@ -252,8 +308,13 @@ const ViewModel = () => {
 	return {
 		themeMode,
 		isLoading,
+		isMobile,
 		filter,
-		setFilter,
+		displayFilter,
+		searchText,
+		setSearchText,
+		onAddFilter,
+		onRemoveFilter,
 		data: data,
 		dataTypeOptions,
 		LOADING_TABLE_CONFIGS,
