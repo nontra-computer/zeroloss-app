@@ -11,6 +11,14 @@ interface Props {
 }
 
 const WindPopup: React.FC<Props> = ({ title, direction, speed, temp, rh, bp }) => {
+	const generateValue = (value: any, unit: string) => {
+		if (value === undefined || value === null) {
+			return '-'
+		} else {
+			return value + ' ' + unit
+		}
+	}
+
 	return (
 		<React.Fragment>
 			<div className="card bg-zeroloss-primary min-h-200px min-w-150px">
@@ -24,13 +32,21 @@ const WindPopup: React.FC<Props> = ({ title, direction, speed, temp, rh, bp }) =
 					</div>
 					<div className="mt-4 text-start">
 						<h6 className="text-start text-zeroloss-base-white fw-bold fs-4">{title ?? '-'}</h6>
-						<div className="text-zeroloss-base-white text-start mb-1">WS : {speed ?? 0} m/s</div>
 						<div className="text-zeroloss-base-white text-start mb-1">
-							WD : {direction ?? 0} Deg NE
+							WS : {generateValue(speed, 'm/s')}
 						</div>
-						<div className="text-zeroloss-base-white text-start mb-1">Temp : {temp ?? 0} Deg C</div>
-						<div className="text-zeroloss-base-white text-start mb-1">RH : {rh ?? 0}%</div>
-						<div className="text-zeroloss-base-white text-start mb-3">BP :{bp ?? 0} HHmg</div>
+						<div className="text-zeroloss-base-white text-start mb-1">
+							WD : {generateValue(direction, 'Deg NE')}
+						</div>
+						<div className="text-zeroloss-base-white text-start mb-1">
+							Temp : {generateValue(temp, '°C')}
+						</div>
+						<div className="text-zeroloss-base-white text-start mb-1">
+							RH : {generateValue(rh, '%')}
+						</div>
+						<div className="text-zeroloss-base-white text-start mb-3">
+							BP :{generateValue(bp, 'HHmg')}
+						</div>
 
 						<span className="cursor-pointer fw-bold text-zeroloss-base-white">
 							รายละเอียดเพิ่มเติม

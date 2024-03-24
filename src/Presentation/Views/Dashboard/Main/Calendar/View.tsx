@@ -30,6 +30,7 @@ const MainDashboardCalendarView: React.FC = () => {
 		nextMonth,
 		prevMonth,
 		goToToday,
+		changeView,
 		filter,
 		displayFilter,
 		searchText,
@@ -206,7 +207,7 @@ const MainDashboardCalendarView: React.FC = () => {
 							</div>
 						</div>
 
-						<div className="card-body">
+						<div className="card-body p-0">
 							<div className="card">
 								<div className="card-header px-4 px-10">
 									<div
@@ -227,6 +228,44 @@ const MainDashboardCalendarView: React.FC = () => {
 											<i className="bi bi-flag-fill text-zeroloss-base-white d-inline-block"></i>
 											<span>Today</span>
 										</button>
+										<div className="zeroloss-button-group w-fit-content shadow">
+											<button
+												className={clsx('btn btn-sm left cursor-pointer', {
+													'white-button': themeMode === 'light',
+													'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
+														themeMode === 'dark',
+													active: calendarRef?.current.getApi().view.type === 'dayGridMonth',
+												})}
+												onClick={() => changeView('dayGridMonth')}>
+												{/* {calendarRef?.current.getApi().view.type === 'dayGridMonth' && (
+													<span className="d-inline-block bg-zeroloss-success-500 p-1 rounded-circle w-2px h-2px me-2" />
+												)}
+												Month */}
+												<img
+													src="/media/icons/zeroloss/table.svg"
+													width={24}
+													alt="Main Dashboard Calendar Month View Icon"
+												/>
+											</button>
+											<button
+												className={clsx('btn btn-sm right cursor-pointer', {
+													'white-button': themeMode === 'light',
+													'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
+														themeMode === 'dark',
+													active: calendarRef?.current.getApi().view.type === 'dayGridWeek',
+												})}
+												onClick={() => changeView('dayGridWeek')}>
+												{/* {calendarRef?.current.getApi().view.type === 'dayGridWeek' && (
+													<span className="d-inline-block bg-zeroloss-success-500 p-1 rounded-circle w-2px h-2px me-2" />
+												)}
+												Week */}
+												<img
+													src="/media/icons/zeroloss/list.svg"
+													width={24}
+													alt="Main Dashboard Calendar Week View Icon"
+												/>
+											</button>
+										</div>
 									</div>
 									<div className="card-toolbar w-100 w-md-auto my-5 my-xxl-0">
 										<div

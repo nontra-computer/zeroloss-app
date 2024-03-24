@@ -131,7 +131,6 @@ const ViewModel = () => {
 			if (!success) {
 				toast.error(dataFetch)
 			} else {
-				console.log(calendarRef.current?.getApi())
 				calendarRef.current?.getApi().rerenderEvents()
 			}
 		})
@@ -160,6 +159,10 @@ const ViewModel = () => {
 
 	const goToToday = () => {
 		calendarRef.current?.getApi().today()
+	}
+
+	const changeView = (view: string) => {
+		calendarRef.current?.getApi().changeView(view)
 	}
 
 	const addFullCalendarButtonStyle = () => {
@@ -221,6 +224,7 @@ const ViewModel = () => {
 		nextMonth,
 		prevMonth,
 		goToToday,
+		changeView,
 	}
 }
 

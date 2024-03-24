@@ -21,7 +21,7 @@ const StatZoneView: React.FC = () => {
 				<div className="col-6 col-lg-4 col-xxl-2 h-100">
 					<NumberBox id="accident" title="Accident" type="danger" value={summary?.accident ?? 0} />
 					<div className="mt-2 row fs-7">
-						<div className="col-6 col-lg-3">
+						<div className="col-6 col-xxxl-3">
 							แจ้งเหตุ{' '}
 							<span
 								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
@@ -31,7 +31,7 @@ const StatZoneView: React.FC = () => {
 								{summary?.accidentDetail?.inform ?? 0}
 							</span>
 						</div>
-						<div className="col-6 col-lg-3">
+						<div className="col-6 col-xxxl-3">
 							Lv. 1{' '}
 							<span
 								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
@@ -41,7 +41,7 @@ const StatZoneView: React.FC = () => {
 								{summary?.accidentDetail?.lv1 ?? 0}
 							</span>
 						</div>
-						<div className="col-6 col-lg-3">
+						<div className="col-6 col-xxxl-3">
 							Lv. 2{' '}
 							<span
 								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
@@ -51,7 +51,7 @@ const StatZoneView: React.FC = () => {
 								{summary?.accidentDetail?.lv2 ?? 0}
 							</span>
 						</div>
-						<div className="col-6 col-lg-3">
+						<div className="col-6 col-xxxl-3">
 							Lv. 3{' '}
 							<span
 								className={clsx('ms-1 fw-bolder text-zeroloss-success-700', {
