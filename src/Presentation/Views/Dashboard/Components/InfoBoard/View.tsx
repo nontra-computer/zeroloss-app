@@ -2,7 +2,14 @@ import React from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import clsx from 'clsx'
 
-const InfoBoard: React.FC = () => {
+interface Props {
+	data: {
+		label: string
+		value: any
+	}[]
+}
+
+const InfoBoard: React.FC<Props> = ({ data }) => {
 	const { mode } = useThemeMode()
 
 	let themeMode = ''
@@ -35,7 +42,25 @@ const InfoBoard: React.FC = () => {
 							})}>
 							<div className="card-body p-4">
 								<div className="d-flex flex-column justify-content-center h-100">
-									<div className="mb-3 d-flex flex-row align-items-center">
+									{data.map(d => (
+										<div className="mb-3 d-flex flex-row align-items-center">
+											<span
+												className={clsx(
+													'me-2 bullet bullet-dot  h-12px w-12px p-2 border-zeroloss-base-white border-1px',
+													{
+														'bg-zeroloss-error': d.value === 1,
+														'bg-zeroloss-warning': d.value === 2,
+														'bg-zeroloss-success': d.value === 3,
+														'bg-zeroloss-primary': d.value === 4,
+														'bg-zeroloss-brand-600': d.value === 5,
+														'bg-zeroloss-primary-400': d.value === 6,
+													}
+												)}></span>
+											<span className="fs-6">{d.label}</span>
+										</div>
+									))}
+
+									{/* <div className="mb-3 d-flex flex-row align-items-center">
 										<span className="me-2 bullet bullet-dot bg-zeroloss-error h-12px w-12px p-2 border-zeroloss-base-white border-1px"></span>
 										<span className="fs-6">เหตุการณ์ฉุกเฉิน</span>
 									</div>
@@ -53,7 +78,7 @@ const InfoBoard: React.FC = () => {
 									<div className="mb-3 d-flex flex-row align-items-center">
 										<span className="me-2 bullet bullet-dot bg-zeroloss-grey h-12px w-12px p-2 border-zeroloss-base-white border-1px"></span>
 										<span className="fs-6">พื้นที่รกร้าง</span>
-									</div>
+									</div> */}
 								</div>
 							</div>
 						</div>

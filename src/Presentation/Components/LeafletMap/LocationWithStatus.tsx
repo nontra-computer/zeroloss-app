@@ -8,6 +8,10 @@ const LocationWithStatus: React.FC<LocationWithStatusProps> = ({
 	draggable,
 	popup,
 	position,
+	title,
+	img,
+	detail,
+	eventType,
 }) => {
 	const SuccessIcon = new Icon({
 		iconUrl: '/media/icons/zeroloss/map/cluster/success.svg',
@@ -51,6 +55,10 @@ const LocationWithStatus: React.FC<LocationWithStatusProps> = ({
 					{createElement(popup, {
 						lat: position.lat,
 						lng: position.lng,
+						title,
+						img,
+						detail,
+						eventType,
 					})}
 				</Popup>
 			)}

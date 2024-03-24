@@ -6,4 +6,10 @@ export interface WindDirectionProps {
 	degree: number
 	draggable?: boolean
 	popup?: React.FunctionComponent<any>
+	title?: string
+	direction?: number
+	speed?: number
+	temp?: number
+	rh?: number
+	bp?: number
 }

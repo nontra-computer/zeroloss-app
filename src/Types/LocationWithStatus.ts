@@ -6,4 +6,12 @@ export interface LocationWithStatusProps {
 	}
 	draggable?: boolean
 	popup?: React.FunctionComponent<any>
+	// Popup Props
+	title?: string
+	detail?: string
+	img?: string
+	eventType?: {
+		id: number
+		name: string
+	}
 }

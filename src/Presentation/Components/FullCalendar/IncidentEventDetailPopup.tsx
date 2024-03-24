@@ -12,10 +12,11 @@ const IncidentEventDetailPopup: React.FC<IncidentEventDetailPopupProps> = ({
 	open,
 	onClose,
 	title,
-	description,
+	detail,
 	img,
 	start,
 	end,
+	locationName,
 }) => {
 	const { mode } = useThemeMode()
 
@@ -96,7 +97,7 @@ const IncidentEventDetailPopup: React.FC<IncidentEventDetailPopupProps> = ({
 								'text-zeroloss-grey-900': themeMode === 'light',
 								'text-zeroloss-base-white': themeMode === 'dark',
 							})}>
-							{description}
+							{detail}
 						</p>
 					</div>
 
@@ -119,7 +120,7 @@ const IncidentEventDetailPopup: React.FC<IncidentEventDetailPopupProps> = ({
 									'text-zeroloss-base-white': themeMode === 'dark',
 								})}></i>
 						</span>
-						<span>ชื่อสถานที่</span>
+						<span>{locationName}</span>
 					</div>
 				</div>
 			</div>

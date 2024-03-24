@@ -20,7 +20,7 @@ const StatZoneView: React.FC = () => {
 			<div className="row g-5">
 				<div className="col-6 col-lg-4 col-xxl-2 h-100">
 					<NumberBox id="accident" title="Accident" type="danger" value={summary?.accident ?? 0} />
-					<div className="mt-2 row">
+					<div className="mt-2 row fs-7">
 						<div className="col-6 col-lg-3">
 							แจ้งเหตุ{' '}
 							<span

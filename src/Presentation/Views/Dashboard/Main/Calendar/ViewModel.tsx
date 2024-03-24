@@ -1,64 +1,29 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
-
+import { useEventStore } from '@/Store/Event'
+import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
+import { toast } from 'react-toastify'
 import moment from 'moment'
 import 'moment/locale/th'
 
-const MOCK_DATA: any[] = [
-	{
-		type: 'success',
-		id: 'incident_1',
-		title: 'เหตุร้องเรียน หมู่บ้าน วรารมณ์ โครงการ 2',
-		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-		img: '/media/examples/incident-1.jpg',
-		start: moment(moment().format('YYYY-MM'), 'YYYY-MM').add(4, 'days').format('YYYY-MM-DD'),
-		end: moment(moment().format('YYYY-MM'), 'YYYY-MM').add(5, 'days').format('YYYY-MM-DD'),
-	},
-	{
-		type: 'warning',
-		id: 'incident_2',
-		title: 'ซ่อมบำรุง Sensor',
-		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-		img: '/media/examples/incident-1.jpg',
-		start: moment(moment().format('YYYY-MM'), 'YYYY-MM').add(10, 'days').format('YYYY-MM-DD'),
-		end: moment(moment().format('YYYY-MM'), 'YYYY-MM').add(10, 'days').format('YYYY-MM-DD'),
-	},
-	{
-		type: 'info',
-		id: 'incident_3',
-		title: 'เหตุร้องเรียน หมู่บ้าน วรารมณ์ โครงการ 2',
-		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-		img: '/media/examples/incident-1.jpg',
-		start: moment(moment().format('YYYY-MM'), 'YYYY-MM').add(12, 'days').format('YYYY-MM-DD'),
-		end: moment(moment().format('YYYY-MM'), 'YYYY-MM').add(14, 'days').format('YYYY-MM-DD'),
-	},
-	{
-		type: 'error',
-		id: 'incident_4',
-		title: 'เหตุร้องเรียน หมู่บ้าน วรารมณ์ โครงการ 2',
-		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-		img: '/media/examples/incident-1.jpg',
-		start: moment(moment().format('YYYY-MM'), 'YYYY-MM').add(12, 'days').format('YYYY-MM-DD'),
-		end: moment(moment().format('YYYY-MM'), 'YYYY-MM').add(19, 'days').format('YYYY-MM-DD'),
-	},
-	{
-		type: 'error',
-		id: 'incident_4',
-		title: 'เหตุร้องเรียน หมู่บ้าน วรารมณ์ โครงการ 2',
-		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-		img: '/media/examples/incident-1.jpg',
-		start: moment(moment().format('YYYY-MM'), 'YYYY-MM').add(12, 'days').format('YYYY-MM-DD'),
-		end: moment(moment().format('YYYY-MM'), 'YYYY-MM').add(19, 'days').format('YYYY-MM-DD'),
-	},
-]
+const INITIAL_STATE_FILTER: {
+	type: any[]
+	search: any[]
+} = {
+	type: [],
+	search: [],
+}
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
+	const { rawData, dataTypes, getAll, getTypes, clearState } = useEventStore(state => ({
+		rawData: state.data,
+		dataTypes: state.types,
+		getAll: state.getAll,
+		getTypes: state.getTypes,
+		clearState: state.clearState,
+	}))
+	const { isMobile } = useResolutionDetection()
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -70,11 +35,107 @@ const ViewModel = () => {
 	const calendarRef = useRef<any>(null)
 	const [openDetail, setOpenDetail] = useState(false)
 	const [selected, setSelected] = useState<string | null>(null)
-	const selectedIncident = useMemo(() => {
-		return MOCK_DATA.find(incident => incident.id === selected)
-	}, [selected])
+	const [searchText, setSearchText] = useState('')
+	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
 
 	const currentMonth = moment(calendarRef.current?.getApi().getDate()).format('MMMM YYYY')
+
+	const displayFilter = useMemo(() => {
+		const results: any = {}
+
+		Object.keys(filter).forEach(key => {
+			if (key === 'type') {
+				results[key] = dataTypes.filter((d: any) => filter[key].includes(d.id))
+			} else if (key === 'search') {
+				results[key] = filter[key]
+			}
+		})
+
+		return results
+	}, [filter, dataTypes])
+
+	const dataTypeOptions: {
+		label: string
+		value: any
+	}[] = dataTypes.map(
+		(d: any) => ({
+			label: d.name,
+			value: d.id,
+		}),
+		[]
+	)
+
+	const data = useMemo(() => {
+		return rawData
+			.map((rd: any, idx) => ({
+				id: `incident_${idx}`,
+				title: rd?.title,
+				detail: rd?.detail,
+				start: moment(rd?.start).toISOString(),
+				end: moment(rd?.end).toISOString(),
+				type: rd?.idEventType ?? 0,
+				img: '/media/examples/incident-1.jpg',
+				location: '',
+				locationName: rd?.locationName ?? '',
+			}))
+			.filter((d: any) => {
+				if (filter.type.length > 0) {
+					return filter.type.includes(d.type)
+				}
+
+				if (filter.search.length > 0) {
+					const search = filter.search.join(' ')
+					const regex = new RegExp(search, 'i')
+					return regex.test(d.title)
+				}
+
+				return true
+			})
+	}, [rawData, filter])
+
+	const selectedIncident = useMemo(() => {
+		return data.find(incident => incident.id === selected)
+	}, [selected, data])
+
+	const onAddFilter = (key: string, value: any) => {
+		setFilter((prev: any) => ({
+			...prev,
+			[key]: [...prev[key], value],
+		}))
+
+		if (key === 'search') {
+			setSearchText('')
+		}
+
+		calendarRef.current?.getApi().refetchEvents()
+	}
+
+	const onRemoveFilter = (key: string, value: any) => {
+		if (key === 'search') {
+			setSearchText('')
+			setFilter(prevState => ({
+				...prevState,
+				[key]: prevState[key].filter((v: any) => v !== value),
+			}))
+		} else if (key === 'type') {
+			setFilter(prevState => ({
+				...prevState,
+				[key]: prevState[key].filter((v: any) => v !== value),
+			}))
+		}
+	}
+
+	const fetchData = () => {
+		getTypes()
+		getAll({}).then(({ data: dataFetch, success }) => {
+			if (!success) {
+				toast.error(dataFetch)
+			} else {
+				console.log(calendarRef.current?.getApi())
+				calendarRef.current?.getApi().rerenderEvents()
+			}
+		})
+	}
 
 	const onClick = (id: string) => {
 		setSelected(id)
@@ -132,14 +193,30 @@ const ViewModel = () => {
 		addFullCalendarButtonStyle()
 	}, [])
 
+	useEffect(() => {
+		fetchData()
+		return () => {
+			clearState()
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
 	return {
+		isMobile,
 		themeMode,
 		calendarRef,
-		data: MOCK_DATA,
+		displayFilter,
+		filter,
+		searchText,
+		data: data,
+		dataTypeOptions,
 		selectedIncident,
+		setSearchText,
 		openDetail,
 		onClick,
 		onCloseDetail,
+		onAddFilter,
+		onRemoveFilter,
 		currentMonth,
 		nextMonth,
 		prevMonth,

@@ -9,19 +9,33 @@ import WindPopup from '@/Presentation/Components/LeafletMap/WindPopup'
 import LocationPolygon from '@/Presentation/Components/LeafletMap/LocationPolygon'
 import LocationMeasurementStation from '@/Presentation/Components/LeafletMap/LocationMeasurementStation'
 import InfoBoard from '../../Components/InfoBoard/View'
-import Alert from '../../Components/Alert/View'
+// import Alert from '../../Components/Alert/View'
 import MeasurementTable from '../../Components/MeasurementTable/View'
-import FeatureNews from '@/Presentation/Components/News/FeatureNews'
-import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
+// import FeatureNews from '@/Presentation/Components/News/FeatureNews'
+// import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
 import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
-import Select from 'react-select'
+import Select, { components } from 'react-select'
 import Filter from './Components/Filter'
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
 const MainDashboardMapView: React.FC = () => {
-	const { isMobile, isLargeMobile, isTablet, themeMode, data, type, onTypeChange, TYPE_OPTIONS } =
-		useViewModel()
+	const {
+		isMobile,
+		isLargeMobile,
+		themeMode,
+		data,
+		dataTypeOptions,
+		type,
+		onTypeChange,
+		TYPE_OPTIONS,
+		filter,
+		displayFilter,
+		searchText,
+		setSearchText,
+		onAddFilter,
+		onRemoveFilter,
+	} = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -58,6 +72,12 @@ const MainDashboardMapView: React.FC = () => {
 								additionalClassName="shadow-sm"
 								placeholder="ค้นหาสถานที่/เหตุการณ์"
 								label="ค้นหาเหตุการณ์"
+								value={searchText}
+								onChange={e => setSearchText(e.target.value)}
+								onPressEnter={() => {
+									onAddFilter('search', searchText)
+									setSearchText('')
+								}}
 							/>
 							<div className="w-100 w-lg-auto">
 								<label className="form-label">ประเภทเหตุการณ์</label>
@@ -81,14 +101,46 @@ const MainDashboardMapView: React.FC = () => {
 											...styles,
 											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
 											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+											zIndex: 1000,
 										}),
 										input: styles => ({
 											...styles,
 											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
 										}),
 									}}
+									options={dataTypeOptions}
+									value={dataTypeOptions.find(option => option.value === filter.type) ?? null}
+									onChange={option => onAddFilter('type', option?.value)}
 									components={{
 										IndicatorSeparator: () => null,
+										SingleValue: props => (
+											<components.SingleValue {...props} className="cursor-pointer">
+												<span
+													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
+														'bg-zeroloss-error': props.data.value === 1,
+														'bg-zeroloss-warning': props.data.value === 2,
+														'bg-zeroloss-success': props.data.value === 3,
+														'bg-zeroloss-primary': props.data.value === 4,
+														'bg-zeroloss-brand-600': props.data.value === 5,
+														'bg-zeroloss-primary-400': props.data.value === 6,
+													})}></span>
+												{props.data.label}
+											</components.SingleValue>
+										),
+										Option: props => (
+											<components.Option {...props} className="cursor-pointer">
+												<span
+													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
+														'bg-zeroloss-error': props.data.value === 1,
+														'bg-zeroloss-warning': props.data.value === 2,
+														'bg-zeroloss-success': props.data.value === 3,
+														'bg-zeroloss-primary': props.data.value === 4,
+														'bg-zeroloss-brand-600': props.data.value === 5,
+														'bg-zeroloss-primary-400': props.data.value === 6,
+													})}></span>
+												{props.data.label}
+											</components.Option>
+										),
 									}}
 								/>
 							</div>
@@ -120,6 +172,7 @@ const MainDashboardMapView: React.FC = () => {
 											...styles,
 											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
 											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+											zIndex: 1000,
 										}),
 										input: styles => ({
 											...styles,
@@ -157,29 +210,77 @@ const MainDashboardMapView: React.FC = () => {
 				<div className="col-12">
 					<div className="card">
 						<div className="card-header">
-							<div className="card-title fw-bold">
-								Current Filter:
-								<span className="ms-3 fw-normal">None</span>
+							<div className="card-title fw-bold w-100 w-lg-auto flex-column flex-lg-row align-items-lg-center">
+								<div className="d-none d-lg-block">Current Filter:</div>
+								{(displayFilter?.search ?? []).length + (displayFilter?.type ?? []).length === 0 ? (
+									<span
+										className={clsx('fw-normal', {
+											'ms-3': !isMobile,
+											'mt-3': isMobile,
+										})}>
+										<span className="d-inine-block d-lg-none">Current Filter: </span> None
+									</span>
+								) : (
+									<React.Fragment>
+										<div
+											className="d-flex flex-column flex-lg-row align-items-center w-100 w-lg-auto ms-3"
+											style={{ gap: '12px' }}>
+											{(displayFilter?.search ?? []).map((item: any, index: number) => (
+												<div
+													key={index}
+													className={clsx(
+														'btn btn-sm btn-light-danger text-zeroloss-error fw-bolder d-flex',
+														{
+															'w-100': isMobile,
+															'flex-row justify-content-between': isMobile,
+														}
+													)}>
+													<span>{item}</span>
+													<button
+														className="btn-close ms-2 text-zeroloss-error"
+														onClick={() => onRemoveFilter('search', item)}
+													/>
+												</div>
+											))}
+											{(displayFilter?.type ?? []).map((item: any, index: number) => (
+												<div
+													key={index}
+													className={clsx(
+														'btn btn-sm btn-light-danger text-zeroloss-error fw-bolder d-flex',
+														{
+															'w-100': isMobile,
+															'flex-row justify-content-between': isMobile,
+														}
+													)}>
+													<span>{item?.name}</span>
+													<button
+														className="btn-close ms-2 text-zeroloss-error"
+														onClick={() => onRemoveFilter('type', item?.id)}
+													/>
+												</div>
+											))}
+										</div>
+									</React.Fragment>
+								)}
 							</div>
 						</div>
 
-						<div className="card-body px-3 pe-lg-0">
+						<div className="card-body px-0 py-0">
 							<div className="row gy-5 gx-0">
 								{/* begin:: Map */}
-								<div className="d-none d-sm-block col-12 col-lg-8">
-									<h3>&nbsp;</h3>
+								<div className="d-none d-sm-block col-12">
 									<div className="card h-800px">
 										<div className="card-body p-0 position-relative">
-											{(type === 'all' || type === 'simulation') && (
+											{/* {(type === 'all' || type === 'simulation') && (
 												<React.Fragment>
 													<div
 														className="position-absolute w-50"
 														style={{ right: '1.5%', top: '2%', zIndex: 999 }}>
-														{/* @ts-ignore */}
+														
 														<Alert {...{}} />
 													</div>
 												</React.Fragment>
-											)}
+											)} */}
 
 											{type === 'measurement' && (
 												<React.Fragment>
@@ -196,7 +297,7 @@ const MainDashboardMapView: React.FC = () => {
 														...styles,
 														width: '200px',
 														height: '44px',
-														left: isMobile || isLargeMobile ? '7%' : isTablet ? '9%' : '5%',
+														left: isMobile || isLargeMobile ? '7%' : '5%',
 														top: '1.5%',
 														zIndex: 1000,
 													}),
@@ -223,23 +324,40 @@ const MainDashboardMapView: React.FC = () => {
 													IndicatorSeparator: () => null,
 												}}
 											/>
-											<InfoBoard />
+											<InfoBoard data={dataTypeOptions} />
 											<MapContainer
 												center={{
 													lat: 13.7563,
 													lng: 100.5018,
 												}}
-												zoom={13}>
+												zoom={7}>
 												<TileLayer
 													attribution="@Copyright 2024 Zeroloss"
 													url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 												/>
 
-												{data.map((d, index) => (
+												{data.map((d: any, index: number) => (
 													<React.Fragment key={`map-data-${index}`}>
-														{type === 'all' && <LocationWithStatus {...d} popup={IncidentPopup} />}
+														{type === 'all' && (
+															<LocationWithStatus
+																{...d}
+																popup={IncidentPopup}
+																position={{
+																	lat: d?.latitude ?? 0,
+																	lng: d?.longitude ?? 0,
+																}}
+															/>
+														)}
 														{type === 'wind-direction' && (
-															<WindDirection {...d} popup={WindPopup} />
+															<WindDirection
+																{...d}
+																popup={WindPopup}
+																position={{
+																	lat: d?.latitude ?? 0,
+																	lng: d?.longitude ?? 0,
+																}}
+																degree={d?.direction ?? 0}
+															/>
 														)}
 														{type === 'simulation' && (
 															<LocationPolygon
@@ -248,7 +366,15 @@ const MainDashboardMapView: React.FC = () => {
 																radius={1500}
 															/>
 														)}
-														{type === 'measurement' && <LocationMeasurementStation {...d} />}
+														{type === 'measurement' && (
+															<LocationMeasurementStation
+																{...d}
+																position={{
+																	lat: d?.latitude ?? 0,
+																	lng: d?.longitude ?? 0,
+																}}
+															/>
+														)}
 													</React.Fragment>
 												))}
 											</MapContainer>
@@ -261,7 +387,7 @@ const MainDashboardMapView: React.FC = () => {
 								<PhoneRotateCaution />
 								{/* end:: Mobile Caution */}
 
-								<div className="col-12 col-lg-4">
+								{/* <div className="col-12 col-lg-4">
 									<h3 className="mx-auto" style={{ width: '95%' }}>
 										เหตุการณ์ที่เกี่ยวข้อง
 									</h3>
@@ -283,7 +409,7 @@ const MainDashboardMapView: React.FC = () => {
 											</div>
 										))}
 									</div>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>

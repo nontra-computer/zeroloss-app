@@ -2,26 +2,31 @@ import { create } from 'zustand'
 import axios from 'axios'
 
 interface EventStore {
-	data: any[]
 	summary: any
+	data: any[]
+	dashboardData: any
 	types: any[]
-	setData: (data: any[]) => void
 	setSummary: (summary: any) => void
+	setData: (data: any[]) => void
+	setDashboardData: (data: any) => void
 	setTypes: (types: any[]) => void
-	getAll: (filter: any) => Promise<{ data: any; success: boolean }>
-	getTypes: () => Promise<{ data: any; success: boolean }>
 	getSummary: () => Promise<{ data: any; success: boolean }>
+	getAll: (filter: any) => Promise<{ data: any; success: boolean }>
+	getDashboardData: () => Promise<{ data: any; success: boolean }>
+	getTypes: () => Promise<{ data: any; success: boolean }>
 	clearState: () => void
 }
 
 export const API_SLUG = '/events'
 
 export const useEventStore = create<EventStore>(set => ({
-	data: [],
 	summary: {},
+	data: [],
+	dashboardData: {},
 	types: [],
 	setData: (data: any[]) => set({ data }),
 	setSummary: (summary: any) => set({ summary }),
+	setDashboardData: (data: any) => set({ dashboardData: data }),
 	setTypes: (types: any[]) => set({ types }),
 	getAll: async (filter: any) => {
 		return axios
@@ -56,5 +61,16 @@ export const useEventStore = create<EventStore>(set => ({
 				return { data: error.response.data.message?.toString(), success: false }
 			})
 	},
-	clearState: () => set({ data: [] }),
+	getDashboardData: async () => {
+		return axios
+			.get(`${API_SLUG}/dashboard-map`)
+			.then(response => {
+				set({ dashboardData: response.data })
+				return { data: response.data, success: true }
+			})
+			.catch(error => {
+				return { data: error.response.data.message?.toString(), success: false }
+			})
+	},
+	clearState: () => set({ data: [], summary: {}, dashboardData: {} }),
 }))

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
-import Select from 'react-select'
+import Select, { components } from 'react-select'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -17,9 +17,11 @@ import clsx from 'clsx'
 
 const MainDashboardCalendarView: React.FC = () => {
 	const {
+		isMobile,
 		themeMode,
 		calendarRef,
 		data,
+		dataTypeOptions,
 		openDetail,
 		selectedIncident,
 		onClick,
@@ -28,6 +30,12 @@ const MainDashboardCalendarView: React.FC = () => {
 		nextMonth,
 		prevMonth,
 		goToToday,
+		filter,
+		displayFilter,
+		searchText,
+		setSearchText,
+		onAddFilter,
+		onRemoveFilter,
 	} = useViewModel()
 
 	return (
@@ -64,6 +72,12 @@ const MainDashboardCalendarView: React.FC = () => {
 								additionalClassName="shadow-sm"
 								placeholder="พิมพ์ค้นหาที่นี่"
 								label="ค้นหาเหตุการณ์"
+								value={searchText}
+								onChange={e => setSearchText(e.target.value)}
+								onPressEnter={() => {
+									onAddFilter('search', searchText)
+									setSearchText('')
+								}}
 							/>
 							<div className="w-100 w-lg-auto">
 								<label className="form-label">ประเภทเหตุการณ์</label>
@@ -85,6 +99,7 @@ const MainDashboardCalendarView: React.FC = () => {
 										}),
 										menu: styles => ({
 											...styles,
+											zIndex: 1000,
 											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
 											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
 										}),
@@ -93,8 +108,39 @@ const MainDashboardCalendarView: React.FC = () => {
 											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
 										}),
 									}}
+									options={dataTypeOptions}
+									value={dataTypeOptions.find(option => option.value === filter.type) ?? null}
+									onChange={option => onAddFilter('type', option?.value)}
 									components={{
 										IndicatorSeparator: () => null,
+										SingleValue: props => (
+											<components.SingleValue {...props} className="cursor-pointer">
+												<span
+													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
+														'bg-zeroloss-error': props.data.value === 1,
+														'bg-zeroloss-warning': props.data.value === 2,
+														'bg-zeroloss-success': props.data.value === 3,
+														'bg-zeroloss-primary': props.data.value === 4,
+														'bg-zeroloss-brand-600': props.data.value === 5,
+														'bg-zeroloss-primary-400': props.data.value === 6,
+													})}></span>
+												{props.data.label}
+											</components.SingleValue>
+										),
+										Option: props => (
+											<components.Option {...props} className="cursor-pointer">
+												<span
+													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
+														'bg-zeroloss-error': props.data.value === 1,
+														'bg-zeroloss-warning': props.data.value === 2,
+														'bg-zeroloss-success': props.data.value === 3,
+														'bg-zeroloss-primary': props.data.value === 4,
+														'bg-zeroloss-brand-600': props.data.value === 5,
+														'bg-zeroloss-primary-400': props.data.value === 6,
+													})}></span>
+												{props.data.label}
+											</components.Option>
+										),
 									}}
 								/>
 							</div>
@@ -104,31 +150,104 @@ const MainDashboardCalendarView: React.FC = () => {
 
 				<div className="col-12">
 					<div className="card">
-						<div className="card-header px-4 px-10">
-							<div
-								className="card-title flex-column flex-lg-row w-100 w-lg-auto align-items-center"
-								style={{ gap: '12px' }}>
-								<div className="d-flex flex-row align-items-center justify-content-between w-100 w-lg-auto">
-									<button className="btn btn-sm white-button me-4" onClick={prevMonth}>
-										<i className="bi bi-arrow-left fs-2"></i>
-									</button>
-									<h2 className="fs-2 fw-bold">{currentMonth}</h2>
-									<button className="btn btn-sm white-button ms-4" onClick={nextMonth}>
-										<i className="bi bi-arrow-right fs-2"></i>
-									</button>
-								</div>
-								<button
-									className="btn btn-sm btn-zeroloss-primary text-zeroloss-base-white fw-bold fs-5 w-100 w-lg-auto"
-									onClick={goToToday}>
-									<i className="bi bi-flag-fill text-zeroloss-base-white d-inline-block"></i>
-									<span>Today</span>
-								</button>
+						<div className="card-header">
+							<div className="card-title fw-bold w-100 w-lg-auto flex-column flex-lg-row align-items-lg-center">
+								<div className="d-none d-lg-block">Current Filter:</div>
+								{(displayFilter?.search ?? []).length + (displayFilter?.type ?? []).length === 0 ? (
+									<span
+										className={clsx('fw-normal', {
+											'ms-3': !isMobile,
+											'mt-3': isMobile,
+										})}>
+										<span className="d-inine-block d-lg-none">Current Filter: </span> None
+									</span>
+								) : (
+									<React.Fragment>
+										<div
+											className="d-flex flex-column flex-lg-row align-items-center w-100 w-lg-auto ms-3"
+											style={{ gap: '12px' }}>
+											{(displayFilter?.search ?? []).map((item: any, index: number) => (
+												<div
+													key={'filter-search' + index}
+													className={clsx(
+														'btn btn-sm btn-light-danger text-zeroloss-error fw-bolder d-flex',
+														{
+															'w-100': isMobile,
+															'flex-row justify-content-between': isMobile,
+														}
+													)}>
+													<span>{item}</span>
+													<button
+														className="btn-close ms-2 text-zeroloss-error"
+														onClick={() => onRemoveFilter('search', item)}
+													/>
+												</div>
+											))}
+											{(displayFilter?.type ?? []).map((item: any, index: number) => (
+												<div
+													key={'filter-type' + index}
+													className={clsx(
+														'btn btn-sm btn-light-danger text-zeroloss-error fw-bolder d-flex',
+														{
+															'w-100': isMobile,
+															'flex-row justify-content-between': isMobile,
+														}
+													)}>
+													<span>{item?.name}</span>
+													<button
+														className="btn-close ms-2 text-zeroloss-error"
+														onClick={() => onRemoveFilter('type', item?.id)}
+													/>
+												</div>
+											))}
+										</div>
+									</React.Fragment>
+								)}
 							</div>
-							<div className="card-toolbar w-100 w-md-auto my-5 my-xxl-0">
-								<div
-									className="mx-auto d-flex flex-column flex-sm-row align-items-sm-center justify-content-center justify-content-md-between h-100"
-									style={{ gap: '24px' }}>
-									<div className="fs-6">
+						</div>
+
+						<div className="card-body">
+							<div className="card">
+								<div className="card-header px-4 px-10">
+									<div
+										className="card-title flex-column flex-lg-row w-100 w-lg-auto align-items-center"
+										style={{ gap: '12px' }}>
+										<div className="d-flex flex-row align-items-center justify-content-between w-100 w-lg-auto">
+											<button className="btn btn-sm white-button me-4" onClick={prevMonth}>
+												<i className="bi bi-arrow-left fs-2"></i>
+											</button>
+											<h2 className="fs-2 fw-bold">{currentMonth}</h2>
+											<button className="btn btn-sm white-button ms-4" onClick={nextMonth}>
+												<i className="bi bi-arrow-right fs-2"></i>
+											</button>
+										</div>
+										<button
+											className="btn btn-sm btn-zeroloss-primary text-zeroloss-base-white fw-bold fs-5 w-100 w-lg-auto"
+											onClick={goToToday}>
+											<i className="bi bi-flag-fill text-zeroloss-base-white d-inline-block"></i>
+											<span>Today</span>
+										</button>
+									</div>
+									<div className="card-toolbar w-100 w-md-auto my-5 my-xxl-0">
+										<div
+											className="mx-auto d-flex flex-column flex-sm-row align-items-sm-center justify-content-center justify-content-md-between h-100"
+											style={{ gap: '24px' }}>
+											{dataTypeOptions.map(option => (
+												<div className="fs-6">
+													<span
+														className={clsx('me-2 bullet bullet-dot h-10px w-10px', {
+															'bg-zeroloss-error': option.value === 1,
+															'bg-zeroloss-warning': option.value === 2,
+															'bg-zeroloss-success': option.value === 3,
+															'bg-zeroloss-primary': option.value === 4,
+															'bg-zeroloss-brand-600': option.value === 5,
+															'bg-zeroloss-primary-400': option.value === 6,
+														})}></span>
+													{option.label}
+												</div>
+											))}
+
+											{/* <div className="fs-6">
 										<span
 											className={'me-2 bullet bullet-dot h-10px w-10px bg-zeroloss-warning'}></span>
 										เหตุการณ์อื่นๆ
@@ -142,38 +261,43 @@ const MainDashboardCalendarView: React.FC = () => {
 										<span
 											className={'me-2 bullet bullet-dot h-10px w-10px bg-zeroloss-success'}></span>
 										กิจกรรมซ่อมบำรุง
+									</div> */}
+										</div>
 									</div>
 								</div>
+								<div className="card-body p-0">
+									{/* {data.length > 0 && ( */}
+									<FullCalendar
+										viewClassNames={'main-dashboard-calendar'}
+										ref={calendarRef}
+										plugins={[
+											dayGridPlugin,
+											timeGridPlugin,
+											interactionPlugin,
+											// scrollGridPlugin,
+											momentTimezonePlugin,
+										]}
+										initialView="dayGridMonth"
+										initialEvents={[]}
+										events={data}
+										eventColor="transparent"
+										eventContent={function (arg) {
+											return (
+												<IncidentEvent
+													{...arg}
+													type={arg.event.extendedProps.type}
+													name={arg.event.title}
+													detail={arg.event.extendedProps.detail}
+													img={arg.event.extendedProps.img}
+													onClick={onClick}
+												/>
+											)
+										}}
+										headerToolbar={false}
+									/>
+									{/* )} */}
+								</div>
 							</div>
-						</div>
-						<div className="card-body p-0">
-							<FullCalendar
-								viewClassNames={'main-dashboard-calendar'}
-								ref={calendarRef}
-								plugins={[
-									dayGridPlugin,
-									timeGridPlugin,
-									interactionPlugin,
-									// scrollGridPlugin,
-									momentTimezonePlugin,
-								]}
-								initialView="dayGridMonth"
-								initialEvents={data}
-								eventColor="transparent"
-								eventContent={function (arg) {
-									return (
-										<IncidentEvent
-											{...arg}
-											type={arg.event.extendedProps.type}
-											name={arg.event.title}
-											description={arg.event.extendedProps.description}
-											img={arg.event.extendedProps.img}
-											onClick={onClick}
-										/>
-									)
-								}}
-								headerToolbar={false}
-							/>
 						</div>
 					</div>
 				</div>

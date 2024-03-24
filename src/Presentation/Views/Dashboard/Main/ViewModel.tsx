@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl'
 import { useEventStore } from '@/Store/Event'
 import { toast } from 'react-toastify'
 import moment from 'moment-timezone'
-// import Alert from '../Components/Alert/View'
+import Alert from '../Components/Alert/View'
 
 const ViewModel = () => {
 	const location = useLocation()
@@ -54,6 +54,30 @@ const ViewModel = () => {
 	}
 
 	const handleShowAlertTemp = () => {
+		toast.success(toastProps => <Alert {...toastProps} />, {
+			className: 'zeroloss-toast',
+			bodyClassName: 'zeroloss-toast-body',
+			icon: false,
+			hideProgressBar: true,
+		})
+		// toast.success(toastProps => <Alert {...toastProps} />, {
+		// 	className: 'zeroloss-toast',
+		// 	bodyClassName: 'zeroloss-toast-body',
+		// 	icon: false,
+		// 	hideProgressBar: true,
+		// })
+		// toast.success(toastProps => <Alert {...toastProps} />, {
+		// 	className: 'zeroloss-toast',
+		// 	bodyClassName: 'zeroloss-toast-body',
+		// 	icon: false,
+		// 	hideProgressBar: true,
+		// })
+		// toast.success(toastProps => <Alert {...toastProps} />, {
+		// 	className: 'zeroloss-toast',
+		// 	bodyClassName: 'zeroloss-toast-body',
+		// 	icon: false,
+		// 	hideProgressBar: true,
+		// })
 		// toast.success(toastProps => <Alert {...toastProps} />, {
 		// 	className: 'zeroloss-toast',
 		// 	bodyClassName: 'zeroloss-toast-body',

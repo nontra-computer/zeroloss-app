@@ -4,7 +4,13 @@ import { Marker, Popup } from 'react-leaflet'
 import { WindDirectionProps } from '@/Types/WindDirection'
 import 'leaflet-rotatedmarker'
 
-const WindDirection: React.FC<WindDirectionProps> = ({ draggable, popup, position, degree }) => {
+const WindDirection: React.FC<WindDirectionProps> = ({
+	draggable,
+	popup,
+	position,
+	degree,
+	...props
+}) => {
 	const WindIcon = new Icon({
 		iconUrl: '/media/icons/zeroloss/map/wind/arrow.svg',
 		iconSize: [40, 40],
@@ -27,6 +33,7 @@ const WindDirection: React.FC<WindDirectionProps> = ({ draggable, popup, positio
 						lat: position.lat,
 						lng: position.lng,
 						degree,
+						...props,
 					})}
 				</Popup>
 			)}

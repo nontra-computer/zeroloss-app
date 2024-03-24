@@ -11,10 +11,12 @@ const IncidentEvent: React.FC<IncidentEventProps> = ({ type, name, event, onClic
 			<div
 				id={`incident-card-${event.id}`}
 				className={clsx('incident-calendar-event border-radius-4px h-70px p-2 cursor-pointer', {
-					'bg-zeroloss-success-600': type === 'success',
-					'bg-zeroloss-warning-500': type === 'warning',
-					'bg-zeroloss-error-500': type === 'error',
-					'bg-zeroloss-purple-1': type === 'info',
+					'bg-zeroloss-error': type === 1,
+					'bg-zeroloss-warning': type === 2,
+					'bg-zeroloss-success': type === 3,
+					'bg-zeroloss-primary': type === 4,
+					'bg-zeroloss-brand-600': type === 5,
+					'bg-zeroloss-primary-400': type === 6,
 				})}
 				onClick={() => onClick(event.id)}>
 				<div className="text-zeroloss-base-white fw-bold fs-4">

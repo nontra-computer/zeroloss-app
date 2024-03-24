@@ -1,6 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
+import { useEventStore } from '@/Store/Event'
+import { toast } from 'react-toastify'
 
 const TYPE_OPTIONS = [
 	{
@@ -155,10 +157,51 @@ const MOCK_DATA: any[] = [
 	},
 ]
 
+const INITIAL_STATE_FILTER: {
+	type: any[]
+	search: any[]
+} = {
+	type: [],
+	search: [],
+}
+
 const ViewModel = () => {
 	const { mode } = useThemeMode()
-	const { isMobile, isLargeMobile, isTablet, } = useResolutionDetection()
+	const { isMobile, isLargeMobile, isTablet } = useResolutionDetection()
 	const [type, setType] = useState<'all' | 'wind-direction' | 'simulation' | 'measurement'>('all')
+	const { rawData, dataTypes, getData, getTypes, clearState } = useEventStore(state => ({
+		rawData: state.dashboardData,
+		dataTypes: state.types,
+		getData: state.getDashboardData,
+		getTypes: state.getTypes,
+		clearState: state.clearState,
+	}))
+	const [searchText, setSearchText] = useState('')
+	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
+
+	const displayFilter = useMemo(() => {
+		const results: any = {}
+
+		Object.keys(filter).forEach(key => {
+			if (key === 'type') {
+				results[key] = dataTypes.filter((d: any) => filter[key].includes(d.id))
+			} else if (key === 'search') {
+				results[key] = filter[key]
+			}
+		})
+
+		return results
+	}, [filter, dataTypes])
+	const dataTypeOptions: {
+		label: string
+		value: any
+	}[] = dataTypes.map(
+		(d: any) => ({
+			label: d.name,
+			value: d.id,
+		}),
+		[]
+	)
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -167,24 +210,68 @@ const ViewModel = () => {
 		themeMode = mode
 	}
 
+	const fetchData = () => {
+		getTypes()
+		getData().then(({ data: dataFetch, success }) => {
+			if (!success) {
+				toast.error(dataFetch)
+			}
+		})
+	}
+
 	const data = useMemo(() => {
 		switch (type) {
 			case 'all':
-				return MOCK_DATA
+				return rawData?.events ?? []
 			case 'wind-direction':
-				return MOCK_DATA
+				return rawData?.wind ?? []
 			case 'simulation':
 				return MOCK_DATA
 			case 'measurement':
-				return MOCK_DATA
+				return rawData?.measurements ?? []
 			default:
 				return MOCK_DATA
 		}
-	}, [type])
+	}, [type, rawData, filter])
 
 	const onTypeChange = (value: 'all' | 'wind-direction' | 'simulation' | 'measurement') => {
 		setType(value)
 	}
+
+	const onAddFilter = (key: string, value: any) => {
+		setFilter((prev: any) => ({
+			...prev,
+			[key]: [...prev[key], value],
+		}))
+
+		if (key === 'search') {
+			setSearchText('')
+		}
+	}
+
+	const onRemoveFilter = (key: string, value: any) => {
+		if (key === 'search') {
+			setSearchText('')
+			setFilter(prevState => ({
+				...prevState,
+				[key]: prevState[key].filter((v: any) => v !== value),
+			}))
+		} else if (key === 'type') {
+			setFilter(prevState => ({
+				...prevState,
+				[key]: prevState[key].filter((v: any) => v !== value),
+			}))
+		}
+	}
+
+	useEffect(() => {
+		fetchData()
+
+		return () => {
+			clearState()
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	return {
 		TYPE_OPTIONS,
@@ -193,8 +280,15 @@ const ViewModel = () => {
 		isTablet,
 		themeMode,
 		data: data,
+		dataTypeOptions,
 		type,
 		onTypeChange,
+		filter,
+		displayFilter,
+		searchText,
+		setSearchText,
+		onAddFilter,
+		onRemoveFilter,
 	}
 }
 
