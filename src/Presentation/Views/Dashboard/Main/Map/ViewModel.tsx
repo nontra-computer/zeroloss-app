@@ -237,7 +237,7 @@ const ViewModel = () => {
 		switch (type) {
 			case 'all':
 				return rawData?.events
-					? rawData.events.map(e => ({
+					? rawData.events.map((e: any) => ({
 							...e,
 							eventType: {
 								id: e.idEventType,
