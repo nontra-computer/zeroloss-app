@@ -10,6 +10,9 @@ export interface WindDirectionProps {
 	direction?: number
 	speed?: number
 	temp?: number
+	windDeg?: number
+	windTo?: number
+	ws?: number
 	rh?: number
 	bp?: number
 }

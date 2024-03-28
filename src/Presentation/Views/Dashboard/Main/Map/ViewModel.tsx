@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { useEventStore } from '@/Store/Event'
+import { useLocationStore } from '@/Store/Location'
 import { toast } from 'react-toastify'
 
 const TYPE_OPTIONS = [
@@ -176,6 +177,9 @@ const ViewModel = () => {
 		getTypes: state.getTypes,
 		clearState: state.clearState,
 	}))
+	const { locations } = useLocationStore(state => ({
+		locations: state.dataMapMarker,
+	}))
 	const [searchText, setSearchText] = useState('')
 	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
 
@@ -202,6 +206,16 @@ const ViewModel = () => {
 		}),
 		[]
 	)
+	const locationOptions: {
+		label: string
+		value: any
+	}[] = locations.map(
+		(d: any) => ({
+			label: d.nameTh,
+			value: d.id,
+		}),
+		[]
+	)
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -222,7 +236,15 @@ const ViewModel = () => {
 	const data = useMemo(() => {
 		switch (type) {
 			case 'all':
-				return rawData?.events ?? []
+				return rawData?.events
+					? rawData.events.map(e => ({
+							...e,
+							eventType: {
+								id: e.idEventType,
+								name: dataTypes.find((d: any) => d.id === e.idEventType)?.name,
+							},
+						}))
+					: []
 			case 'wind-direction':
 				return rawData?.wind ?? []
 			case 'simulation':
@@ -232,7 +254,7 @@ const ViewModel = () => {
 			default:
 				return MOCK_DATA
 		}
-	}, [type, rawData, filter])
+	}, [type, rawData, filter, dataTypes])
 
 	const onTypeChange = (value: 'all' | 'wind-direction' | 'simulation' | 'measurement') => {
 		setType(value)
@@ -281,6 +303,7 @@ const ViewModel = () => {
 		themeMode,
 		data: data,
 		dataTypeOptions,
+		locationOptions,
 		type,
 		onTypeChange,
 		filter,

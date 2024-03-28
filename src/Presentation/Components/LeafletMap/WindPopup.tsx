@@ -1,16 +1,19 @@
 import { KTSVG } from '@/_metronic/helpers'
 import React from 'react'
+import { WIND_TO } from '@/Configuration/Wind'
 
 interface Props {
 	title: string
 	direction: number
-	speed: number
 	temp: number
 	rh: number
 	bp: number
+	windTo: number
+	windDeg: number
+	ws: number
 }
 
-const WindPopup: React.FC<Props> = ({ title, direction, speed, temp, rh, bp }) => {
+const WindPopup: React.FC<Props> = ({ title, windDeg, windTo, temp, rh, bp, ws }) => {
 	const generateValue = (value: any, unit: string) => {
 		if (value === undefined || value === null) {
 			return '-'
@@ -33,10 +36,11 @@ const WindPopup: React.FC<Props> = ({ title, direction, speed, temp, rh, bp }) =
 					<div className="mt-4 text-start">
 						<h6 className="text-start text-zeroloss-base-white fw-bold fs-4">{title ?? '-'}</h6>
 						<div className="text-zeroloss-base-white text-start mb-1">
-							WS : {generateValue(speed, 'm/s')}
+							WS : {generateValue(ws, 'm/s')}
 						</div>
 						<div className="text-zeroloss-base-white text-start mb-1">
-							WD : {generateValue(direction, 'Deg NE')}
+							{/* @ts-ignore */}
+							WD : {generateValue(windDeg, `Deg ${WIND_TO[windTo] ?? ''}`)}
 						</div>
 						<div className="text-zeroloss-base-white text-start mb-1">
 							Temp : {generateValue(temp, '°C')}

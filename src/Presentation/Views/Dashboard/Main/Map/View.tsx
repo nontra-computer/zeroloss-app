@@ -26,6 +26,7 @@ const MainDashboardMapView: React.FC = () => {
 		themeMode,
 		data,
 		dataTypeOptions,
+		locationOptions,
 		type,
 		onTypeChange,
 		TYPE_OPTIONS,
@@ -292,6 +293,7 @@ const MainDashboardMapView: React.FC = () => {
 												placeholder="เลือกสถานที่"
 												noOptionsMessage={() => 'ไม่พบข้อมูล'}
 												className="position-absolute"
+												options={locationOptions}
 												styles={{
 													container: styles => ({
 														...styles,

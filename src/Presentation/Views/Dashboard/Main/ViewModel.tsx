@@ -5,6 +5,7 @@ import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
 import { useEventStore } from '@/Store/Event'
+import { useLocationStore } from '@/Store/Location'
 import { toast } from 'react-toastify'
 import moment from 'moment-timezone'
 import Alert from '../Components/Alert/View'
@@ -17,6 +18,10 @@ const ViewModel = () => {
 	const { summary, getSummary } = useEventStore(state => ({
 		summary: state.summary,
 		getSummary: state.getSummary,
+	}))
+	const { getAllMapMarker } = useLocationStore(state => ({
+		dataMapMarker: state.dataMapMarker,
+		getAllMapMarker: state.getAllMapMarker,
 	}))
 
 	const currentTime = useCurrentTime()
@@ -42,6 +47,7 @@ const ViewModel = () => {
 	const isShowCalendar = location.pathname === '/dashboard/overview/calendar'
 
 	const fetchData = () => {
+		getAllMapMarker()
 		getSummary().then(({ data, success }) => {
 			if (!success) {
 				toast.error(data)

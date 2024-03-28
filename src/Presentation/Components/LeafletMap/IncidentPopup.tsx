@@ -6,12 +6,13 @@ interface Props {
 		id: number
 		name: string
 	}
+	idEventType: number
 	img: string
 	title: string
 	detail: string
 }
 
-const IncidentPopup: React.FC<Props> = ({ title, detail, eventType, img }) => {
+const IncidentPopup: React.FC<Props> = ({ title, detail, eventType, img, idEventType }) => {
 	return (
 		<React.Fragment>
 			<div className="card bg-zeroloss-primary min-h-200px min-w-250px">
@@ -31,12 +32,12 @@ const IncidentPopup: React.FC<Props> = ({ title, detail, eventType, img }) => {
 								'position-absolute bg-zeroloss-error-600 border-zeroloss-base-white text-zeroloss-base-white border-1px fw-bold rounded px-4 py-2',
 								{
 									'bg-zeroloss-error':
-										eventType?.id === 1 || eventType?.id === undefined || eventType?.id === null,
-									'bg-zeroloss-warning': eventType?.id === 2,
-									'bg-zeroloss-success': eventType?.id === 3,
-									'bg-zeroloss-primary': eventType?.id === 4,
-									'bg-zeroloss-brand-600': eventType?.id === 5,
-									'bg-zeroloss-primary-400': eventType?.id === 6,
+										idEventType === 1 || idEventType === undefined || idEventType === null,
+									'bg-zeroloss-warning': idEventType === 2,
+									'bg-zeroloss-success': idEventType === 3,
+									'bg-zeroloss-primary': idEventType === 4,
+									'bg-zeroloss-brand-600': idEventType === 5,
+									'bg-zeroloss-primary-400': idEventType === 6,
 								}
 							)}
 							style={{ left: '3%', bottom: '5%' }}>

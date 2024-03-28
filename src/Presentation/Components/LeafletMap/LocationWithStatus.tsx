@@ -11,6 +11,7 @@ const LocationWithStatus: React.FC<LocationWithStatusProps> = ({
 	title,
 	img,
 	detail,
+	idEventType,
 	eventType,
 }) => {
 	const SuccessIcon = new Icon({
@@ -58,6 +59,7 @@ const LocationWithStatus: React.FC<LocationWithStatusProps> = ({
 						title,
 						img,
 						detail,
+						idEventType,
 						eventType,
 					})}
 				</Popup>

@@ -10,6 +10,7 @@ export interface LocationWithStatusProps {
 	title?: string
 	detail?: string
 	img?: string
+	idEventType?: number
 	eventType?: {
 		id: number
 		name: string

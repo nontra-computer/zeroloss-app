@@ -234,7 +234,7 @@ const MainDashboardCalendarView: React.FC = () => {
 													'white-button': themeMode === 'light',
 													'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
 														themeMode === 'dark',
-													active: calendarRef?.current.getApi().view.type === 'dayGridMonth',
+													active: calendarRef?.current?.getApi().view.type === 'dayGridMonth',
 												})}
 												onClick={() => changeView('dayGridMonth')}>
 												{/* {calendarRef?.current.getApi().view.type === 'dayGridMonth' && (
@@ -252,7 +252,7 @@ const MainDashboardCalendarView: React.FC = () => {
 													'white-button': themeMode === 'light',
 													'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
 														themeMode === 'dark',
-													active: calendarRef?.current.getApi().view.type === 'dayGridWeek',
+													active: calendarRef?.current?.getApi().view.type === 'dayGridWeek',
 												})}
 												onClick={() => changeView('dayGridWeek')}>
 												{/* {calendarRef?.current.getApi().view.type === 'dayGridWeek' && (

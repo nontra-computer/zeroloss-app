@@ -8,7 +8,7 @@ const WindDirection: React.FC<WindDirectionProps> = ({
 	draggable,
 	popup,
 	position,
-	degree,
+	windDeg,
 	...props
 }) => {
 	const WindIcon = new Icon({
@@ -26,13 +26,13 @@ const WindDirection: React.FC<WindDirectionProps> = ({
 			eventHandlers={{
 				mouseover: event => event.target.openPopup(),
 			}}
-			rotationAngle={degree}>
+			rotationAngle={windDeg}>
 			{popup && (
 				<Popup closeButton={false}>
 					{createElement(popup, {
 						lat: position.lat,
 						lng: position.lng,
-						degree,
+						windDeg,
 						...props,
 					})}
 				</Popup>
