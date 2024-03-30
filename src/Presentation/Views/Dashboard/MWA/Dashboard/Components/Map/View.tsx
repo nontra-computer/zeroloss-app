@@ -231,7 +231,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 								onPanningStop={onEndPanning}
 								maxScale={is4K || is8K ? 3 : 1.5}>
 								{({ zoomIn, zoomOut }) => (
-									<React.Fragment>
+									<div className='relative w-100 h-100'>
 										<div
 											className="position-absolute d-flex justify-content-start align-items-end"
 											style={{ zIndex: 100, left: 20, top: stageDimensions.height - 100 }}>
@@ -513,7 +513,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 										<TransformComponent wrapperClass="h-100 w-100">
 											<PlantStation />
 										</TransformComponent>
-									</React.Fragment>
+									</div>
 								)}
 							</TransformWrapper>
 

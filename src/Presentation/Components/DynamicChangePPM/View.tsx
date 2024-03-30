@@ -11,9 +11,18 @@ interface Props {
 	direction: 'up' | 'down'
 	type: 'success' | 'warning' | 'danger'
 	change: number
+	valueColor?: 'black' | 'success' | 'warning' | 'danger'
 }
 
-const DynamicChangePPM: React.FC<Props> = ({ arrow, minus, value, direction, type, change }) => {
+const DynamicChangePPM: React.FC<Props> = ({
+	arrow,
+	minus,
+	value,
+	direction,
+	type,
+	change,
+	valueColor,
+}) => {
 	const { mode } = useThemeMode()
 
 	let themeMode = ''
@@ -23,12 +32,32 @@ const DynamicChangePPM: React.FC<Props> = ({ arrow, minus, value, direction, typ
 		themeMode = mode
 	}
 
+	let valueColorClassLight = ''
+	let valueColorClassDark = ''
+
+	if (valueColor === 'black') {
+		valueColorClassLight = 'text-zeroloss-grey-900'
+		valueColorClassDark = 'text-zeroloss-base-white'
+	}
+	if (valueColor === 'success') {
+		valueColorClassLight = 'text-zeroloss-success-600'
+		valueColorClassDark = 'text-zeroloss-success-500'
+	}
+	if (valueColor === 'warning') {
+		valueColorClassLight = 'text-zeroloss-warning-600'
+		valueColorClassDark = 'text-zeroloss-warning-500'
+	}
+	if (valueColor === 'danger') {
+		valueColorClassLight = 'text-zeroloss-error-600'
+		valueColorClassDark = 'text-zeroloss-error-500'
+	}
+
 	return (
 		<div className="d-flex flex-row align-items-center">
 			<span
 				className={clsx('fw-bold fs-1 me-2', {
-					'text-zeroloss-base-white': themeMode === 'dark',
-					'text-zeroloss-grey-900': themeMode === 'light',
+					[valueColorClassDark]: themeMode === 'dark',
+					[valueColorClassLight]: themeMode === 'light',
 				})}>
 				{formatNumberCommas(value)}
 			</span>

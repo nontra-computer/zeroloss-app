@@ -133,12 +133,13 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 				<div
 					className="card-body position-relative"
 					style={{
-						height: isLargeMobile ? "500px" : '45vh',
+						height: isLargeMobile ? '500px' : '45vh',
 					}}>
 					<TransformWrapper
 						initialScale={0.8}
 						minScale={0.7}
 						centerOnInit
+						centerZoomedOut
 						limitToBounds={false}
 						smooth
 						onPanningStart={onStartPanning}
@@ -148,7 +149,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 						}}
 						maxScale={1.5}>
 						{({ zoomIn, zoomOut }) => (
-							<React.Fragment>
+							<div className="relative w-100 h-100">
 								<div
 									className="position-absolute d-flex justify-content-start align-items-end"
 									style={{ zIndex: 100, left: 20, top: stageDimensions.height - 100 }}>
@@ -241,7 +242,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 									{isStation2 && <Station2 isDark={themeMode === 'dark'} {...station2Sensor} />}
 									{isStation3 && <Station3 isDark={themeMode === 'dark'} {...station3Sensor} />}
 								</TransformComponent>
-							</React.Fragment>
+							</div>
 						)}
 					</TransformWrapper>
 				</div>

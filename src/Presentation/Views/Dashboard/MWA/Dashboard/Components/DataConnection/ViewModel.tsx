@@ -35,17 +35,18 @@ const ViewModel = () => {
 			offlinePercentage,
 		}
 	}, [dashboardSensors])
-	const { isMobile, isLargeMobile, isFullHD, is4K, is8K } = useResolutionDetection()
+	const { isMobile, isLargeMobile, isLaptop, isFullHD, is4K, is8K } = useResolutionDetection()
 	const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
 	const chartData = useMemo(
 		() => [data?.onlinePercentage ?? 0, data?.offlinePercentage ?? 0],
-		[data]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[data, isFullHD, is4K, is8K, isMobile, isLargeMobile]
 	)
 	const chartOffsetX = useMemo(() => {
 		if (is8K) return 100
 		if (is4K) return 100
-		if (isFullHD) return -20
+		if (isFullHD) return 40
 		if (isLargeMobile) return 100
 		if (isMobile) return 20
 		return 0
@@ -100,6 +101,7 @@ const ViewModel = () => {
 		isFullHD,
 		is4K,
 		is8K,
+		isLaptop,
 		chartData,
 		chartWidth,
 		chartHeight,

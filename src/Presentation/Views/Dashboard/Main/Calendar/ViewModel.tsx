@@ -72,7 +72,7 @@ const ViewModel = () => {
 				title: rd?.title,
 				detail: rd?.detail,
 				start: moment(rd?.start).toISOString(),
-				end: moment(rd?.end).toISOString(),
+				end: rd?.end ? moment(rd?.end).toISOString() : moment().toISOString(),
 				type: rd?.idEventType ?? 0,
 				img: '/media/examples/incident-1.jpg',
 				location: '',

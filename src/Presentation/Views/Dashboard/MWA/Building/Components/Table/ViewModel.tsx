@@ -32,7 +32,7 @@ const ViewModel = () => {
 		updateLoading(false)
 		updateError(false)
 		updatePagination(true)
-		updateSorting('sensors', true)
+		updateSorting('sensors', false)
 	}
 
 	const calculateArrow = ({
@@ -40,16 +40,19 @@ const ViewModel = () => {
 		nearStd,
 		std,
 		lastValue,
+		valueStatus,
 	}: {
 		value: number
 		nearStd: number
 		std: number
 		lastValue: number
+		valueStatus: number
 	}) => {
 		let arrow = false
 		let minus = false
 		let direction: 'up' | 'down' = 'up'
 		let type: 'success' | 'warning' | 'danger' = 'success'
+		let valueColor = 'black'
 
 		if (nearStd <= value && value < std) {
 			direction = 'up'
@@ -70,11 +73,22 @@ const ViewModel = () => {
 			minus = true
 		}
 
+		if (valueStatus === 0) {
+			valueColor = 'black'
+		} else if (valueStatus === 1) {
+			valueColor = 'success'
+		} else if (valueStatus === 2) {
+			valueColor = 'warning'
+		} else if (valueStatus === 3) {
+			valueColor = 'danger'
+		}
+
 		return {
 			arrow,
 			minus,
 			direction,
 			type,
+			valueColor,
 		}
 	}
 
@@ -163,7 +177,7 @@ const ViewModel = () => {
 					return <span>-</span>
 				}
 
-				const { arrow, direction, minus, type } = calculateArrow(props.row.original)
+				const { arrow, direction, minus, type, valueColor } = calculateArrow(props.row.original)
 				// Find change in percentage between lastValue and value
 				let change = (props.row.original.value * 100) / props.row.original.lastValue
 				if (change > 100) change = 100
@@ -176,6 +190,7 @@ const ViewModel = () => {
 						direction={direction}
 						type={type}
 						change={isNaN(change) ? 0 : change}
+						valueColor={valueColor as 'black' | 'success' | 'warning' | 'danger'}
 					/>
 				)
 			},

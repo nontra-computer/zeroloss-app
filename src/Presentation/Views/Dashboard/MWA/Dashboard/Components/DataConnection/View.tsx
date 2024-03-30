@@ -9,8 +9,19 @@ import { vhToPixels } from '@/Utils/vhToPixels'
 interface Props {}
 
 const DataConnection: React.FC<Props> = () => {
-	const { isLargeMobile, is4K, is8K, chartData, chartOffsetX, intl, themeMode, data } =
-		useViewModel()
+	const {
+		isLoading,
+		isLargeMobile,
+		is4K,
+		is8K,
+		isFullHD,
+		isLaptop,
+		chartData,
+		chartOffsetX,
+		intl,
+		themeMode,
+		data,
+	} = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -67,104 +78,108 @@ const DataConnection: React.FC<Props> = () => {
 									{/* end:: Header */}
 
 									{/* start:: Content */}
-									<div className="col-12 col-xxl-5">
+									<div className="col-12 col-xxl-6">
 										{/* begin::Chart */}
-										<Chart
-											type="donut"
-											width={is4K || is8K || isLargeMobile ? '500px' : '300px'}
-											height={is4K || is8K ? vhToPixels(25) : 200}
-											series={chartData}
-											options={{
-												labels: ['Sensors', 'Offline Sensors'],
-												chart: {
-													offsetY: 30,
-													offsetX: chartOffsetX,
-													redrawOnParentResize: true,
-													redrawOnWindowResize: true,
-												},
-												plotOptions: {
-													pie: {
-														startAngle: -90,
-														endAngle: 90,
-														donut: {
-															labels: {
-																show: true,
-																name: {
+										{!isLoading && (
+											<Chart
+												type="donut"
+												width={is4K || is8K || isLargeMobile ? '500px' : '300px'}
+												height={is4K || is8K ? Math.round(vhToPixels(25)) : 200}
+												series={chartData}
+												options={{
+													labels: ['Sensors', 'Offline Sensors'],
+													chart: {
+														offsetY: 30,
+														offsetX: chartOffsetX,
+														redrawOnParentResize: true,
+														redrawOnWindowResize: true,
+													},
+													plotOptions: {
+														pie: {
+															startAngle: -90,
+															endAngle: 90,
+															offsetX:
+																is4K || is8K || isLargeMobile || isFullHD || isLaptop ? -40 : 0,
+															donut: {
+																labels: {
 																	show: true,
-																	offsetY: -20,
-																	fontFamily: 'Noto Sans Thai, sans-serif',
-																	fontWeight: 'bolder',
-																	fontSize: '14px',
-																	formatter: function (val: any) {
-																		return val
+																	name: {
+																		show: true,
+																		offsetY: -20,
+																		fontFamily: 'Noto Sans Thai, sans-serif',
+																		fontWeight: 'bolder',
+																		fontSize: '14px',
+																		formatter: function (val: any) {
+																			return val
+																		},
+																	},
+																	value: {
+																		show: true,
+																		offsetY: -20,
+																		fontFamily: 'Noto Sans Thai, sans-serif',
+																		fontWeight: 'bolder',
+																		fontSize: '14px',
+																		color: themeMode === 'dark' ? '#ffffff' : '#666666',
+																		formatter: function (val: any) {
+																			return val + ' %'
+																		},
 																	},
 																},
-																value: {
-																	show: true,
-																	offsetY: -20,
-																	fontFamily: 'Noto Sans Thai, sans-serif',
-																	fontWeight: 'bolder',
-																	fontSize: '14px',
-																	color: themeMode === 'dark' ? '#ffffff' : '#666666',
-																	formatter: function (val: any) {
-																		return val + ' %'
-																	},
+															},
+														},
+													},
+													colors: ['#F79009', '#667085'],
+													grid: {
+														padding: {
+															top: 0,
+															bottom: is4K || is8K ? -200 : -50,
+														},
+													},
+													dataLabels: {
+														enabled: false,
+													},
+													responsive: [
+														{
+															breakpoint: 480,
+															options: {
+																chart: {
+																	width: 250,
+																	height: 250,
+																},
+																legend: {
+																	position: 'bottom',
 																},
 															},
 														},
-													},
-												},
-												colors: ['#F79009', '#667085'],
-												grid: {
-													padding: {
-														top: 0,
-														bottom: is4K || is8K ? -200 : -50,
-													},
-												},
-												dataLabels: {
-													enabled: false,
-												},
-												responsive: [
-													{
-														breakpoint: 480,
-														options: {
-															chart: {
-																width: 250,
-																height: 250,
-															},
-															legend: {
-																position: 'bottom',
+														{
+															breakpoint: 481,
+															options: {
+																chart: {
+																	width: 350,
+																	height: 250,
+																},
+																legend: {
+																	position: 'bottom',
+																},
 															},
 														},
-													},
-													{
-														breakpoint: 481,
-														options: {
-															chart: {
-																width: 350,
-																height: 250,
-															},
-															legend: {
-																position: 'bottom',
-															},
+													],
+													legend: {
+														show: false,
+														position: 'bottom',
+														floating: true,
+														labels: {
+															colors: themeMode === 'dark' ? '#ffffff' : '#666666',
 														},
 													},
-												],
-												legend: {
-													show: false,
-													position: 'bottom',
-													floating: true,
-													labels: {
-														colors: themeMode === 'dark' ? '#ffffff' : '#666666',
-													},
-												},
-											}}
-										/>
+												}}
+											/>
+										)}
 									</div>
-									<div className="col-12 col-xxl-7 mt-5 mt-lg-0">
+									<div className="col-12 col-xxl-6 mt-5 mt-lg-0">
 										<div className="d-flex flex-column align-items-end justify-content-center h-100">
-											<div className="fs-5 mb-3 w-100">
-												<div className="row">
+											<div className="fs-6 mb-3 w-100">
+												<div className="row align-items-center">
 													<div
 														className={clsx(
 															'col-5 col-xxl-8 text-xxl-end text-zeroloss-warning fw-bold'
@@ -173,7 +188,7 @@ const DataConnection: React.FC<Props> = () => {
 															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_SENSOR_LABEL',
 														})}
 													</div>
-													<div className="col-4">
+													<div className="col-4 fs-7">
 														<span
 															className={clsx({
 																'text-zeroloss-base-white': themeMode === 'dark',
@@ -184,8 +199,8 @@ const DataConnection: React.FC<Props> = () => {
 													</div>
 												</div>
 											</div>
-											<div className="fs-5 mb-3 w-100">
-												<div className="row">
+											<div className="fs-6 mb-3 w-100">
+												<div className="row align-items-center">
 													<div
 														className={clsx(
 															'col-5 col-xxl-8 text-xxl-end text-zeroloss-error fw-bold',
@@ -198,7 +213,7 @@ const DataConnection: React.FC<Props> = () => {
 															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_OFFLINE_SENSOR_LABEL',
 														})}
 													</div>
-													<div className="col-4">
+													<div className="col-4 fs-7">
 														<span
 															className={clsx({
 																'text-zeroloss-base-white': themeMode === 'dark',
@@ -209,8 +224,8 @@ const DataConnection: React.FC<Props> = () => {
 													</div>
 												</div>
 											</div>
-											<div className="fs-5 mb-3 w-100">
-												<div className="row">
+											<div className="fs-6 mb-3 w-100">
+												<div className="row align-items-center">
 													<div
 														className={clsx('col-5 col-xxl-8 text-xxl-end', {
 															'text-zeroloss-base-white': themeMode === 'dark',
@@ -220,7 +235,7 @@ const DataConnection: React.FC<Props> = () => {
 															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_SENSOR_AVAILABLE',
 														})}
 													</div>
-													<div className="col-4">
+													<div className="col-4 fs-7">
 														<span
 															className={clsx({
 																'text-zeroloss-base-white': themeMode === 'dark',
@@ -232,7 +247,7 @@ const DataConnection: React.FC<Props> = () => {
 												</div>
 											</div>
 											<div className="fs-5 w-100">
-												<div className="row">
+												<div className="row align-items-center">
 													<div
 														className={clsx('col-5 col-xxl-8 text-xxl-end', {
 															'text-zeroloss-base-white': themeMode === 'dark',
@@ -242,7 +257,7 @@ const DataConnection: React.FC<Props> = () => {
 															id: 'ZEROLOSS.DASHBOARD.MWA_MEASUREMENT.CHLORINE_SENSOR_UNAVAILABLE',
 														})}
 													</div>
-													<div className="col-4">
+													<div className="col-4 fs-7">
 														<span
 															className={clsx({
 																'text-zeroloss-base-white': themeMode === 'dark',

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
@@ -9,7 +9,7 @@ import moment from 'moment-timezone'
 const ViewModel = () => {
 	const selectedLang = useLang()
 	const intl = useIntl()
-	const navigate = useNavigate()
+	// const navigate = useNavigate()
 	const currentTime = useCurrentTime()
 	const timeStr = useMemo(() => {
 		const time = moment(currentTime)
@@ -29,7 +29,8 @@ const ViewModel = () => {
 	}
 
 	const onSelectBuilding = (id: string) => {
-		navigate(`/dashboard/mwa/building/${id}`)
+		window.open(`/dashboard/mwa/building/${id}`, '_blank')
+		// navigate(`/dashboard/mwa/building/${id}`)
 	}
 
 	return {

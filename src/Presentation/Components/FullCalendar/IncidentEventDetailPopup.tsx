@@ -101,7 +101,7 @@ const IncidentEventDetailPopup: React.FC<IncidentEventDetailPopupProps> = ({
 						</p>
 					</div>
 
-					<div className="mt-10 d-flex flex-row align-items-center">
+					{/* <div className="mt-10 d-flex flex-row align-items-center">
 						<span className="me-2">
 							<i
 								className={clsx('bi bi-geo-alt-fill fs-2', {
@@ -110,7 +110,7 @@ const IncidentEventDetailPopup: React.FC<IncidentEventDetailPopupProps> = ({
 								})}></i>
 						</span>
 						<span>ชื่อเขต หน่วยงาน</span>
-					</div>
+					</div> */}
 
 					<div className="mt-4 d-flex flex-row align-items-center">
 						<span className="me-2">

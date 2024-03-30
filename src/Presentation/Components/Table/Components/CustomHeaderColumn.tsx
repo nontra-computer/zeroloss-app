@@ -47,12 +47,12 @@ const CustomHeaderColumn: React.FC<Prop> = ({ headerRight, column, additionalSty
 					{column.isSorted ? (
 						column.isSortedDesc ? (
 							<KTSVG
-								path="/media/icons/duotune/arrows/arr004.svg"
+								path="media/icons/duotune/arrows/arr004.svg"
 								className="svg-icon-2 svg-icon-primary"
 							/>
 						) : (
 							<KTSVG
-								path="/media/icons/duotune/arrows/arr003.svg"
+								path="media/icons/duotune/arrows/arr003.svg"
 								className="svg-icon-2 svg-icon-primary"
 							/>
 						)

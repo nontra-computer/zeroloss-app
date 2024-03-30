@@ -4,6 +4,7 @@ interface ResolutionDetection {
 	isMobile: boolean
 	isLargeMobile: boolean
 	isTablet: boolean
+	isLaptop: boolean
 	isFullHD: boolean
 	is4K: boolean
 	is8K: boolean
@@ -14,6 +15,7 @@ export const useResolutionDetection = (): ResolutionDetection => {
 		isMobile: false,
 		isLargeMobile: false,
 		isTablet: false,
+		isLaptop: false,
 		isFullHD: false,
 		is4K: false,
 		is8K: false,
@@ -27,6 +29,7 @@ export const useResolutionDetection = (): ResolutionDetection => {
 				isMobile: width < 768,
 				isLargeMobile: width >= 768 && width < 992,
 				isTablet: width >= 768 && width < 1920,
+				isLaptop: width >= 992 && width < 1920,
 				isFullHD: width >= 1920 && height >= 1080,
 				is4K: width >= 3840 && height >= 2160,
 				is8K: width >= 7680 && height >= 4320,

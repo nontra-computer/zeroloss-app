@@ -5,7 +5,19 @@ import clsx from 'clsx'
 import useViewModel from './ViewModel'
 
 const TotalMeasurement: React.FC = () => {
-	const { isMobile, isLargeMobile, isTablet, intl, themeMode, data, totalChartRef } = useViewModel()
+	const {
+		chartOffsetX,
+		isMobile,
+		isLargeMobile,
+		isTablet,
+		isLaptop,
+		isFullHD,
+		is4K,
+		is8K,
+		intl,
+		themeMode,
+		data,
+	} = useViewModel()
 
 	return (
 		<div className="row h-100">
@@ -50,20 +62,20 @@ const TotalMeasurement: React.FC = () => {
 						{/* begin::Chart */}
 						<Chart
 							type="donut"
-							width={isLargeMobile ? '40%' : '100%'}
-							height={isMobile || isLargeMobile ? '220px' : isTablet ? '300px' : '150px'}
+							width={210}
+							height={isLaptop || isFullHD || is4K || is8K ? 150 : undefined}
 							series={[data?.totalOnline ?? 0, data?.totalOffline ?? 0]}
 							options={{
 								labels: ['เชื่อมโยงได้', 'เชื่อมโยงไม่ได้'],
 								chart: {
 									redrawOnParentResize: true,
 									redrawOnWindowResize: true,
-									offsetX: isMobile ? -50 : isLargeMobile ? 150 : isTablet ? -50 : 50,
+									offsetX: chartOffsetX,
 								},
 								plotOptions: {
 									pie: {
 										customScale: 0.8,
-										offsetX: 60,
+										offsetX: isLargeMobile || isLaptop || is4K || is8K ? 60 : 0,
 										donut: {
 											labels: {
 												show: false,
@@ -115,7 +127,7 @@ const TotalMeasurement: React.FC = () => {
 									position: 'left',
 									horizontalAlign: 'center',
 									// offsetY: 20,
-									offsetX: !isMobile && !isLargeMobile ? -30 : undefined,
+									offsetX: !isMobile && !isLargeMobile ? -20 : 0,
 									floating: true,
 									labels: {
 										colors: themeMode === 'dark' ? '#ffffff' : '#666666',
@@ -123,11 +135,11 @@ const TotalMeasurement: React.FC = () => {
 								},
 							}}
 						/>
-						<div
+						{/* <div
 							ref={totalChartRef}
 							id="kt_charts_total_measurement_chart"
 							className="card-rounded-bottom"
-							style={{ height: '150px' }}></div>
+							style={{ height: '150px' }}></div> */}
 						{/* end::Chart */}
 					</div>
 				</div>
