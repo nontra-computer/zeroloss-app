@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -17,6 +17,8 @@ const ViewModel = () => {
 	const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
 	const [isShowHover, setIsShowHover] = useState(true)
 	const { isLargeMobile, isFullHD, is4K, is8K } = useResolutionDetection()
+
+	const wrapperRef = useRef<any>(null)
 
 	const isStation1 = useMemo(() => buildingId === '1', [buildingId])
 	const isStation2 = useMemo(() => buildingId === '2', [buildingId])
@@ -183,6 +185,12 @@ const ViewModel = () => {
 		}
 	}, [])
 
+	useEffect(() => {
+		if (wrapperRef.current) {
+			wrapperRef.current.centerView(undefined, 0)
+		}
+	}, [buildingId, wrapperRef])
+
 	return {
 		isLargeMobile,
 		canZoomAndPan,
@@ -202,6 +210,7 @@ const ViewModel = () => {
 		onSelectBuilding,
 		onStartPanning,
 		onEndPanning,
+		wrapperRef,
 	}
 }
 

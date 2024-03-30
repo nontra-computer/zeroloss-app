@@ -29,6 +29,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 		stationDropdownOptions,
 		onStartPanning,
 		onEndPanning,
+		wrapperRef,
 	} = useViewModel()
 
 	return (
@@ -136,6 +137,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 						height: isLargeMobile ? '500px' : '45vh',
 					}}>
 					<TransformWrapper
+						ref={wrapperRef}
 						initialScale={0.8}
 						minScale={0.7}
 						centerOnInit
@@ -149,7 +151,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 						}}
 						maxScale={1.5}>
 						{({ zoomIn, zoomOut }) => (
-							<div className="relative w-100 h-100">
+							<div className="position-relative w-100 h-100">
 								<div
 									className="position-absolute d-flex justify-content-start align-items-end"
 									style={{ zIndex: 100, left: 20, top: stageDimensions.height - 100 }}>
@@ -237,7 +239,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 									</div>
 								</div>
 
-								<TransformComponent wrapperClass="w-100 h-100">
+								<TransformComponent>
 									{isStation1 && <Station1 isDark={themeMode === 'dark'} {...station1Sensor} />}
 									{isStation2 && <Station2 isDark={themeMode === 'dark'} {...station2Sensor} />}
 									{isStation3 && <Station3 isDark={themeMode === 'dark'} {...station3Sensor} />}

@@ -151,10 +151,16 @@ const MainDashboardMapView: React.FC = () => {
 									placeholder="เลือกรูปแบบการมองเห็น"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
 									options={TYPE_OPTIONS}
-									value={TYPE_OPTIONS.find(option => option.value === type) ?? ''}
+									value={TYPE_OPTIONS.find(option => option.value === type) ?? null}
 									onChange={option => {
-										// @ts-ignore
-										if (option?.value) onTypeChange(option?.value ?? 'all')
+										if (option?.value)
+											onTypeChange(
+												(option?.value ?? 'all') as
+													| 'all'
+													| 'wind-direction'
+													| 'simulation'
+													| 'measurement'
+											)
 									}}
 									className="shadow-sm w-100 w-lg-200px"
 									styles={{
