@@ -52,13 +52,13 @@ export const ZEROLOSS_MENU = [
 			{
 				key: 'dashboard',
 				icon: 'bi-file-bar-graph-fill',
-				path: '/event/overview',
+				path: '/events/overview',
 				label: 'ZEROLOSS.MENU.EVENT_DASHBOARD',
 			},
 			{
 				key: 'create',
 				icon: 'bi-calendar2-plus-fill',
-				path: '/event/new',
+				path: '/events/new',
 				label: 'ZEROLOSS.MENU.CREATE_EVENT',
 			},
 		],

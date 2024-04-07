@@ -2,10 +2,12 @@ import { create } from 'zustand'
 import axios from 'axios'
 
 interface EventStore {
+	isLoadingData: boolean
 	summary: any
 	data: any[]
 	dashboardData: any
 	types: any[]
+	setIsLoadingData: (isLoadingData: boolean) => void
 	setSummary: (summary: any) => void
 	setData: (data: any[]) => void
 	setDashboardData: (data: any) => void
@@ -20,10 +22,12 @@ interface EventStore {
 export const API_SLUG = '/events'
 
 export const useEventStore = create<EventStore>(set => ({
+	isLoadingData: false,
 	summary: {},
 	data: [],
 	dashboardData: {},
 	types: [],
+	setIsLoadingData: (isLoadingData: boolean) => set({ isLoadingData }),
 	setData: (data: any[]) => set({ data }),
 	setSummary: (summary: any) => set({ summary }),
 	setDashboardData: (data: any) => set({ dashboardData: data }),
@@ -36,7 +40,10 @@ export const useEventStore = create<EventStore>(set => ({
 				return { data: response.data, success: true }
 			})
 			.catch(error => {
-				return { data: error.response.data.message?.toString(), success: false }
+				return {
+					data: error.response?.data.message?.toString() ?? 'Something went wrong.',
+					success: false,
+				}
 			})
 	},
 	getTypes: async () => {
@@ -47,7 +54,10 @@ export const useEventStore = create<EventStore>(set => ({
 				return { data: response.data, success: true }
 			})
 			.catch(error => {
-				return { data: error.response.data.message?.toString(), success: false }
+				return {
+					data: error.response?.data.message?.toString() ?? 'Something went wrong.',
+					success: false,
+				}
 			})
 	},
 	getSummary: async () => {
@@ -58,7 +68,10 @@ export const useEventStore = create<EventStore>(set => ({
 				return { data: response.data, success: true }
 			})
 			.catch(error => {
-				return { data: error.response.data.message?.toString(), success: false }
+				return {
+					data: error.response?.data.message?.toString() ?? 'Something went wrong.',
+					success: false,
+				}
 			})
 	},
 	getDashboardData: async () => {
@@ -69,7 +82,10 @@ export const useEventStore = create<EventStore>(set => ({
 				return { data: response.data, success: true }
 			})
 			.catch(error => {
-				return { data: error.response.data.message?.toString(), success: false }
+				return {
+					data: error.response?.data.message?.toString() ?? 'Something went wrong.',
+					success: false,
+				}
 			})
 	},
 	clearState: () => set({ data: [], summary: {}, dashboardData: {} }),

@@ -4,7 +4,7 @@ import { KTSVG } from '@/_metronic/helpers'
 const Filter: React.FC = () => {
 	return (
 		<div
-			id="kt_main_dashboard_map_filter"
+			id="kt_events_list_filter"
 			className="bg-body"
 			data-kt-drawer="true"
 			data-kt-drawer-name="chat"
@@ -12,8 +12,8 @@ const Filter: React.FC = () => {
 			data-kt-drawer-overlay="true"
 			data-kt-drawer-width="{default:'300px', 'md': '500px'}"
 			data-kt-drawer-direction="end"
-			data-kt-drawer-toggle="#kt_main_dashboard_map_filter_toggle"
-			data-kt-drawer-close="#kt_main_dashboard_map_filter_close"
+			data-kt-drawer-toggle="#kt_events_list_filter_toggle"
+			data-kt-drawer-close="#kt_events_list_filter_close"
 			style={{ zIndex: 9999 }}>
 			<div className="card w-100 rounded-0" style={{ zIndex: 9999 }}>
 				<div className="card-header pe-5">
@@ -31,7 +31,7 @@ const Filter: React.FC = () => {
 						{/* begin:: Close Button */}
 						<button
 							className="btn btn-sm btn-bg-white btn-active-light-danger text-center"
-							id="kt_main_dashboard_map_filter_close">
+							id="kt_events_list_filter_close">
 							<KTSVG
 								path="media/icons/duotune/arrows/arr015.svg"
 								className="svg-icon svg-icon-2x mx-auto"
