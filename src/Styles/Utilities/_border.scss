@@ -8,6 +8,26 @@
 			border-width: #{$i}px !important;
 			border-style: solid !important;
 		}
+
+		.border-left-#{$i}px {
+			border-left-width: #{$i}px !important;
+			border-left-style: solid !important;
+		}
+
+		.border-right-#{$i}px {
+			border-right-width: #{$i}px !important;
+			border-right-style: solid !important;
+		}
+
+		.border-top-#{$i}px {
+			border-top-width: #{$i}px !important;
+			border-top-style: solid !important;
+		}
+
+		.border-bottom-#{$i}px {
+			border-bottom-width: #{$i}px !important;
+			border-bottom-style: solid !important;
+		}
 	}
 }
 
