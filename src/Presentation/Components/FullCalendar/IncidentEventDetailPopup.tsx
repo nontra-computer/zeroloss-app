@@ -38,7 +38,8 @@ const IncidentEventDetailPopup: React.FC<IncidentEventDetailPopupProps> = ({
 			dialogClassName="modal-fullscreen-lg-down modal-lg modal-dialog modal-dialog-centered"
 			show={open}
 			onHide={onClose}
-			backdrop={true}>
+			backdrop={true}
+			style={{ zIndex: 9999 }}>
 			<div className="modal-content">
 				<div
 					className={clsx(

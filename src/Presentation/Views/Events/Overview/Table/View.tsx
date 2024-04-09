@@ -12,11 +12,12 @@ const EventListTableView: React.FC = () => {
 		themeMode,
 		isLoading,
 		// isMobile,
-		filter,
 		// displayFilter,
 		searchText,
+		selectedEventTypeId,
 		setSearchText,
-		onAddFilter,
+		setSelectedEventTypeId,
+		onClearFilter,
 		// onRemoveFilter,
 		data,
 		dataTypeOptions,
@@ -76,10 +77,6 @@ const EventListTableView: React.FC = () => {
 										label="ค้นหาเหตุการณ์"
 										value={searchText}
 										onChange={e => setSearchText(e.target.value)}
-										onPressEnter={() => {
-											onAddFilter('search', searchText)
-											setSearchText('')
-										}}
 									/>
 									<div className="w-100 w-lg-auto">
 										<label className="form-label">ประเภทเหตุการณ์</label>
@@ -88,8 +85,10 @@ const EventListTableView: React.FC = () => {
 											noOptionsMessage={() => 'ไม่พบข้อมูล'}
 											className="w-100 shadow-sm w-lg-200px"
 											options={dataTypeOptions}
-											value={dataTypeOptions.find(option => option.value === filter.type) ?? null}
-											onChange={option => onAddFilter('type', option?.value)}
+											value={
+												dataTypeOptions.find(option => option.value === selectedEventTypeId) ?? null
+											}
+											onChange={option => setSelectedEventTypeId(option?.value)}
 											styles={{
 												container: styles => ({
 													...styles,
@@ -164,9 +163,17 @@ const EventListTableView: React.FC = () => {
 									</div>
 								</div>
 							</div>
+
+							<div className="card-toolbar">
+								<button
+									className="btn btn-sm white-button text-zeroloss-grey-900"
+									onClick={onClearFilter}>
+									Clear All
+								</button>
+							</div>
 						</div>
 
-						<div className="card-body p-0 pb-5">
+						<div className="card-body p-0 py-5">
 							<ClientSideTable
 								pagination
 								columns={isLoading ? LOADING_TABLE_CONFIGS : TABLE_CONFIGS}

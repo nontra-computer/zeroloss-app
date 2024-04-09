@@ -9,14 +9,6 @@ import moment from 'moment'
 import Skeleton from 'react-loading-skeleton'
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
 
-const INITIAL_STATE_FILTER: {
-	type: any[]
-	search: any[]
-} = {
-	type: [],
-	search: [],
-}
-
 const ViewModel = () => {
 	const { updatePagination, updateDefaultSorting, updateLoading } = useContext(TableContext)
 	const { isMobile, is4K, is8K } = useResolutionDetection()
@@ -28,39 +20,25 @@ const ViewModel = () => {
 	}))
 
 	const [searchText, setSearchText] = useState('')
-	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
+	const [selectedEventTypeId, setSelectedEventTypeId] = useState<number>(0)
 
 	const data = useMemo(
 		() =>
 			rawData.filter(d => {
-				if (filter.search.length > 0) {
-					const search = filter.search.join(' ').toLowerCase()
+				if (searchText.length > 0) {
+					const search = searchText.toLowerCase()
 					const searchValues = Object.values(d).join(' ').toLowerCase()
 					if (!searchValues.includes(search)) return false
 				}
 
-				if (filter.type.length > 0) {
-					const type = filter.type.map((t: any) => t)
-					if (!type.includes(d.eventType.id)) return false
+				if (selectedEventTypeId !== 0) {
+					return d.eventType.id === selectedEventTypeId
 				}
 
 				return true
 			}),
-		[rawData, filter]
+		[rawData, searchText, selectedEventTypeId]
 	)
-	const displayFilter = useMemo(() => {
-		const results: any = {}
-
-		Object.keys(filter).forEach(key => {
-			if (key === 'type') {
-				results[key] = dataTypes.filter((d: any) => filter[key].includes(d.id))
-			} else if (key === 'search') {
-				results[key] = filter[key]
-			}
-		})
-
-		return results
-	}, [filter, dataTypes])
 
 	const dataTypeOptions: {
 		label: string
@@ -86,30 +64,9 @@ const ViewModel = () => {
 		updateLoading(false)
 	}
 
-	const onAddFilter = (key: string, value: any) => {
-		setFilter((prev: any) => ({
-			...prev,
-			[key]: [...prev[key], value],
-		}))
-
-		if (key === 'search') {
-			setSearchText('')
-		}
-	}
-
-	const onRemoveFilter = (key: string, value: any) => {
-		if (key === 'search') {
-			setSearchText('')
-			setFilter(prevState => ({
-				...prevState,
-				[key]: prevState[key].filter((v: any) => v !== value),
-			}))
-		} else if (key === 'type') {
-			setFilter(prevState => ({
-				...prevState,
-				[key]: prevState[key].filter((v: any) => v !== value),
-			}))
-		}
+	const onClearFilter = () => {
+		setSearchText('')
+		setSelectedEventTypeId(0)
 	}
 
 	const TABLE_CONFIGS: any[] = [
@@ -283,13 +240,12 @@ const ViewModel = () => {
 		isLoading,
 		themeMode,
 		dataTypeOptions,
-		filter,
 		data,
-		displayFilter,
 		searchText,
+		selectedEventTypeId,
 		setSearchText,
-		onAddFilter,
-		onRemoveFilter,
+		setSelectedEventTypeId,
+		onClearFilter,
 		LOADING_TABLE_CONFIGS,
 		TABLE_CONFIGS,
 	}
