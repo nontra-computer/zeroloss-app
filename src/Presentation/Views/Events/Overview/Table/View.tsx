@@ -18,6 +18,7 @@ const EventListTableView: React.FC = () => {
 		setSearchText,
 		setSelectedEventTypeId,
 		onClearFilter,
+		onCreateEvent,
 		// onRemoveFilter,
 		data,
 		dataTypeOptions,
@@ -49,7 +50,9 @@ const EventListTableView: React.FC = () => {
 						</div>
 
 						<div>
-							<button className="btn btn-sm btn-zeroloss-primary text-zeroloss-base-white fw-bold">
+							<button
+								className="btn btn-sm btn-zeroloss-primary text-zeroloss-base-white fw-bold w-100 w-lg-auto"
+								onClick={onCreateEvent}>
 								<img
 									className="me-1"
 									src="/media/icons/zeroloss/white-plus.svg"

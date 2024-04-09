@@ -4,7 +4,7 @@ import { useEventStore } from '@/Store/Event'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { toast } from 'react-toastify'
 import moment from 'moment'
-import 'moment/locale/th'
+import 'moment/dist/locale/th'
 
 const INITIAL_STATE_FILTER: {
 	type: any[]
@@ -38,7 +38,9 @@ const ViewModel = () => {
 	const [searchText, setSearchText] = useState('')
 	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
 
-	const currentMonth = moment(calendarRef.current?.getApi().getDate()).format('MMMM YYYY')
+	const currentMonth = moment(calendarRef.current?.getApi().getDate())
+		.locale('th')
+		.format('MMM YYYY')
 
 	const displayFilter = useMemo(() => {
 		const results: any = {}

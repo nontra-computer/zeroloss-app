@@ -2,8 +2,9 @@ import { useState, useMemo, useRef, useEffect } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useEventStore } from '@/Store/Event'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
+import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
-import 'moment/locale/th'
+import 'moment/dist/locale/th'
 
 const INITIAL_STATE_FILTER: {
 	type: any[]
@@ -14,6 +15,7 @@ const INITIAL_STATE_FILTER: {
 }
 
 const ViewModel = () => {
+	const navigate = useNavigate()
 	const { mode } = useThemeMode()
 	const { rawData, dataTypes } = useEventStore(state => ({
 		rawData: state.data,
@@ -34,7 +36,9 @@ const ViewModel = () => {
 	const [searchText, setSearchText] = useState('')
 	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
 
-	const currentMonth = moment(calendarRef.current?.getApi().getDate()).format('MMMM YYYY')
+	const currentMonth = moment(calendarRef.current?.getApi().getDate())
+		.locale('th')
+		.format('MMMM YYYY')
 
 	const displayFilter = useMemo(() => {
 		const results: any = {}
@@ -177,6 +181,10 @@ const ViewModel = () => {
 		}
 	}
 
+	const onCreateEvent = () => {
+		navigate('/events/new')
+	}
+
 	useEffect(() => {
 		addFullCalendarButtonStyle()
 	}, [])
@@ -202,6 +210,7 @@ const ViewModel = () => {
 		prevMonth,
 		goToToday,
 		changeView,
+		onCreateEvent,
 	}
 }
 

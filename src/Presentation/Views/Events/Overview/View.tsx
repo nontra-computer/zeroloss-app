@@ -47,8 +47,10 @@ const EventOverviewView: React.FC = () => {
 
 			<div className="row g-5 gy-10 px-10 pb-10 pt-10">
 				<div className="col-12 mt-20 mt-lg-0">
-					<div className="d-flex flex-row justify-content-between">
-						<div className="zeroloss-button-group w-fit-content shadow">
+					<div
+						className="d-flex flex-column flex-lg-row justify-content-between"
+						style={{ rowGap: '12px' }}>
+						<div className="zeroloss-button-group w-fit-content shadow mx-auto mx-lg-0">
 							<button
 								className={clsx('btn btn-sm left cursor-pointer', {
 									'white-button': themeMode === 'light',
@@ -116,7 +118,7 @@ const EventOverviewView: React.FC = () => {
 
 							<button
 								id="kt_events_list_filter_toggle"
-								className={clsx('btn btn-sm w-100 w-lg-auto', {
+								className={clsx('btn btn-sm w-100 w-lg-auto mt-4 mt-lg-0', {
 									'white-button': themeMode === 'light',
 									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
 										themeMode === 'dark',
@@ -135,7 +137,7 @@ const EventOverviewView: React.FC = () => {
 					</div>
 				</div>
 
-				<div className="col-12 mt-lg-20">
+				<div className="col-12 mt-lg-10">
 					{isShowTable && <EventListTableView />}
 					{isShowCalendar && <EventListCalendarView />}
 				</div>

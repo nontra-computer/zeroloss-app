@@ -74,6 +74,10 @@ const ViewModel = () => {
 		navigate(path)
 	}
 
+	const onCreateEvent = () => {
+		navigate('/events/new')
+	}
+
 	const onChangeFilter = (key: string, value: any) => {
 		if (key === 'startDate' || key === 'endDate') {
 			const finale = value !== null ? moment(value).format('YYYY-MM-DD') : null
@@ -108,6 +112,7 @@ const ViewModel = () => {
 		setIsOpenDatePicker,
 		onChangeFilter,
 		onClickView,
+		onCreateEvent,
 	}
 }
 

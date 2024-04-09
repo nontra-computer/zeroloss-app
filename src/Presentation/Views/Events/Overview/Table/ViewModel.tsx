@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { TableContext } from '@/Context/Table'
+import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useEventStore } from '@/Store/Event'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
@@ -10,6 +11,7 @@ import Skeleton from 'react-loading-skeleton'
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
 
 const ViewModel = () => {
+	const navigate = useNavigate()
 	const { updatePagination, updateDefaultSorting, updateLoading } = useContext(TableContext)
 	const { isMobile, is4K, is8K } = useResolutionDetection()
 	const { mode } = useThemeMode()
@@ -56,6 +58,10 @@ const ViewModel = () => {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 	} else {
 		themeMode = mode
+	}
+
+	const onCreateEvent = () => {
+		navigate('/events/new')
 	}
 
 	const setupTable = () => {
@@ -245,9 +251,10 @@ const ViewModel = () => {
 		selectedEventTypeId,
 		setSearchText,
 		setSelectedEventTypeId,
-		onClearFilter,
 		LOADING_TABLE_CONFIGS,
 		TABLE_CONFIGS,
+		onClearFilter,
+		onCreateEvent,
 	}
 }
 
