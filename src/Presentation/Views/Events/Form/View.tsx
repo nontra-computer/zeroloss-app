@@ -1,7 +1,10 @@
 import React from 'react'
 import { PageTitle } from '@/_metronic/layout/core'
 
+import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
 import EventFormStepper from './Stepper/View'
+import ReactDatePicker from 'react-datepicker'
+import Select from 'react-select'
 
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
@@ -84,7 +87,97 @@ const EventFormView: React.FC = () => {
 							<EventFormStepper />
 						</div>
 
-						<div className="col-12 col-lg-9">Test</div>
+						<div className="col-12 col-lg-9">
+							<div className="card">
+								<div className="card-header bg-zeroloss-soft-blue">
+									<div className="card-title text-zeroloss-primary fw-bolder">
+										รายละเอียดเหตุการณ์
+									</div>
+								</div>
+								<div className="card-body">
+									<div className="row gy-5">
+										{/* Date */}
+										<div className="col-12 col-lg-8">
+											<label
+												className={`form-label d-flex flex-row`}
+												data-testid="form-input-label-component">
+												<div className="d-flex flex-column">
+													<span>วันและเวลาที่เกิดเหตุ</span>
+												</div>
+											</label>
+											<ReactDatePicker
+												wrapperClassName="w-100"
+												className="form-control form-control-sm"
+												dateFormat={'dd/MM/yyyy HH:mm'}
+												onChange={() => {}}
+											/>
+										</div>
+
+										{/* Name */}
+										<div className="col-12 col-lg-8">
+											<FormGenerator
+												formKey="name"
+												inputType="plain"
+												label="ชื่อเหตุการณ์"
+												additionalLabel="ชื่อเหตุการณ์จะถูกนำไปใช้ในหลายตำแหน่ง"
+												additionalClassName="form-control-sm"
+											/>
+										</div>
+
+										{/* Description */}
+										<div className="col-12 col-lg-8">
+											<FormGenerator
+												formKey="description"
+												inputType="textarea"
+												label="บรรยายเหตุการณ์"
+												additionalLabelCom={
+													<img
+														className="ms-1 cursor-pointer"
+														src="/media/icons/zeroloss/help.svg"
+														alt="Help Icon"
+													/>
+												}
+												limitCharacter={200}
+											/>
+										</div>
+
+										<div className="col-12">
+											<hr />
+										</div>
+
+										{/* Image */}
+										<div className="col-12 col-lg-8">
+											<FormGenerator
+												formKey="image"
+												inputType="drag-and-drop"
+												label="รูปภาพปกเหตุการณ์"
+											/>
+										</div>
+
+										<div className="col-12 col-lg-8">
+											<label
+												className={`form-label d-flex flex-row`}
+												data-testid="form-input-label-component">
+												<div className="d-flex flex-column">
+													<span>สถานที่เกิดเหตุ</span>
+													<span className={clsx('text-kumopack-grey-600 fs-8')}>
+														Short Description
+													</span>
+												</div>
+											</label>
+
+											<Select
+												placeholder="เลือกสถานที่"
+												noOptionsMessage={() => 'ไม่พบสถานที่'}
+												components={{
+													IndicatorSeparator: () => null,
+												}}
+											/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

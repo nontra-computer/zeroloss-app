@@ -12,6 +12,7 @@ $zeroloss-error: #de5348;
 $zeroloss-grey: #667085;
 $zeroloss-grey-true-200: #e5e5e5;
 $zeroloss-grey-true-800: #292929;
+$zeroloss-soft-blue: #e6e9fa;
 
 $zeroloss-primary-900: #003c68;
 $zeroloss-primary-800: #006b97;
@@ -101,6 +102,7 @@ $zeroloss-theme-colors: (
 	'zeroloss-grey': $zeroloss-grey,
 	'zeroloss-grey-true-200': $zeroloss-grey-true-200,
 	'zeroloss-grey-true-800': $zeroloss-grey-true-800,
+	'zeroloss-soft-blue': $zeroloss-soft-blue,
 	'zeroloss-primary-900': $zeroloss-primary-900,
 	'zeroloss-primary-800': $zeroloss-primary-800,
 	'zeroloss-primary-700': $zeroloss-primary-700,
@@ -270,7 +272,7 @@ $zeroloss-theme-colors: (
 
 	.border-right-#{$name} {
 		border-right-color: $color !important;
-	}	
+	}
 
 	.border-top-#{$name} {
 		border-top-color: $color !important;

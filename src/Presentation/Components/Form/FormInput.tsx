@@ -50,7 +50,12 @@ const FormInput: React.FC<FormInputProp> = ({
 						data-testid="form-input-label-component">
 						<div className="d-flex flex-column">
 							<span>{label}</span>
-							<span className="text-kumopack-grey-600 fs-8 w-75">{additionalLabel}</span>
+							<span
+								className={clsx('text-kumopack-grey-600 fs-8', {
+									'w-75': isHorizontal,
+								})}>
+								{additionalLabel}
+							</span>
 						</div>
 
 						{additionalLabelCom}

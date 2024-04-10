@@ -1,7 +1,6 @@
 import React, { useRef, ChangeEvent } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-import { toAbsoluteUrl } from '@/_metronic/helpers'
 import { FormDragAndDropFileProp } from '@/Types/Form'
 
 const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
@@ -9,6 +8,7 @@ const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
 	label,
 	additionalLabel,
 	additionalLabelCom,
+
 	containerClassName,
 	isHorizontal,
 	accept,
@@ -45,9 +45,9 @@ const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
 	}
 
 	// triggers the input when the button is clicked
-	// const onButtonClick = () => {
-	// 	if (inputRef.current) inputRef.current.click()
-	// }
+	const onButtonClick = () => {
+		if (inputRef.current) inputRef.current.click()
+	}
 
 	return (
 		<div
@@ -60,7 +60,7 @@ const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
 					data-testid="form-input-label-component">
 					<div className="d-flex flex-column">
 						<span>{label}</span>
-						<span className="text-kumopack-grey-600 fs-8 w-75">{additionalLabel}</span>
+						<span className="text-zeroloss-grey-600 fs-8 w-75">{additionalLabel}</span>
 					</div>
 
 					{additionalLabelCom}
@@ -71,13 +71,13 @@ const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
 			<form
 				{...getRootProps()}
 				key={formKey}
-				id="form-file-upload"
 				onSubmit={e => e.preventDefault()}
-				className="">
+				className="form-file-upload"
+				onClick={onButtonClick}>
 				<input
 					{...getInputProps()}
 					type="file"
-					id={`${formKey}-input-file-upload`}
+					className=""
 					ref={inputRef}
 					multiple={multiple}
 					accept={accept}
@@ -87,15 +87,15 @@ const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
 				<div id="label-file-upload" className={disabled ? ' disabled' : ''}>
 					<div>
 						<div
-							className="mb-10 cursor-pointer bg-kumopack-grey-100 rounded-circle d-flex align-items-center justify-content-center mx-auto"
+							className="mb-10 cursor-pointer bg-zeroloss-grey-100 rounded-circle d-flex align-items-center justify-content-center mx-auto"
 							style={{ border: '6px solid #F9FAFB', width: '40px', height: '40px' }}>
 							<img
-								src={toAbsoluteUrl('/media/icons/kumopack/upload-cloud-02.png')}
+								src={'/media/icons/zeroloss/upload-cloud-02.png'}
 								alt="Upload Drag and Drop Icon"
 							/>
 						</div>
 						<button
-							className="upload-button text-kumopack-primary-700 fw-bold"
+							className="upload-button text-zeroloss-primary fw-bold"
 							// onClick={onButtonClick}
 						>
 							{isDragActive ? 'Drop the file here' : 'Click to upload'}
