@@ -1,7 +1,7 @@
 import React from 'react'
 
-import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
-import Select, { components } from 'react-select'
+// import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
+// import Select, { components } from 'react-select'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -30,13 +30,13 @@ const EventListCalendarView: React.FC = () => {
 		prevMonth,
 		goToToday,
 		changeView,
-		filter,
-		displayFilter,
-		searchText,
-		setSearchText,
-		onAddFilter,
-		onRemoveFilter,
-		onCreateEvent,
+		// filter,
+		// displayFilter,
+		// searchText,
+		// setSearchText,
+		// onAddFilter,
+		// onRemoveFilter,
+		// onCreateEvent,
 	} = useViewModel()
 
 	return (
@@ -63,7 +63,7 @@ const EventListCalendarView: React.FC = () => {
 							</p>
 						</div>
 
-						<div
+						{/* <div
 							className="w-100 w-lg-auto d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-end mb-1"
 							style={{ gap: '12px' }}>
 							<button
@@ -157,13 +157,13 @@ const EventListCalendarView: React.FC = () => {
 									}}
 								/>
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</div>
 
 				<div className="col-12">
 					<div className="card">
-						<div className="card-header">
+						{/* <div className="card-header">
 							<div className="card-title fw-bold w-100 w-lg-auto flex-column flex-lg-row align-items-lg-center">
 								<div className="d-none d-lg-block">ตัวกรอง:</div>
 								{(displayFilter?.search ?? []).length + (displayFilter?.type ?? []).length === 0 ? (
@@ -217,7 +217,7 @@ const EventListCalendarView: React.FC = () => {
 									</React.Fragment>
 								)}
 							</div>
-						</div>
+						</div> */}
 
 						<div className="card-body p-0">
 							<div className="card">

@@ -24,6 +24,13 @@ const ViewModel = () => {
 	const [searchText, setSearchText] = useState('')
 	const [selectedEventTypeId, setSelectedEventTypeId] = useState<number>(0)
 
+	const isAdmin = useMemo(() => {
+		return true
+	}, [])
+	const isApprover = useMemo(() => {
+		return true
+	}, [])
+
 	const data = useMemo(
 		() =>
 			rawData.filter(d => {
@@ -192,9 +199,11 @@ const ViewModel = () => {
 			minWidth: is4K || is8K ? 60 : 40,
 			Cell: () => (
 				<div className="d-flex flex-row justify-content-center align-items-center">
-					<button className="btn btn-sm btn-icon btn-muted btn-active-light">
-						<img src="/media/icons/zeroloss/trash-01.svg" alt="Action Icon" />
-					</button>
+					{(isAdmin || isApprover) && (
+						<button className="btn btn-sm btn-icon btn-muted btn-active-light">
+							<img src="/media/icons/zeroloss/trash-01.svg" alt="Action Icon" />
+						</button>
+					)}
 					<button className="btn btn-sm btn-icon btn-muted btn-active-light">
 						<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
 					</button>

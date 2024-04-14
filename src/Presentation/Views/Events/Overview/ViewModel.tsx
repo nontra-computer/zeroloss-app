@@ -93,7 +93,25 @@ const ViewModel = () => {
 
 	const fetchData = () => {
 		setIsLoadingData(true)
-		getAll(filter).then(({ success, data }) => {
+		let finaleFilter: { [key: string]: any } = {
+			...filter,
+		}
+
+		if (isShowCalendar) {
+			finaleFilter = Object.entries(filter).reduce((acc: { [key: string]: any }, [key, value]) => {
+				if (key === 'startPeriod' || key === 'endPeriod') {
+					return acc
+				} else {
+					acc[key] = value
+				}
+
+				return acc
+			}, {})
+		} else {
+			finaleFilter = filter
+		}
+
+		getAll(finaleFilter).then(({ success, data }) => {
 			if (!success) {
 				toast.error(data)
 			} else {

@@ -96,15 +96,17 @@ const EventOverviewView: React.FC = () => {
 						</div>
 
 						<div>
-							<button
-								className={clsx('btn btn-sm w-100 w-lg-auto me-lg-2', {
-									'white-button': themeMode === 'light',
-									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
-										themeMode === 'dark',
-								})}
-								onClick={() => setIsOpenDatePicker(true)}>
-								{dateRange}
-							</button>
+							{isShowTable && (
+								<button
+									className={clsx('btn btn-sm w-100 w-lg-auto me-lg-2', {
+										'white-button': themeMode === 'light',
+										'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
+											themeMode === 'dark',
+									})}
+									onClick={() => setIsOpenDatePicker(true)}>
+									{dateRange}
+								</button>
+							)}
 							{isOpenDatePicker && (
 								<div className="position-absolute" style={{ zIndex: 999, marginTop: '10px' }}>
 									<ReactDatePicker
