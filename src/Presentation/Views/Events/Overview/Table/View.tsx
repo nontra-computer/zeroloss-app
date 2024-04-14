@@ -1,8 +1,8 @@
 import React from 'react'
 
 import { ClientSideTable } from '@/Presentation/Components/Table'
-import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
-import Select, { components } from 'react-select'
+// import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
+// import Select, { components } from 'react-select'
 
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
@@ -13,15 +13,15 @@ const EventListTableView: React.FC = () => {
 		isLoading,
 		// isMobile,
 		// displayFilter,
-		searchText,
-		selectedEventTypeId,
-		setSearchText,
-		setSelectedEventTypeId,
-		onClearFilter,
+		// searchText,
+		// selectedEventTypeId,
+		// setSearchText,
+		// setSelectedEventTypeId,
+		// onClearFilter,
 		onCreateEvent,
 		// onRemoveFilter,
 		data,
-		dataTypeOptions,
+		// dataTypeOptions,
 		TABLE_CONFIGS,
 		LOADING_TABLE_CONFIGS,
 	} = useViewModel()
@@ -66,7 +66,7 @@ const EventListTableView: React.FC = () => {
 
 				<div className="col-12">
 					<div className="card">
-						<div className="card-header border-b-0">
+						{/* <div className="card-header border-b-0">
 							<div className="card-title fw-bold w-100 w-lg-auto flex-column flex-lg-row align-items-lg-center justify-content-lg-end">
 								<div
 									className="w-100 w-lg-auto d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center"
@@ -174,9 +174,9 @@ const EventListTableView: React.FC = () => {
 									Clear All
 								</button>
 							</div>
-						</div>
+						</div> */}
 
-						<div className="card-body p-0 py-5">
+						<div className="card-body p-0 pb-5">
 							<ClientSideTable
 								pagination
 								columns={isLoading ? LOADING_TABLE_CONFIGS : TABLE_CONFIGS}

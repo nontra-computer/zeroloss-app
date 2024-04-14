@@ -9,9 +9,30 @@ import moment from 'moment-timezone'
 import { toast } from 'react-toastify'
 
 const INITIAL_FILTER = {
-	startDate: moment().startOf('month').format('YYYY-MM-DD'),
-	endDate: moment().endOf('month').format('YYYY-MM-DD'),
+	startPeriod: moment().startOf('month').format('YYYY-MM-DD'),
+	endPeriod: moment().endOf('month').format('YYYY-MM-DD'),
+	eventTypeId: null,
+	state: null,
 }
+
+const EVENT_STATUS_OPTIONS = [
+	{
+		label: 'แจ้งเหตุ',
+		value: 1,
+	},
+	{
+		label: 'รอพิจารณา',
+		value: 2,
+	},
+	{
+		label: 'เหตุการณ์ต่อเนื่อง',
+		value: 3,
+	},
+	{
+		label: 'เหตุการณ์สิ้นสุด',
+		value: 4,
+	},
+]
 
 const ViewModel = () => {
 	const location = useLocation()
@@ -28,8 +49,9 @@ const ViewModel = () => {
 		return intl.formatMessage({ id: 'ZEROLOSS.HEADER.CURRENT_TIME' }) + ' ' + time
 	}, [currentTime, intl, selectedLang])
 	const { mode } = useThemeMode()
-	const { setIsLoadingData, getAll, getTypes, clearState } = useEventStore(state => ({
+	const { setIsLoadingData, eventTypes, getAll, getTypes, clearState } = useEventStore(state => ({
 		setIsLoadingData: state.setIsLoadingData,
+		eventTypes: state.types,
 		getAll: state.getAll,
 		getTypes: state.getTypes,
 		clearState: state.clearState,
@@ -39,14 +61,14 @@ const ViewModel = () => {
 	const [isOpenDatePicker, setIsOpenDatePicker] = useState(false)
 
 	const dateRange = useMemo(() => {
-		if (filter.startDate && filter.endDate) {
-			return `${moment(filter.startDate).format('MMM D, YYYY')} - ${moment(filter.endDate).format(
-				'MMM D, YYYY'
-			)}`
+		if (filter.startPeriod && filter.endPeriod) {
+			return `${moment(filter.startPeriod).format('MMM D, YYYY')} - ${moment(
+				filter.endPeriod
+			).format('MMM D, YYYY')}`
 		}
 
 		return 'Select Date Range'
-	}, [filter.startDate, filter.endDate])
+	}, [filter.startPeriod, filter.endPeriod])
 
 	const isShowTable = location.pathname === '/events/overview/table'
 	const isShowCalendar = location.pathname === '/events/overview/calendar'
@@ -58,9 +80,20 @@ const ViewModel = () => {
 		themeMode = mode
 	}
 
+	const eventTypesOptions: {
+		label: string
+		value: any
+	}[] = eventTypes.map(
+		(d: any) => ({
+			label: d.name,
+			value: d.id,
+		}),
+		[]
+	)
+
 	const fetchData = () => {
 		setIsLoadingData(true)
-		getAll({}).then(({ success, data }) => {
+		getAll(filter).then(({ success, data }) => {
 			if (!success) {
 				toast.error(data)
 			} else {
@@ -68,6 +101,22 @@ const ViewModel = () => {
 			}
 		})
 		getTypes()
+	}
+
+	const confirmFilter = () => {
+		fetchData()
+	}
+
+	const clearFilter = () => {
+		setFilter(INITIAL_FILTER)
+		setIsLoadingData(true)
+		getAll(INITIAL_FILTER).then(({ success, data }) => {
+			if (!success) {
+				toast.error(data)
+			} else {
+				setIsLoadingData(false)
+			}
+		})
 	}
 
 	const onClickView = (path: string) => {
@@ -79,7 +128,7 @@ const ViewModel = () => {
 	}
 
 	const onChangeFilter = (key: string, value: any) => {
-		if (key === 'startDate' || key === 'endDate') {
+		if (key === 'startPeriod' || key === 'endPeriod') {
 			const finale = value !== null ? moment(value).format('YYYY-MM-DD') : null
 
 			setFilter(prev => ({ ...prev, [key]: finale }))
@@ -109,7 +158,11 @@ const ViewModel = () => {
 		filter,
 		isOpenDatePicker,
 		dateRange,
+		eventTypesOptions,
+		eventStatusOptions: EVENT_STATUS_OPTIONS,
 		setIsOpenDatePicker,
+		confirmFilter,
+		clearFilter,
 		onChangeFilter,
 		onClickView,
 		onCreateEvent,

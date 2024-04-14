@@ -18,6 +18,10 @@ const EventOverviewView: React.FC = () => {
 		timeStr,
 		themeMode,
 		filter,
+		eventTypesOptions,
+		eventStatusOptions,
+		confirmFilter,
+		clearFilter,
 		onChangeFilter,
 		isOpenDatePicker,
 		setIsOpenDatePicker,
@@ -43,7 +47,14 @@ const EventOverviewView: React.FC = () => {
 				All Events
 			</PageTitle>
 
-			<Filter />
+			<Filter
+				filter={filter}
+				onChangeFilter={onChangeFilter}
+				confirmFilter={confirmFilter}
+				clearFilter={clearFilter}
+				eventTypeOptions={eventTypesOptions}
+				eventStatusOptions={eventStatusOptions}
+			/>
 
 			<div className="row g-5 gy-10 px-10 pb-10 pt-10">
 				<div className="col-12 mt-20 mt-lg-0">
@@ -102,12 +113,16 @@ const EventOverviewView: React.FC = () => {
 										selectsRange
 										selectsStart
 										selectsEnd
-										startDate={filter.startDate ? moment(filter.startDate).toDate() : null}
-										endDate={filter.endDate ? moment(filter.endDate).toDate() : null}
+										startDate={filter.startPeriod ? moment(filter.startPeriod).toDate() : null}
+										endDate={filter.endPeriod ? moment(filter.endPeriod).toDate() : null}
 										onChange={dates => {
 											if (dates) {
-												onChangeFilter('startDate', dates[0])
-												onChangeFilter('endDate', dates[1])
+												onChangeFilter('startPeriod', dates[0])
+												onChangeFilter('endPeriod', dates[1])
+
+												if (dates[0] && dates[1]) {
+													setIsOpenDatePicker(false)
+												}
 											}
 										}}
 										onBlur={() => setIsOpenDatePicker(false)}
