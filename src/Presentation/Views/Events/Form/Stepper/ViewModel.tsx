@@ -8,7 +8,7 @@ const ViewModel = () => {
 	const STEPPERS = [
 		{
 			id: 1,
-			title: 'รับแจ้งเหตุ',
+			title: 'แจ้งเหตุ',
 		},
 		{
 			id: 2,

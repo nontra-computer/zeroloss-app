@@ -246,10 +246,10 @@ const ViewModel = () => {
 			Cell: () => (
 				<div className="d-flex flex-row justify-content-center align-items-center">
 					<button className="btn btn-sm btn-icon btn-muted btn-active-light">
-						<img src="/media/icons/zeroloss/trash-01.svg" alt="Action Icon" />
+						<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
 					</button>
 					<button className="btn btn-sm btn-icon btn-muted btn-active-light">
-						<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
+						<img src="/media/icons/zeroloss/trash-01.svg" alt="Action Icon" />
 					</button>
 				</div>
 			),
