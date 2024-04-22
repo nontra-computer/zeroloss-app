@@ -70,7 +70,7 @@ const EventsRoutes = () => (
 			/>
 
 			<Route
-				path="effect"
+				path="impact"
 				element={
 					<LocationSelectionContextProvider>
 						<EventFormView />
