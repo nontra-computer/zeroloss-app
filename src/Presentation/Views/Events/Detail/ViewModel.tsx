@@ -169,6 +169,10 @@ const ViewModel = () => {
 		}
 	}
 
+	const onViewInDetail = () => {
+		navigate(`/events/edit/${eventId}`)
+	}
+
 	return {
 		isDefaultView,
 		isMapView,
@@ -181,6 +185,7 @@ const ViewModel = () => {
 		onOpenLightBox,
 		onCloseLightBox,
 		onChangeViewType,
+		onViewInDetail,
 	}
 }
 

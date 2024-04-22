@@ -5,4 +5,5 @@ export interface PlainLocationProps {
 	locationTypeId: number
 	latitude: number
 	longitude: number
+	popup?: React.FunctionComponent<any>
 }

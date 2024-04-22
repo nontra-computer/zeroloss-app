@@ -2,9 +2,10 @@ import React from 'react'
 import { KTSVG } from '@/_metronic/helpers'
 import { MapContainer, TileLayer } from 'react-leaflet'
 import Filter from '../Components/Filter'
+import PlainLocation from '@/Presentation/Components/LeafletMap/PlainLocation'
 import LocationPolygon from '@/Presentation/Components/LeafletMap/LocationPolygon'
 import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
-import InfoBoard from '../../Components/InfoBoard'
+import InfoBoard from '@/Presentation/Components/InfoBoard'
 
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
@@ -13,6 +14,7 @@ const EventDetailMapView: React.FC = () => {
 	const {
 		themeMode,
 		data,
+		locationData,
 		eventTypesOptions,
 		locationOptions,
 		distanceOptions,
@@ -73,6 +75,15 @@ const EventDetailMapView: React.FC = () => {
 								attribution="@Copyright 2024 Zeroloss"
 								url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 							/>
+
+							{locationData.map((l, idx) => (
+								<PlainLocation
+									key={`location-${idx}`}
+									{...l}
+									latitude={l?.latitude ?? 0}
+									longitude={l?.longitude ?? 0}
+								/>
+							))}
 
 							<LocationPolygon type={data.shapeType} position={[data.position]} radius={1500} />
 						</MapContainer>

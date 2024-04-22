@@ -2,9 +2,8 @@ import React, { useEffect } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { KTSVG } from '@/_metronic/helpers'
 import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
-import Select, { components } from 'react-select'
+import Select from 'react-select'
 import { DrawerComponent } from '@/_metronic/assets/ts/components'
-import clsx from 'clsx'
 
 interface Props {
 	locationOptions: any[]
@@ -133,46 +132,6 @@ const Filter: React.FC<Props> = ({
 									}}
 									components={{
 										IndicatorSeparator: () => null,
-										SingleValue: props => (
-											<components.SingleValue {...props} className="cursor-pointer fs-7 fw-normal">
-												<span
-													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
-														'bg-zeroloss-error': props.data.value === 1,
-														'bg-zeroloss-warning': props.data.value === 2,
-														'bg-zeroloss-success': props.data.value === 3,
-														'bg-zeroloss-primary': props.data.value === 4,
-														'bg-zeroloss-brand-600': props.data.value === 5,
-														'bg-zeroloss-primary-400': props.data.value === 6,
-													})}></span>
-												{props.data.label}
-											</components.SingleValue>
-										),
-										Option: props => (
-											<components.Option {...props} className="cursor-pointer fs-7 fw-normal">
-												<span
-													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
-														'bg-zeroloss-error': props.data.value === 1,
-														'bg-zeroloss-warning': props.data.value === 2,
-														'bg-zeroloss-success': props.data.value === 3,
-														'bg-zeroloss-primary': props.data.value === 4,
-														'bg-zeroloss-brand-600': props.data.value === 5,
-														'bg-zeroloss-primary-400': props.data.value === 6,
-													})}></span>
-												{props.data.label}
-											</components.Option>
-										),
-										Placeholder: props => (
-											<components.Placeholder {...props} className="cursor-pointer fs-7 fw-normal">
-												เลือกประเภทสถานที่
-											</components.Placeholder>
-										),
-										NoOptionsMessage: props => (
-											<components.NoOptionsMessage
-												{...props}
-												className="cursor-pointer fs-7 fw-normal">
-												ไม่พบข้อมูล
-											</components.NoOptionsMessage>
-										),
 									}}
 								/>
 							</div>

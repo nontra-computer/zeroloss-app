@@ -16,7 +16,9 @@ const MOCK_DATA = {
 	degree: 0,
 }
 
-const INITIAL_FILTER_STATE = {}
+const INITIAL_FILTER_STATE = {
+	locationTypeId: null,
+}
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
@@ -71,9 +73,11 @@ const ViewModel = () => {
 		() =>
 			locations.map(l => ({
 				id: l.id,
-				title: l.nameTh,
-				latitude: l.latitude,
-				longitude: l.longitude,
+				nameTh: l.nameTh,
+				nameEn: l.nameEn,
+				locationTypeId: l.locationTypeId,
+				latitude: l?.latitude ? parseFloat(l.latitude) : 0,
+				longitude: l?.longitude ? parseFloat(l.longitude) : 0,
 			})),
 		[locations]
 	)

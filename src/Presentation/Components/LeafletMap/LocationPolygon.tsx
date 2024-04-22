@@ -1,13 +1,22 @@
-import React, { createElement } from 'react'
+import React, { createElement, useEffect, useRef } from 'react'
 import { Circle, Polygon } from 'react-leaflet'
 import { Popup } from 'react-leaflet'
 import { LocationShapeProps } from '@/Types/LocationPolygon'
 
 const LocationShape: React.FC<LocationShapeProps> = ({ type, position, popup, radius }) => {
+	const markerRef = useRef<any>(null)
+
+	useEffect(() => {
+		if (markerRef.current) {
+			console.log('markerRef', markerRef.current)
+		}
+	}, [])
+
 	return (
 		<React.Fragment>
 			{type === 'polygon' && (
 				<Polygon
+					ref={markerRef}
 					// center={[13.736717, 100.523186, 13.80717]} radius={2000}
 					positions={position}>
 					{popup && position.length > 0 && (
@@ -24,6 +33,7 @@ const LocationShape: React.FC<LocationShapeProps> = ({ type, position, popup, ra
 			{type === 'circle' && (
 				<React.Fragment>
 					<Circle
+						ref={markerRef}
 						center={position?.[0]}
 						radius={radius}
 						pathOptions={{

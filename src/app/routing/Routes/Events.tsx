@@ -23,14 +23,63 @@ const EventsRoutes = () => (
 				</LocationSelectionContextProvider>
 			}
 		/>
-		<Route
-			path="edit/:eventId"
-			element={
-				<LocationSelectionContextProvider>
-					<EventFormView />
-				</LocationSelectionContextProvider>
-			}
-		/>
+		<Route path="edit/:eventId">
+			<Route
+				index
+				element={
+					<LocationSelectionContextProvider>
+						<EventFormView />
+					</LocationSelectionContextProvider>
+				}
+			/>
+
+			<Route
+				path="location"
+				element={
+					<LocationSelectionContextProvider>
+						<EventFormView />
+					</LocationSelectionContextProvider>
+				}
+			/>
+
+			<Route
+				path="informer"
+				element={
+					<LocationSelectionContextProvider>
+						<EventFormView />
+					</LocationSelectionContextProvider>
+				}
+			/>
+
+			<Route
+				path="images"
+				element={
+					<LocationSelectionContextProvider>
+						<EventFormView />
+					</LocationSelectionContextProvider>
+				}
+			/>
+
+			<Route
+				path="reporting"
+				element={
+					<LocationSelectionContextProvider>
+						<EventFormView />
+					</LocationSelectionContextProvider>
+				}
+			/>
+
+			<Route
+				path="effect"
+				element={
+					<LocationSelectionContextProvider>
+						<EventFormView />
+					</LocationSelectionContextProvider>
+				}
+			/>
+
+			<Route path="*" element={<Navigate to="." replace />} />
+		</Route>
 
 		<Route path="detail/:eventId">
 			<Route index element={<EventDetailView />} />

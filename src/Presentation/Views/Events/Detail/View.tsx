@@ -26,6 +26,7 @@ const EventDetailView: React.FC = () => {
 		onOpenLightBox,
 		onCloseLightBox,
 		onChangeViewType,
+		onViewInDetail,
 	} = useViewModel()
 
 	return (
@@ -80,7 +81,9 @@ const EventDetailView: React.FC = () => {
 
 						{/* Call to Action */}
 						<div className="text-end mb-5">
-							<button className="btn btn-zeroloss-primary text-zeroloss-base-white fw-bold">
+							<button
+								className="btn btn-zeroloss-primary text-zeroloss-base-white fw-bold"
+								onClick={onViewInDetail}>
 								{/* <img
 									className="me-1"
 									src="/media/icons/zeroloss/white-save-01.svg"
