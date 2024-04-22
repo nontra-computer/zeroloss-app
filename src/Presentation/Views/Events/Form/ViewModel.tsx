@@ -19,6 +19,25 @@ const INITIAL_STATE = {
 	longitude: 100.5018,
 }
 
+const STEPPERS = [
+	{
+		id: 1,
+		title: 'รับแจ้งเหตุ',
+	},
+	{
+		id: 2,
+		title: 'ยืนยันเหตุการณ์',
+	},
+	{
+		id: 3,
+		title: 'เหตุการณ์ต่อเนื่อง',
+	},
+	{
+		id: 4,
+		title: 'เหตุการณ์สิ้นสุด',
+	},
+]
+
 const ViewModel = () => {
 	const intl = useIntl()
 	const currentTime = useCurrentTime()
@@ -69,6 +88,18 @@ const ViewModel = () => {
 		}),
 		[]
 	)
+
+	const steppers = useMemo(() => {
+		return STEPPERS.map((step, idx) => ({
+			...step,
+			status: isCreate && idx === 0 ? 'done' : 'pending',
+			description:
+				idx === 0 && isCreate
+					? moment().locale('th').add(543, 'years').format('DD/MM/YYYY HH:mm')
+					: '-',
+		}))
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isCreate])
 
 	const fetchData = () => {
 		getTypes()
@@ -128,6 +159,7 @@ const ViewModel = () => {
 		themeMode,
 		title,
 		eventTypesOptions,
+		steppers,
 		formState,
 		onChangeFormState,
 		onOpenLocationSelection,

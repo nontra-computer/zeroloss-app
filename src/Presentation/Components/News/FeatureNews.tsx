@@ -17,8 +17,8 @@ const FeatureNews: React.FC<FeatureNewsProps> = () => {
 	return (
 		<React.Fragment>
 			<div
-				className={clsx('feature-news-card card overflow-hidden min-h-200px w-100 shadow', {
-					'bg-zeroloss-base-white border-0': themeMode === 'light',
+				className={clsx('feature-news-card card overflow-hidden min-h-200px w-100', {
+					'bg-zeroloss-base-white border-zeroloss-grey-300 border-1px': themeMode === 'light',
 					'bg-zeroloss-grey-true-800 border-zeroloss-base-white border-1px': themeMode === 'dark',
 				})}>
 				<div className="card-body p-0">

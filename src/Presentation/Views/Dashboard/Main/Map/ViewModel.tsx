@@ -199,23 +199,17 @@ const ViewModel = () => {
 	const dataTypeOptions: {
 		label: string
 		value: any
-	}[] = dataTypes.map(
-		(d: any) => ({
-			label: d.name,
-			value: d.id,
-		}),
-		[]
-	)
+	}[] = dataTypes.map((d: any) => ({
+		label: d.name,
+		value: d.id,
+	}))
 	const locationOptions: {
 		label: string
 		value: any
-	}[] = locations.map(
-		(d: any) => ({
-			label: d.nameTh,
-			value: d.id,
-		}),
-		[]
-	)
+	}[] = locations.map((d: any) => ({
+		label: d.nameTh,
+		value: d.id,
+	}))
 
 	let themeMode = ''
 	if (mode === 'system') {

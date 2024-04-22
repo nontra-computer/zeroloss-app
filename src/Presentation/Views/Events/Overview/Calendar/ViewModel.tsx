@@ -126,8 +126,9 @@ const ViewModel = () => {
 	}
 
 	const onClick = (id: string) => {
-		setSelected(id)
-		setOpenDetail(true)
+		navigate(`/events/detail/${id}`)
+		// setSelected(id)
+		// setOpenDetail(true)
 	}
 
 	const onCloseDetail = () => {

@@ -18,8 +18,8 @@ const NewsHorizontal: React.FC<NewsHorizontalProps> = () => {
 	return (
 		<React.Fragment>
 			<div
-				className={clsx('news-horizontal-card card overflow-hidden h-100px w-100 shadow', {
-					'bg-zeroloss-base-white border-0': themeMode === 'light',
+				className={clsx('news-horizontal-card card overflow-hidden h-100px w-100', {
+					'bg-zeroloss-base-white border-zeroloss-grey-300 border-1px': themeMode === 'light',
 					'bg-zeroloss-grey-true-800 border-zeroloss-base-white border-1px': themeMode === 'dark',
 				})}>
 				<div className="card-body p-0">

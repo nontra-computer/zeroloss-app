@@ -20,6 +20,7 @@ import 'react-tooltip/dist/react-tooltip.css'
 import 'react-toastify/dist/ReactToastify.css'
 import 'leaflet/dist/leaflet.css'
 import 'react-loading-skeleton/dist/skeleton.css'
+import 'yet-another-react-lightbox/styles.css'
 import { ToastContainer } from 'react-toastify'
 /**
  * TIP: Replace this style import with rtl styles to enable rtl mode

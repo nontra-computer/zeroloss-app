@@ -2,8 +2,8 @@ import React from 'react'
 import { PageTitle } from '@/_metronic/layout/core'
 
 import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
-import EventFormStepper from './Stepper/View'
 import ReactDatePicker from 'react-datepicker'
+import EventStepper from '../Components/Stepper'
 import Select, { components } from 'react-select'
 import { KTSVG } from '@/_metronic/helpers'
 import LocationSelection from './LocationSelection/View'
@@ -18,6 +18,7 @@ const EventFormView: React.FC = () => {
 		themeMode,
 		title,
 		eventTypesOptions,
+		steppers,
 		formState,
 		onChangeFormState,
 		onOpenLocationSelection,
@@ -105,7 +106,7 @@ const EventFormView: React.FC = () => {
 								<hr />
 							</div>
 
-							<EventFormStepper />
+							<EventStepper steppers={steppers} />
 						</div>
 
 						<div className="col-12 col-lg-9">

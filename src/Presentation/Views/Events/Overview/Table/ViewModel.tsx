@@ -82,6 +82,10 @@ const ViewModel = () => {
 		setSelectedEventTypeId(0)
 	}
 
+	const onViewDetail = (id: string) => {
+		navigate(`/events/detail/${id}`)
+	}
+
 	const TABLE_CONFIGS: any[] = [
 		{
 			Header: 'รายชื่อเหตุการณ์',
@@ -197,9 +201,11 @@ const ViewModel = () => {
 			Header: '',
 			accessor: 'action',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: () => (
+			Cell: ({ row }: any) => (
 				<div className="d-flex flex-row justify-content-center align-items-center">
-					<button className="btn btn-sm btn-icon btn-muted btn-active-light">
+					<button
+						className="btn btn-sm btn-icon btn-muted btn-active-light"
+						onClick={() => onViewDetail(row.original.id)}>
 						<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
 					</button>
 					{(isAdmin || isApprover) && (
