@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { useIntl } from 'react-intl'
@@ -8,7 +7,6 @@ import { toast } from 'react-toastify'
 
 const ViewModel = () => {
 	const intl = useIntl()
-	const navigate = useNavigate()
 	const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
 	const [expanded, setExpanded] = useState(false)
 	const { mode } = useThemeMode()
@@ -115,15 +113,15 @@ const ViewModel = () => {
 	}
 
 	const onClickBuildingOne = () => {
-		navigate(`/dashboard/mwa/building/${buildingOne?.id}`)
+		window.open(`/dashboard/mwa/building/${buildingOne?.id}`, '_blank')
 	}
 
 	const onClickBuildingTwo = () => {
-		navigate(`/dashboard/mwa/building/${buildingTwo?.id}`)
+		window.open(`/dashboard/mwa/building/${buildingTwo?.id}`, '_blank')
 	}
 
 	const onClickBuildingThree = () => {
-		navigate(`/dashboard/mwa/building/${buildingThree?.id}`)
+		window.open(`/dashboard/mwa/building/${buildingThree?.id}`, '_blank')
 	}
 
 	useEffect(() => {
@@ -151,9 +149,9 @@ const ViewModel = () => {
 	}, [])
 
 	useEffect(() => {
-		const buildingOneGroup = document.querySelector('#first-building-group')
-		const buildingTwoGroup = document.querySelector('#second-building-group')
-		const buildingThreeGroup = document.querySelector('#third-building-group')
+		const buildingOneGroup = document.querySelector('#chlorine-station-1')
+		const buildingTwoGroup = document.querySelector('#chlorine-station-2')
+		const buildingThreeGroup = document.querySelector('#chlorine-station-3')
 
 		if (buildingOneGroup) {
 			buildingOneGroup.addEventListener('click', onClickBuildingOne)

@@ -14,6 +14,7 @@ const ViewModel = () => {
 		getDashboardSensors: state.getDashboardSensors,
 	}))
 	const [isLoading, setIsLoading] = useState(false)
+	const [isDataChanged, setIsDataChanged] = useState(false)
 	const data = useMemo(() => {
 		if (!dashboardSensors) return {}
 
@@ -70,12 +71,37 @@ const ViewModel = () => {
 	}
 
 	const fetchData = () => {
+		const currentOnlinePercentage = data?.onlinePercentage ?? 0
+		const currentOfflinePercentage = data?.offlinePercentage ?? 0
+
 		setIsLoading(true)
 		getDashboardSensors().then(({ data, success }) => {
 			if (!success) {
 				toast.error(data)
 				return
 			} else {
+				let offlinePercentage = 0
+
+				if (
+					data?.totalOnline !== undefined &&
+					data?.totalOffline !== undefined &&
+					data?.onlinePercentage !== undefined
+				) {
+					offlinePercentage = Math.round(
+						(data?.onlinePercentage * data?.totalOffline) / data?.totalOnline
+					)
+				}
+
+				if (
+					currentOnlinePercentage !== data.onlinePercentage ||
+					currentOfflinePercentage !== offlinePercentage
+				) {
+					setIsDataChanged(true)
+
+					setTimeout(() => {
+						setIsDataChanged(false)
+					}, 1000)
+				}
 				setIsLoading(false)
 			}
 		})
@@ -110,6 +136,7 @@ const ViewModel = () => {
 		themeMode,
 		mode,
 		isLoading,
+		isDataChanged,
 		data,
 	}
 }
