@@ -3,7 +3,7 @@ import Chart from 'react-apexcharts'
 import clsx from 'clsx'
 
 import useViewModel from './ViewModel'
-import { formatNumberCommas } from '@/Utils/formatNumberCommas'
+// import { formatNumberCommas } from '@/Utils/formatNumberCommas'
 import { vhToPixels } from '@/Utils/vhToPixels'
 
 interface Props {}
@@ -176,7 +176,7 @@ const DataConnection: React.FC<Props> = () => {
 									</div>
 									<div className="col-12 col-xxl-6 mt-5 mt-lg-0">
 										<div className="d-flex flex-column align-items-end justify-content-center h-100">
-											<div className="fs-6 mb-3 w-100">
+											{/* <div className="fs-6 mb-3 w-100">
 												<div className="row align-items-center">
 													<div
 														className={clsx(
@@ -221,7 +221,7 @@ const DataConnection: React.FC<Props> = () => {
 														</span>
 													</div>
 												</div>
-											</div>
+											</div> */}
 											<div className="fs-6 mb-3 w-100">
 												<div className="row align-items-center">
 													<div

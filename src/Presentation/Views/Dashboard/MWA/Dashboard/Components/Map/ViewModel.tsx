@@ -78,24 +78,42 @@ const ViewModel = () => {
 	const generateIcon = (buildingId: number) => {
 		const building = stations.find((b: any) => b.id === buildingId)
 		if (building) {
-			// Sensor มีสถานะ Online ทั้งหมด และมีผลการตรวจวัดที่เกินมาตรฐาน || แต่หากมี Sensor บางตัวที่ยัง Online และอ่านค่าได้เกินมาตรฐาน ก็ให้แสดงเป็นสีแดงแทน
-			if (building.sumSensor > 0 && building.valueOverStd > 0) {
-				return 'red'
-			}
-			// Sensor มีสถานะ Online ทั้งหมด และมีผลการตรวจวัดที่ใกล้เกินมาตรฐาน
-			else if (building.sumSensor === building.sensorOnline && building.valueNearStd > 0) {
-				return 'orange'
-			}
-			// มี Sensor ที่ Online ทั้งหมดและผลการตรวจวัดอยู่ในเกณฑ์ปกติ
-			else if (
-				building.sumSensor === building.sensorOnline &&
-				building.sensorOnline === building.valueNormal
-			) {
-				return 'green'
-			}
-			// มี Sensor บางตัวที่ Offline
-			else if (building.sensorOffline > 0) {
+			/**
+			 * Old Rules
+			 */
+			// // Sensor มีสถานะ Online ทั้งหมด และมีผลการตรวจวัดที่เกินมาตรฐาน || แต่หากมี Sensor บางตัวที่ยัง Online และอ่านค่าได้เกินมาตรฐาน ก็ให้แสดงเป็นสีแดงแทน
+			// if (building.sumSensor > 0 && building.valueOverStd > 0) {
+			// 	return 'red'
+			// }
+			// // Sensor มีสถานะ Online ทั้งหมด และมีผลการตรวจวัดที่ใกล้เกินมาตรฐาน
+			// else if (building.sumSensor === building.sensorOnline && building.valueNearStd > 0) {
+			// 	return 'orange'
+			// }
+			// // มี Sensor ที่ Online ทั้งหมดและผลการตรวจวัดอยู่ในเกณฑ์ปกติ
+			// else if (
+			// 	building.sumSensor === building.sensorOnline &&
+			// 	building.sensorOnline === building.valueNormal
+			// ) {
+			// 	return 'green'
+			// }
+			// // มี Sensor บางตัวที่ Offline
+			// else if (building.sensorOffline > 0) {
+			// 	return 'grey'
+			// } else {
+			// 	return null
+			// }
+
+			/**
+			 * New Rules (April 18, 2024)
+			 */
+			if (building?.status === 0) {
 				return 'grey'
+			} else if (building?.status === 1) {
+				return 'green'
+			} else if (building?.status === 2) {
+				return 'orange'
+			} else if (building?.status === 3) {
+				return 'red'
 			} else {
 				return null
 			}

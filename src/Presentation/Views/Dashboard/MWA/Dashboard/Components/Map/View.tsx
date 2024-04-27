@@ -176,7 +176,8 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 										className="position-absolute"
 										style={{ left: -70, top: -5 }}
 									/>{' '}
-									{buildingOne?.building}
+									{/* {buildingOne?.building} */}
+									โรงจ่ายคลอรีน 1
 								</div>
 							</Tooltip>
 						)}
@@ -196,7 +197,8 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 										className="position-absolute"
 										style={{ left: -70, top: -5 }}
 									/>{' '}
-									{buildingTwo?.building}
+									{/* {buildingTwo?.building} */}
+									โรงจ่ายคลอรีน 2
 								</div>
 							</Tooltip>
 						)}
@@ -216,7 +218,8 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 										className="position-absolute"
 										style={{ left: -70, top: -5 }}
 									/>{' '}
-									{buildingThree?.building}
+									{/* {buildingThree?.building} */}
+									โรงจ่ายคลอรีน 3
 								</div>
 							</Tooltip>
 						)}
@@ -293,23 +296,23 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 							โรงจ่ายสารส้ม 2
 						</Tooltip>
 
-						<Tooltip
+						{/* <Tooltip
 							place="top"
 							anchorSelect="#service-center-building"
 							className="fs-7 fw-bold"
 							style={{ zIndex: 10, backgroundColor: '#233FA1' }}
 							isOpen={isShowHover}>
 							อาคารกองบริการโรงงาน
-						</Tooltip>
+						</Tooltip> */}
 
-						<Tooltip
+						{/* <Tooltip
 							place="top"
 							anchorSelect="#water-research-building"
 							className="fs-7 fw-bold"
 							style={{ zIndex: 10, backgroundColor: '#233FA1' }}
 							isOpen={isShowHover}>
 							อาคารวิเคราะห์คุณภาพน้ำระบบผลิต
-						</Tooltip>
+						</Tooltip> */}
 
 						<Tooltip
 							place="top"
@@ -320,16 +323,16 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 							อาคารอำนวยการโรงงานผลิตน้ำบางเขน
 						</Tooltip>
 
-						<Tooltip
+						{/* <Tooltip
 							place="top"
 							anchorSelect="#air-filling-building"
 							className="fs-7 fw-bold"
 							style={{ zIndex: 10 }}
 							isOpen={isShowHover}>
 							อาคารเติมอากาศ
-						</Tooltip>
+						</Tooltip> */}
 
-						<Tooltip
+						{/* <Tooltip
 							place="right"
 							anchorSelect="#clean-water-storage-building-1"
 							className="fs-7 fw-bold"
@@ -354,7 +357,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 							style={{ zIndex: 10 }}
 							isOpen={isShowHover}>
 							อาคารเก็บน้ำสะอาด 3
-						</Tooltip>
+						</Tooltip> */}
 						{/* Tooltip */}
 
 						<div className="card-body position-relative p-0">
