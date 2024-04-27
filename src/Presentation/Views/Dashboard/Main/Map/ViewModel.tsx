@@ -234,8 +234,8 @@ const ViewModel = () => {
 					? rawData.events.map((e: any) => ({
 							...e,
 							eventType: {
-								id: e.idEventType,
-								name: dataTypes.find((d: any) => d.id === e.idEventType)?.name,
+								id: e.eventTypeId,
+								name: dataTypes.find((d: any) => d.id === e.eventTypeId)?.name,
 							},
 						}))
 					: []

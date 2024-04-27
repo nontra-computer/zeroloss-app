@@ -16,7 +16,6 @@ import clsx from 'clsx'
 
 const EventListCalendarView: React.FC = () => {
 	const {
-		isMobile,
 		themeMode,
 		calendarRef,
 		data,

@@ -75,7 +75,7 @@ const ViewModel = () => {
 				detail: rd?.detail,
 				start: moment(rd?.start).toISOString(),
 				end: rd?.end ? moment(rd?.end).toISOString() : moment().toISOString(),
-				type: rd?.idEventType ?? 0,
+				type: rd?.eventTypeId ?? 0,
 				img: '/media/examples/incident-1.jpg',
 				location: '',
 				locationName: rd?.locationName ?? '',
