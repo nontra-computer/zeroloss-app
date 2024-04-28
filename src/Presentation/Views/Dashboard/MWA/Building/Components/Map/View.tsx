@@ -154,7 +154,11 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 							<div className="position-relative w-100 h-100">
 								<div
 									className="position-absolute d-flex justify-content-start align-items-end"
-									style={{ zIndex: 100, left: 20, top: stageDimensions.height - 100 }}>
+									style={{
+										zIndex: 100,
+										left: 2,
+										top: isLargeMobile ? 'calc(500px - 100px)' : 'calc(42vh - 100px)',
+									}}>
 									<div className="border-radius-4px overflow-hidden shadow transition-300 cursor-pointer">
 										<div
 											className="bg-zeroloss-base-white p-3 hover-enabled transition-300"

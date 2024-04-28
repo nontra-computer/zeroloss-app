@@ -220,7 +220,7 @@ const EventListCalendarView: React.FC = () => {
 
 						<div className="card-body p-0">
 							<div className="card">
-								<div className="card-header px-4 px-10">
+								<div className="card-header px-4 px-9">
 									<div
 										className="card-title flex-column flex-lg-row w-100 w-lg-auto align-items-center"
 										style={{ gap: '12px' }}>
