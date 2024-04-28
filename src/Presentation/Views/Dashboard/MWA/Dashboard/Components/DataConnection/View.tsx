@@ -20,6 +20,7 @@ const DataConnection: React.FC<Props> = () => {
 		intl,
 		themeMode,
 		data,
+		last24ConnectionData,
 	} = useViewModel()
 
 	return (
@@ -309,11 +310,11 @@ const DataConnection: React.FC<Props> = () => {
 											series={[
 												{
 													name: 'Offline Sensor',
-													data: [30, 60, 70, 20, 90, 32, 12],
+													data: last24ConnectionData.offline,
 												},
 												{
 													name: 'Online Sensor',
-													data: [10, 41, 35, 51, 49, 62, 69],
+													data: last24ConnectionData.online,
 												},
 											]}
 											options={{
@@ -340,6 +341,7 @@ const DataConnection: React.FC<Props> = () => {
 														// opacity: 0.5,
 													},
 												},
+
 												legend: {
 													position: 'top',
 													labels: {
@@ -353,6 +355,7 @@ const DataConnection: React.FC<Props> = () => {
 															fontFamily: 'Noto Sans Thai, sans-serif',
 														},
 													},
+													categories: last24ConnectionData.categories,
 												},
 												yaxis: {
 													labels: {
