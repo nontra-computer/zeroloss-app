@@ -73,6 +73,9 @@ const EventDetailDefaultView: React.FC = () => {
 						}}
 						components={{
 							IndicatorSeparator: () => null,
+							Menu: () => null,
+							DownChevron: () => null,
+							DropdownIndicator: () => null,
 							SingleValue: props => (
 								<components.SingleValue {...props} className="cursor-pointer fs-7 fw-normal">
 									<span
@@ -172,6 +175,10 @@ const EventDetailDefaultView: React.FC = () => {
 						components={{
 							IndicatorSeparator: () => null,
 							Menu: () => null,
+							DownChevron: () => null,
+							DropdownIndicator: () => null,
+							ClearIndicator: () => null,
+							CrossIcon: () => null,
 						}}
 						options={(data?.pollution ?? []).map((d: any) => ({
 							label: d.title,

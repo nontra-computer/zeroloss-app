@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useEventStore } from '@/Store/Event'
-import { useLocationStore } from '@/Store/Location'
+import { useLocationTypeStore } from '@/Store/LocationType'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const MOCK_DATA = {
@@ -27,9 +27,9 @@ const ViewModel = () => {
 		getTypes: state.getTypes,
 		clearState: state.clearState,
 	}))
-	const { locations, getAllMapMarker } = useLocationStore(state => ({
-		locations: state.dataMapMarker,
-		getAllMapMarker: state.getAllMapMarker,
+	const { locationTypes, getAllLocationTypes } = useLocationTypeStore(state => ({
+		locationTypes: state.data,
+		getAllLocationTypes: state.getAll,
 	}))
 	const [filter, setFilter] = useState(INITIAL_FILTER_STATE)
 
@@ -43,8 +43,8 @@ const ViewModel = () => {
 	const locationOptions: {
 		label: string
 		value: any
-	}[] = locations.map((d: any) => ({
-		label: d.nameTh,
+	}[] = locationTypes.map((d: any) => ({
+		label: d.name,
 		value: d.id,
 	}))
 	const distanceOptions: {
@@ -71,7 +71,7 @@ const ViewModel = () => {
 
 	const locationData = useMemo(
 		() =>
-			locations.map(l => ({
+			locationTypes.map(l => ({
 				id: l.id,
 				nameTh: l.nameTh,
 				nameEn: l.nameEn,
@@ -79,7 +79,7 @@ const ViewModel = () => {
 				latitude: l?.latitude ? parseFloat(l.latitude) : 0,
 				longitude: l?.longitude ? parseFloat(l.longitude) : 0,
 			})),
-		[locations]
+		[locationTypes]
 	)
 
 	let themeMode = ''
@@ -91,7 +91,7 @@ const ViewModel = () => {
 
 	const fetchData = () => {
 		getTypes()
-		getAllMapMarker()
+		getAllLocationTypes()
 	}
 
 	const onChangeFilter = (key: string, value: any) => {
