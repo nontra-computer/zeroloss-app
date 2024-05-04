@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useEventStore } from '@/Store/Event'
+import { useLocationStore } from '@/Store/Location'
 import { useLocationTypeStore } from '@/Store/LocationType'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
@@ -26,6 +27,11 @@ const ViewModel = () => {
 		eventTypes: state.types,
 		getTypes: state.getTypes,
 		clearState: state.clearState,
+	}))
+	const { locations, setLocations, getAllLocations } = useLocationStore(state => ({
+		locations: state.dataMapMarker,
+		setLocations: state.setDataMapMarker,
+		getAllLocations: state.getAllMapMarker,
 	}))
 	const { locationTypes, getAllLocationTypes } = useLocationTypeStore(state => ({
 		locationTypes: state.data,
@@ -71,7 +77,7 @@ const ViewModel = () => {
 
 	const locationData = useMemo(
 		() =>
-			locationTypes.map(l => ({
+			locations.map(l => ({
 				id: l.id,
 				nameTh: l.nameTh,
 				nameEn: l.nameEn,
@@ -79,7 +85,7 @@ const ViewModel = () => {
 				latitude: l?.latitude ? parseFloat(l.latitude) : 0,
 				longitude: l?.longitude ? parseFloat(l.longitude) : 0,
 			})),
-		[locationTypes]
+		[locations]
 	)
 
 	let themeMode = ''
@@ -101,9 +107,16 @@ const ViewModel = () => {
 		})
 	}
 
-	const confirmFilter = () => {}
+	const confirmFilter = () => {
+		if (filter.locationTypeId) {
+			getAllLocations(filter)
+		}
+	}
 
-	const clearFilter = () => {}
+	const clearFilter = () => {
+		setLocations([])
+		setFilter(INITIAL_FILTER_STATE)
+	}
 
 	useEffect(() => {
 		fetchData()
@@ -111,6 +124,8 @@ const ViewModel = () => {
 	}, [])
 
 	useEffect(() => {
+		setLocations([])
+
 		return () => {
 			clearState()
 		}

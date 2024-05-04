@@ -18,6 +18,7 @@ import Lightbox from 'yet-another-react-lightbox'
 
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
+import moment from 'moment'
 
 const EventFormView: React.FC = () => {
 	const {
@@ -25,6 +26,7 @@ const EventFormView: React.FC = () => {
 		selectedTabName,
 		currentActiveTabIdx,
 		isCreate,
+		isSubmitting,
 		isEditDetail,
 		isEditLocation,
 		isEditImages,
@@ -53,6 +55,7 @@ const EventFormView: React.FC = () => {
 		impactWaterResourceOptions,
 		impactGroundResourceOptions,
 		impactAnimalOptions,
+		onSubmit,
 	} = useViewModel()
 
 	return (
@@ -116,7 +119,11 @@ const EventFormView: React.FC = () => {
 							</div>
 						)}
 						<div className="text-end">
-							<button className="btn btn-zeroloss-primary text-zeroloss-base-white fw-bold w-100 w-lg-auto">
+							<button
+								type="button"
+								className="btn btn-zeroloss-primary text-zeroloss-base-white fw-bold w-100 w-lg-auto"
+								disabled={isSubmitting}
+								onClick={onSubmit}>
 								<img
 									className="me-1"
 									src="/media/icons/zeroloss/white-save-01.svg"
@@ -183,7 +190,9 @@ const EventFormView: React.FC = () => {
 															className="form-control form-control-sm"
 															timeFormat="HH:mm"
 															dateFormat="dd/MM/yyyy HH:mm"
-															selected={formState.createdAt}
+															selected={
+																formState.createdAt ? moment(formState.createdAt).toDate() : null
+															}
 															onChange={date => {
 																onChangeFormState('createdAt', date)
 															}}
@@ -209,9 +218,9 @@ const EventFormView: React.FC = () => {
 															className="form-control form-control-sm"
 															timeFormat="HH:mm"
 															dateFormat="dd/MM/yyyy HH:mm"
-															selected={formState.eventOccuredAt}
+															selected={formState.start ? moment(formState.start).toDate() : null}
 															onChange={date => {
-																onChangeFormState('eventOccuredAt', date)
+																onChangeFormState('start', date)
 															}}
 														/>
 													</div>
@@ -233,9 +242,9 @@ const EventFormView: React.FC = () => {
 																className="form-control form-control-sm"
 																timeFormat="HH:mm"
 																dateFormat="dd/MM/yyyy HH:mm"
-																selected={formState.eventOccuredAt}
+																selected={formState.end ? moment(formState.end).toDate() : null}
 																onChange={date => {
-																	onChangeFormState('eventOccuredAt', date)
+																	onChangeFormState('end', date)
 																}}
 															/>
 														</div>
@@ -260,10 +269,10 @@ const EventFormView: React.FC = () => {
 															options={eventTypesOptions}
 															value={
 																eventTypesOptions.find(
-																	option => option.value === formState.eventType
+																	option => option.value === formState.eventTypeId
 																) ?? null
 															}
-															onChange={option => onChangeFormState('eventType', option?.value)}
+															onChange={option => onChangeFormState('eventTypeId', option?.value)}
 															styles={{
 																container: styles => ({
 																	...styles,
@@ -358,10 +367,12 @@ const EventFormView: React.FC = () => {
 															options={eventSubTypesOptions}
 															value={
 																eventSubTypesOptions.find(
-																	option => option.value === formState.eventSubType
+																	option => option.value === formState.eventSubTypeId
 																) ?? null
 															}
-															onChange={option => onChangeFormState('eventSubType', option?.value)}
+															onChange={option =>
+																onChangeFormState('eventSubTypeId', option?.value)
+															}
 															styles={{
 																container: styles => ({
 																	...styles,
@@ -423,7 +434,7 @@ const EventFormView: React.FC = () => {
 													{/* Description */}
 													<div className="col-12 col-lg-8">
 														<FormGenerator
-															formKey="description"
+															formKey="detail"
 															inputType="textarea"
 															label="บรรยายเหตุการณ์"
 															additionalLabelCom={
@@ -591,24 +602,24 @@ const EventFormView: React.FC = () => {
 															<div
 																className="w-100 rounded bg-kumopack-base-white border mb-5 text-center shadow d-flex align-items-center justify-content-center position-relative"
 																style={{ height: '320px' }}>
-																{formState.featurePicture && (
+																{formState.pictureCover && (
 																	<div
 																		className="btn btn-sm btn-icon btn-danger btn-active-light-danger position-absolute"
 																		style={{ top: -10, right: -10 }}
-																		onClick={() => onChangeFormState('featurePicture', null)}>
+																		onClick={() => onChangeFormState('pictureCover', null)}>
 																		<KTSVG
 																			className="svg-icon-1"
 																			path="media/icons/duotune/general/gen027.svg"
 																		/>
 																	</div>
 																)}
-																{formState.featurePicture && (
+																{formState.pictureCover && (
 																	<img
 																		className="mx-auto h-100 w-100 rounded"
 																		src={
-																			typeof formState.featurePicture !== 'string'
-																				? URL.createObjectURL(formState.featurePicture as any)
-																				: formState.featurePicture
+																			typeof formState.pictureCover !== 'string'
+																				? URL.createObjectURL(formState.pictureCover as any)
+																				: formState.pictureCover
 																		}
 																		onError={(e: any) => {
 																			e.target.onerror = null
@@ -618,11 +629,11 @@ const EventFormView: React.FC = () => {
 																		style={{
 																			userSelect: 'none',
 																			pointerEvents: 'none',
-																			objectFit: 'cover',
+																			objectFit: 'contain',
 																		}}
 																	/>
 																)}
-																{!formState.featurePicture && (
+																{!formState.pictureCover && (
 																	<div className="fw-bold fs-5 text-kumopack-grey-300 py-10">
 																		No Files Uploaded
 																	</div>
@@ -638,7 +649,7 @@ const EventFormView: React.FC = () => {
 																multiple={false}
 																accept="image/*"
 																onFileUpload={coverFiles =>
-																	onChangeFormState('featurePicture', coverFiles[0])
+																	onChangeFormState('pictureCover', coverFiles[0])
 																}
 															/>
 														</div>
@@ -677,7 +688,7 @@ const EventFormView: React.FC = () => {
 												</React.Fragment>
 											)}
 
-											{(isCreate ? true : isEditLocation) && (
+											{(isCreate ? false : isEditLocation) && (
 												<React.Fragment>
 													<div className="col-12 col-lg-8">
 														<label
@@ -768,7 +779,7 @@ const EventFormView: React.FC = () => {
 													</div>
 												</React.Fragment>
 											)}
-											{(isCreate ? true : isEditInformer) && (
+											{(isCreate ? false : isEditInformer) && (
 												<React.Fragment>
 													<div className="col-12 col-lg-8">
 														<FormGenerator
@@ -815,7 +826,7 @@ const EventFormView: React.FC = () => {
 													</div>
 												</React.Fragment>
 											)}
-											{(isCreate ? true : isEditImages) && (
+											{(isCreate ? false : isEditImages) && (
 												<React.Fragment>
 													<Lightbox
 														index={imageIdx}
@@ -914,7 +925,7 @@ const EventFormView: React.FC = () => {
 													</div>
 												</React.Fragment>
 											)}
-											{(isCreate ? true : isEditReporting) && (
+											{(isCreate ? false : isEditReporting) && (
 												<React.Fragment>
 													<div className="col-12">
 														<div className="card">
@@ -934,7 +945,7 @@ const EventFormView: React.FC = () => {
 								</div>
 							)}
 
-							{(isCreate ? true : isEditImpact) && (
+							{(isCreate ? false : isEditImpact) && (
 								<React.Fragment>
 									<div className="card mb-5">
 										<div className="card-header bg-zeroloss-soft-blue">

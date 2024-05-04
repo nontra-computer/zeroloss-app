@@ -4,7 +4,7 @@ import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import { useEventStore } from '@/Store/Event'
+import { useEventStore, ICreateEvent } from '@/Store/Event'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { LocationSelectionContext } from './LocationSelection/Context'
 import moment from 'moment-timezone'
@@ -19,15 +19,17 @@ import {
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
 import DoubleLine from '@/Presentation/Components/Table/Cells/DoubleLine'
 import clsx from 'clsx'
+import { toast } from 'react-toastify'
 
 const INITIAL_STATE = {
-	createdAt: moment().toDate(),
-	eventOccuredAt: moment().toDate(),
-	eventType: 0,
-	eventSubType: 0,
+	createdAt: moment().toISOString(),
+	start: moment().toISOString(),
+	end: moment().toISOString(),
+	eventTypeId: 0,
+	eventSubTypeId: 0,
 	title: '',
 	detail: '',
-	featurePicture: null,
+	pictureCover: null,
 	additionalPictures: [] as File[],
 	latitude: 13.7563,
 	longitude: 100.5018,
@@ -125,13 +127,15 @@ const ViewModel = () => {
 		return intl.formatMessage({ id: 'ZEROLOSS.HEADER.CURRENT_TIME' }) + ' ' + time
 	}, [currentTime, intl, selectedLang])
 	const { mode } = useThemeMode()
-	const { eventTypes, eventSubTypes, getTypes, getSubTypes, clearState } = useEventStore(state => ({
-		eventTypes: state.types,
-		eventSubTypes: state.subTypes,
-		getTypes: state.getTypes,
-		getSubTypes: state.getSubTypes,
-		clearState: state.clearState,
-	}))
+	const { eventTypes, eventSubTypes, getTypes, getSubTypes, createEvent, clearState } =
+		useEventStore(state => ({
+			eventTypes: state.types,
+			eventSubTypes: state.subTypes,
+			getTypes: state.getTypes,
+			getSubTypes: state.getSubTypes,
+			createEvent: state.create,
+			clearState: state.clearState,
+		}))
 	const {
 		setOpen: setOpenSelectLocation,
 		changeConfirm,
@@ -145,6 +149,7 @@ const ViewModel = () => {
 	const title = isCreate ? 'All Events / สร้างเหตุการณ์ใหม่' : 'All Events / รายละเอียดเหตุการณ์'
 
 	const [hasChanged, setHasChanged] = useState(false)
+	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [formState, setFormState] = useState(INITIAL_STATE)
 
 	const [isOpenLightBox, setIsOpenLightBox] = useState(false)
@@ -229,12 +234,12 @@ const ViewModel = () => {
 	)
 	const eventSubTypesOptions = useMemo(() => {
 		return eventSubTypes
-			.filter((d: any) => d.eventTypeId === formState.eventType)
+			.filter((d: any) => d.eventTypeId === formState.eventTypeId)
 			.map((d: any) => ({
 				label: d.name,
 				value: d.id,
 			}))
-	}, [formState.eventType, eventSubTypes])
+	}, [formState.eventTypeId, eventSubTypes])
 
 	const impactWaterResourceOptions = useMemo(() => {
 		return [
@@ -330,10 +335,20 @@ const ViewModel = () => {
 	}
 
 	const onChangeFormState = (key: string, value: any) => {
-		setFormState(prevState => ({
-			...prevState,
-			[key]: value,
-		}))
+		console.log(key, value)
+		if (key === 'start' || key === 'createdAt') {
+			setFormState(prevState => ({
+				...prevState,
+				[key]: moment(value).toISOString(),
+			}))
+		} else {
+			setFormState(prevState => ({
+				...prevState,
+				[key]: value,
+			}))
+		}
+
+		setHasChanged(true)
 	}
 
 	const onOpenLightBox = (imgIdx: number) => {
@@ -394,6 +409,56 @@ const ViewModel = () => {
 
 		setChangeConfirm(false)
 		setOpenSelectLocation(true)
+	}
+
+	const onSubmit = () => {
+		if (!hasChanged) {
+			return
+		}
+
+		setIsSubmitting(true)
+		if (isCreate) {
+			const requiredFields = ['start', 'eventTypeId', 'eventSubTypeId', 'latitude', 'longitude']
+			let hasAlertErrorField = false
+			requiredFields.forEach(field => {
+				if (field === 'start') {
+					if (!moment(formState[field]).isValid()) {
+						toast.error('กรุณากรอกวันและเวลาที่เกิดเหตุ')
+					}
+				} else {
+					// @ts-ignore
+					if ((formState[field] === '' || formState[field] === 0) && !hasAlertErrorField) {
+						toast.error('กรุณากรอกข้อมูลให้ครบถ้วน')
+						setIsSubmitting(false)
+						hasAlertErrorField = true
+					}
+				}
+			})
+
+			const body: ICreateEvent = {
+				start: formState.start,
+				eventTypeId: formState.eventTypeId,
+				eventSubTypeId: formState.eventSubTypeId,
+				detail: formState.detail,
+				pictureCover: formState.pictureCover,
+				latitude: formState.latitude,
+				longitude: formState.longitude,
+			}
+
+			createEvent(body).then(({ success, data }) => {
+				if (!success) {
+					toast.error(`เกิดข้อผิดพลาดในการสร้างเหตุการณ์ : ${data}`)
+					setIsSubmitting(false)
+				} else {
+					toast.success('สร้างเหตุการณ์สำเร็จ')
+					setTimeout(() => {
+						navigate(`/events/edit/${data.id}`)
+						setIsSubmitting(false)
+					}, 500)
+				}
+			})
+		} else if (eventId !== undefined) {
+		}
 	}
 
 	const REPORTING_TABLE_CONFIGS: any[] = [
@@ -504,6 +569,7 @@ const ViewModel = () => {
 		availableTabs: TAB_HEADER_ITEMS.map(d => d.tabName),
 		selectedTabName: TAB_HEADER_ITEMS[currentActiveTabIdx].tabName,
 		isCreate,
+		isSubmitting,
 		imageIdx,
 		isOpenLightBox,
 		timeStr,
@@ -526,6 +592,7 @@ const ViewModel = () => {
 		impactWaterResourceOptions,
 		impactGroundResourceOptions,
 		impactAnimalOptions,
+		onSubmit,
 	}
 }
 

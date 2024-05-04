@@ -7,7 +7,7 @@ interface LocationStore {
 	setData: (data: any[]) => void
 	setDataMapMarker: (data: any[]) => void
 	getAll: (filter?: any) => Promise<{ data: any; success: boolean }>
-	getAllMapMarker: () => Promise<{ data: any; success: boolean }>
+	getAllMapMarker: (filter?: any) => Promise<{ data: any; success: boolean }>
 	clearState: () => void
 }
 
@@ -29,9 +29,9 @@ export const useLocationStore = create<LocationStore>(set => ({
 				return { data: error.response.data.message?.toString(), success: false }
 			})
 	},
-	getAllMapMarker: async () => {
+	getAllMapMarker: async filter => {
 		return axios
-			.get(`${API_SLUG}/map-marker`)
+			.get(`${API_SLUG}/map-marker`, { params: filter ?? {} })
 			.then(response => {
 				set({ dataMapMarker: response.data })
 				return { data: response.data, success: true }
