@@ -854,10 +854,10 @@ const EventFormView: React.FC = () => {
 																</div>
 															</label>
 															<ImageUploader1
-																formKey="featurePicture"
+																formKey="pictureCover"
 																accept="image/jpg, image/jpeg, image/png"
-																image={formState.featurePicture}
-																changeImage={image => onChangeFormState('featurePicture', image)}
+																image={formState.pictureCover}
+																changeImage={image => onChangeFormState('pictureCover', image)}
 															/>
 														</div>
 													</div>
