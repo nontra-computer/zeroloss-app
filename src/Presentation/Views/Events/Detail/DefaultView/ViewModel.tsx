@@ -1,29 +1,27 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useEventStore } from '@/Store/Event'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import moment from 'moment'
-import 'moment-timezone'
-
-const MOCK_DATA = {
-	eventOccuredAt: moment().tz('Asia/Bangkok').toDate(),
-	eventType: 1,
-	eventTitle: 'เหตุการณ์ที่เกิดขึ้น',
-	detail: 'รายละเอียดเหตุการณ์ที่เกิดขึ้น',
-	pollution: [
-		{
-			title: 'กลิ่นเหม็น',
-		},
-		{
-			title: 'สารเคมีรั่วไหล',
-		},
-	],
-}
+import { EventDangerLevelOptions } from '@/Configuration/EventDangerLevel'
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
-	const { eventTypes, getTypes, clearState } = useEventStore(state => ({
+	const {
+		data,
+		eventTypes,
+		eventSubTypes,
+		pollutionTypes,
+		getTypes,
+		getSubTypes,
+		getPollution,
+		clearState,
+	} = useEventStore(state => ({
+		data: state.selected,
 		eventTypes: state.types,
+		eventSubTypes: state.subTypes,
+		pollutionTypes: state.pollutions,
 		getTypes: state.getTypes,
+		getSubTypes: state.getSubTypes,
+		getPollution: state.getPollution,
 		clearState: state.clearState,
 	}))
 
@@ -38,6 +36,48 @@ const ViewModel = () => {
 		[]
 	)
 
+	const eventSubTypesOptions = eventSubTypes
+		.filter((d: any) => d.eventTypeId === data?.eventTypeId)
+		.map((d: any) => ({
+			label: d.name,
+			value: d.id,
+		}))
+
+	const pollution = useMemo(() => {
+		let pollutionData: {
+			[key: string]: {
+				label: string
+				value: any
+			}
+		} = {}
+
+		if (Object.keys(pollutionTypes).length !== 0) {
+			pollutionData = Object.keys(pollutionTypes).reduce(
+				(
+					acc: {
+						[key: string]: {
+							label: string
+							value: any
+						}
+					},
+					curr
+				) => {
+					if (data[curr] !== undefined && (data[curr] === 1 || data[curr] === true)) {
+						acc[curr] = {
+							label: pollutionTypes[curr],
+							value: data[curr],
+						}
+					}
+
+					return acc
+				},
+				{}
+			)
+		}
+
+		return Object.entries(pollutionData).map(([, value]) => value)
+	}, [data, pollutionTypes])
+
 	let themeMode = ''
 	if (mode === 'system') {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -47,6 +87,8 @@ const ViewModel = () => {
 
 	const fetchData = () => {
 		getTypes()
+		getSubTypes()
+		getPollution()
 	}
 
 	useEffect(() => {
@@ -63,8 +105,11 @@ const ViewModel = () => {
 
 	return {
 		themeMode,
-		data: MOCK_DATA,
+		data: data,
+		pollution,
 		eventTypesOptions,
+		eventSubTypesOptions,
+		eventDangerLevelOptions: EventDangerLevelOptions,
 	}
 }
 

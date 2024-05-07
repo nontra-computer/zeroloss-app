@@ -8,7 +8,14 @@ import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
 const EventDetailDefaultView: React.FC = () => {
-	const { themeMode, data, eventTypesOptions } = useViewModel()
+	const {
+		themeMode,
+		data,
+		pollution,
+		eventTypesOptions,
+		eventSubTypesOptions,
+		eventDangerLevelOptions,
+	} = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -30,7 +37,7 @@ const EventDetailDefaultView: React.FC = () => {
 						})}
 						timeFormat="HH:mm"
 						dateFormat="dd/MM/yyyy HH:mm"
-						selected={data.eventOccuredAt}
+						selected={data?.start ? new Date(data.start) : null}
 						onChange={() => {
 							// onChangeFormState('eventOccuredAt', date)
 						}}
@@ -45,11 +52,11 @@ const EventDetailDefaultView: React.FC = () => {
 						</div>
 					</label>
 					<Select
-						placeholder="เลือกประเภทเหตุการณ์"
+						placeholder="ไม่พบข้อมูล"
 						noOptionsMessage={() => 'ไม่พบข้อมูล'}
 						className="w-100 shadow-sm"
 						options={eventTypesOptions}
-						value={eventTypesOptions.find(option => option.value === data.eventType) ?? null}
+						value={eventTypesOptions.find(option => option.value === data.eventTypeId) ?? null}
 						styles={{
 							container: styles => ({
 								...styles,
@@ -106,7 +113,64 @@ const EventDetailDefaultView: React.FC = () => {
 							),
 							Placeholder: props => (
 								<components.Placeholder {...props} className="cursor-pointer fs-7 fw-normal">
-									เลือกประเภทเหตุการณ์
+									ไม่พบข้อมูล
+								</components.Placeholder>
+							),
+							NoOptionsMessage: props => (
+								<components.NoOptionsMessage {...props} className="cursor-pointer fs-7 fw-normal">
+									ไม่พบข้อมูล
+								</components.NoOptionsMessage>
+							),
+						}}
+					/>
+				</div>
+
+				{/* Event Sub Type */}
+				<div className="col-12">
+					<label className={`form-label d-flex flex-row`} data-testid="form-input-label-component">
+						<div className="d-flex flex-column">
+							<span>ประเภทเหตุการณ์ย่อย</span>
+						</div>
+					</label>
+					<Select
+						placeholder="ไม่พบข้อมูล"
+						noOptionsMessage={() => 'ไม่พบข้อมูล'}
+						className="w-100 shadow-sm"
+						options={eventSubTypesOptions}
+						value={
+							eventSubTypesOptions.find(option => option.value === data.eventSubTypeId) ?? null
+						}
+						styles={{
+							container: styles => ({
+								...styles,
+								// height: '44px',
+								marginTop: '-2px',
+							}),
+							control: styles => ({
+								...styles,
+								// height: '44px',
+								borderColor: themeMode === 'dark' ? '#363843' : '#dbdfe9',
+								backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+								color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+							}),
+							menu: styles => ({
+								...styles,
+								backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+								color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+							}),
+							input: styles => ({
+								...styles,
+								color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+							}),
+						}}
+						components={{
+							IndicatorSeparator: () => null,
+							Menu: () => null,
+							DownChevron: () => null,
+							DropdownIndicator: () => null,
+							Placeholder: props => (
+								<components.Placeholder {...props} className="cursor-pointer fs-7 fw-normal">
+									ไม่พบข้อมูล
 								</components.Placeholder>
 							),
 							NoOptionsMessage: props => (
@@ -125,7 +189,7 @@ const EventDetailDefaultView: React.FC = () => {
 						inputType="plain"
 						label="ชื่อเหตุการณ์"
 						additionalClassName="form-control-sm"
-						value={data.eventTitle}
+						value={data?.title ?? ''}
 					/>
 				</div>
 
@@ -143,7 +207,7 @@ const EventDetailDefaultView: React.FC = () => {
 					<hr />
 				</div>
 
-				{/* Danger Level */}
+				{/* Event Danger Level */}
 				<div className="col-12">
 					<label className={`form-label d-flex flex-row`} data-testid="form-input-label-component">
 						<div className="d-flex flex-column">
@@ -151,11 +215,51 @@ const EventDetailDefaultView: React.FC = () => {
 						</div>
 					</label>
 					<Select
-						placeholder="เลือกระดับความรุนแรงเหตุการณ์"
+						placeholder="ไม่พบข้อมูล"
 						noOptionsMessage={() => 'ไม่พบข้อมูล'}
 						className="w-100 shadow-sm"
+						options={eventDangerLevelOptions}
+						value={
+							eventDangerLevelOptions.find(option => option.value === data.dangerLevel) ?? null
+						}
+						styles={{
+							container: styles => ({
+								...styles,
+								// height: '44px',
+								marginTop: '-2px',
+							}),
+							control: styles => ({
+								...styles,
+								// height: '44px',
+								borderColor: themeMode === 'dark' ? '#363843' : '#dbdfe9',
+								backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+								color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+							}),
+							menu: styles => ({
+								...styles,
+								backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+								color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+							}),
+							input: styles => ({
+								...styles,
+								color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+							}),
+						}}
 						components={{
 							IndicatorSeparator: () => null,
+							Menu: () => null,
+							DownChevron: () => null,
+							DropdownIndicator: () => null,
+							Placeholder: props => (
+								<components.Placeholder {...props} className="cursor-pointer fs-7 fw-normal">
+									ไม่พบข้อมูล
+								</components.Placeholder>
+							),
+							NoOptionsMessage: props => (
+								<components.NoOptionsMessage {...props} className="cursor-pointer fs-7 fw-normal">
+									ไม่พบข้อมูล
+								</components.NoOptionsMessage>
+							),
 						}}
 					/>
 				</div>
@@ -180,14 +284,8 @@ const EventDetailDefaultView: React.FC = () => {
 							ClearIndicator: () => null,
 							CrossIcon: () => null,
 						}}
-						options={(data?.pollution ?? []).map((d: any) => ({
-							label: d.title,
-							value: d.title,
-						}))}
-						value={(data?.pollution ?? []).map((d: any) => ({
-							label: d.title,
-							value: d.title,
-						}))}
+						options={pollution}
+						value={pollution}
 					/>
 				</div>
 			</div>

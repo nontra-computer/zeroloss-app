@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import moment from 'moment'
 import 'moment/locale/th'
 
-const NewsHorizontal: React.FC<NewsHorizontalProps> = () => {
+const NewsHorizontal: React.FC<NewsHorizontalProps> = ({ date, img, detail }) => {
 	const { mode } = useThemeMode()
 	let themeMode = ''
 	if (mode === 'system') {
@@ -26,9 +26,14 @@ const NewsHorizontal: React.FC<NewsHorizontalProps> = () => {
 					<div className="row h-100px w-100 gx-0">
 						<div className="col-4">
 							<img
-								src="/media/examples/incident-1.jpg"
+								src={img ?? '/media/icons/zeroloss/default-placeholder.png'}
+								onError={e => {
+									e.currentTarget.src = '/media/icons/zeroloss/default-placeholder.png'
+									e.currentTarget.onerror = null
+								}}
 								alt="Incident 1"
-								className="w-100 h-100 object-fit-cover"
+								className="object-fit-contain"
+								style={{ maxWidth: '100%' }}
 							/>
 						</div>
 						<div className="col-8">
@@ -39,27 +44,28 @@ const NewsHorizontal: React.FC<NewsHorizontalProps> = () => {
 											'text-zeroloss-base-white': themeMode === 'dark',
 											'text-zeroloss-grey-500': themeMode === 'light',
 										})}>
-										{moment().format('DD/MM/YYYY HH:mm')}
+										{moment(date).tz('Asia/Bangkok').format('DD/MM/YYYY HH:mm')}
 									</div>
 									<button className="btn btn-sm btn-icon btn-active-light">
 										<KTSVG path="media/icons/zeroloss/x-close.svg" />
 									</button>
 								</div>
-								<h6
+								{/* <h6
 									className={clsx('new-title mt-2 fw-bold fs-4', {
 										'text-zeroloss-base-white': themeMode === 'dark',
 										'text-zeroloss-grey-900': themeMode === 'light',
 									})}>
 									ด่วน! เหตุเพลิงไหม้โรงงานพลาสติก จังหวัดนครปฐม
-								</h6>
+								</h6> */}
 								<p
 									className={clsx('new-description ', {
 										'text-zeroloss-base-white': themeMode === 'dark',
 										'text-zeroloss-grey-900': themeMode === 'light',
 									})}>
-									ระทึก 'ไฟไหม้' โรงงานผลิตกล่องโฟม ภายในนิคมอุต สาหกรรมโรจนะ ขณะนี้ยังไม่สามารถคุม
-									<span className="ms-1 text-underline cursor-pointer">เพิ่มเติม</span>
+									{detail}
 								</p>
+
+								<span className="ms-1 text-underline cursor-pointer d-block">เพิ่มเติม</span>
 							</div>
 						</div>
 					</div>

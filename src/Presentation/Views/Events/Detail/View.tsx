@@ -4,6 +4,7 @@ import Lightbox from 'yet-another-react-lightbox'
 
 import FeatureNews from '@/Presentation/Components/News/FeatureNews'
 import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
+import EventMessageForm from '../MessageForm/View'
 import EventStepper from '../Components/Stepper'
 
 import EventDetailDefaultView from './DefaultView/View'
@@ -20,13 +21,21 @@ const EventDetailView: React.FC = () => {
 		timeStr,
 		themeMode,
 		data,
+		pictureCover,
+		galleryImages,
+		locationAddress,
+		eventSubTypes,
 		steppers,
+		eventMessages,
 		isOpenLightBox,
 		imageIdx,
+		isEventMessageMax,
 		onOpenLightBox,
 		onCloseLightBox,
 		onChangeViewType,
 		onViewInDetail,
+		onOpenEventMessageForm,
+		loadMoreEventMessage,
 	} = useViewModel()
 
 	return (
@@ -47,12 +56,14 @@ const EventDetailView: React.FC = () => {
 				Event Dashboard
 			</PageTitle>
 
+			<EventMessageForm />
+
 			<Lightbox
 				index={imageIdx}
 				open={isOpenLightBox}
 				close={onCloseLightBox}
-				slides={(data?.additionalPictures ?? []).map((p, idx) => ({
-					src: p.path,
+				slides={galleryImages.map((p: any, idx: number) => ({
+					src: p,
 					caption: `Event Picture ${idx + 1}`,
 				}))}
 				styles={{ container: { backgroundColor: 'rgba(0, 0, 0, .6)' } }}
@@ -75,8 +86,11 @@ const EventDetailView: React.FC = () => {
 
 						{/* Header */}
 						<div>
-							<div className="fs-2x text-zeroloss-base-white fw-bold">ประเภทเหตุการณ์หลัก</div>
-							<p className="text-zeroloss-grey-25 fs-3">ประเภทเหตุการณ์ย่อย</p>
+							<div className="fs-2x text-zeroloss-base-white fw-bold">{data?.title ?? '-'}</div>
+							<p className="text-zeroloss-grey-25 fs-3">
+								{data?.eventTypeTitle} (
+								{eventSubTypes.find(item => item.id === data?.eventSubTypeId)?.name})
+							</p>
 						</div>
 
 						{/* Call to Action */}
@@ -109,7 +123,11 @@ const EventDetailView: React.FC = () => {
 								{/* Feature Picture */}
 								<div className="rounded-3 overflow-hidden h-450px w-50">
 									<img
-										src={data?.featurePicture ?? '/media/icons/zeroloss/default-placeholder.png'}
+										src={pictureCover ?? '/media/icons/zeroloss/default-placeholder.png'}
+										onError={e => {
+											e.currentTarget.src = '/media/icons/zeroloss/default-placeholder.png'
+											e.currentTarget.onerror = null
+										}}
 										alt="Event Feature Picture"
 										className="w-100 h-100 object-fit-cover"
 										style={{ userSelect: 'none', pointerEvents: 'none' }}
@@ -118,7 +136,7 @@ const EventDetailView: React.FC = () => {
 
 								{/* Additional Pictures */}
 								<div className="row w-50 g-5" style={{ height: 'fit-content' }}>
-									{(data?.additionalPictures ?? []).slice(0, 9).map((item, index) => (
+									{galleryImages.slice(0, 9).map((item: any, index: number) => (
 										<div
 											key={`event-additional-picture-${index}`}
 											className="col-4"
@@ -127,7 +145,11 @@ const EventDetailView: React.FC = () => {
 											}}>
 											<div className="h-100px rounded-3 overflow-hidden cursor-pointer hover-filter-brightness transition-300">
 												<img
-													src={item?.path ?? '/media/icons/zeroloss/default-placeholder.png'}
+													src={item ?? '/media/icons/zeroloss/default-placeholder.png'}
+													onError={e => {
+														e.currentTarget.src = '/media/icons/zeroloss/default-placeholder.png'
+														e.currentTarget.onerror = null
+													}}
 													alt="Event Additional Picture"
 													className="w-100 h-100 object-fit-cover"
 													style={{ userSelect: 'none', pointerEvents: 'none' }}
@@ -137,7 +159,7 @@ const EventDetailView: React.FC = () => {
 									))}
 
 									{/* More Pictures */}
-									{(data?.additionalPictures ?? []).length > 9 && (
+									{galleryImages.length > 9 && (
 										<div
 											className="col-4"
 											onClick={() => {
@@ -159,20 +181,22 @@ const EventDetailView: React.FC = () => {
 								<div className="card-body p-5 text-zeroloss-grey-700">
 									<div className="d-flex flex-row align-items-center mb-2">
 										<img src="/media/icons/zeroloss/home-03.svg" alt="Home Icon" />
-										<span className="ms-2 fs-5 fw-semibold">{data?.locationName ?? ''}</span>
+										<span className="ms-2 fs-5 fw-semibold">{data?.locationName ?? '-'}</span>
 									</div>
 									<div className="d-flex flex-row align-items-center mb-2">
 										<img src="/media/icons/zeroloss/marker-pin-01.svg" alt="Marker Pin Icon" />
-										<span className="mx-2 fs-5 fw-semibold">{data?.location ?? ''}</span>
-										<img
-											className="cursor-pointer w-15px h-15px"
-											src="/media/icons/zeroloss/orange-arrow-circle-up-right.svg"
-											alt="Orange Arrow Circle Up Right Icon"
-										/>
+										<span className="mx-2 fs-5 fw-semibold">{locationAddress ?? '-'}</span>
+										{locationAddress && (
+											<img
+												className="cursor-pointer w-15px h-15px"
+												src="/media/icons/zeroloss/orange-arrow-circle-up-right.svg"
+												alt="Orange Arrow Circle Up Right Icon"
+											/>
+										)}
 									</div>
 									<div className="d-flex flex-row align-items-center mb-2">
 										<img src="/media/icons/zeroloss/marker-pin-01.svg" alt="Marker Pin Icon" />
-										<span className="ms-2 fs-5 fw-semibold">รายละเอียดเหตุการณ์</span>
+										<span className="ms-2 fs-5 fw-semibold">{data?.detail}</span>
 									</div>
 									<div className="d-flex flex-row align-items-center mb-2">
 										<div className="w-20px h-20px"></div>
@@ -180,7 +204,9 @@ const EventDetailView: React.FC = () => {
 									</div>
 
 									<div className="d-flex flex-row align-items-center mb-2">
-										<button className="btn btn-muted btn-sm text-zeroloss-error text-decoration-underline">
+										<button
+											className="btn btn-muted btn-sm text-zeroloss-error text-decoration-underline"
+											onClick={onOpenEventMessageForm}>
 											<span>เพิ่มลำดับเหตุการณ์</span>
 											<img
 												className="ms-2"
@@ -255,20 +281,40 @@ const EventDetailView: React.FC = () => {
 												รายงานเหตุการณ์ (เรื่องเล่า รูปภาพ)
 											</div>
 											<div className="event-detail-news-container h-850px overflow-y-scroll ps-0">
-												<div style={{ width: '95%' }} className="mx-auto mb-5">
-													<FeatureNews />
-												</div>
-
-												{[...Array(10)].map((_, index) => (
-													<div
-														key={index}
-														style={{ width: '95%' }}
-														className={clsx('mx-auto', {
-															'mb-5': index !== 9,
-														})}>
-														<NewsHorizontal {..._} />
+												{eventMessages.length === 0 && (
+													<div className="text-center text-zeroloss-grey-500 my-10">
+														ไม่มีข้อมูลรายงานเหตุการณ์
 													</div>
-												))}
+												)}
+
+												{eventMessages.length > 0 && (
+													<React.Fragment>
+														<div style={{ width: '95%' }} className="mx-auto mb-5">
+															<FeatureNews {...eventMessages?.[0]} />
+														</div>
+
+														{eventMessages.slice(1).map((item, index) => (
+															<div
+																key={index}
+																style={{ width: '95%' }}
+																className={clsx('mx-auto', {
+																	'mb-5': index !== 9,
+																})}>
+																<NewsHorizontal {...item} />
+															</div>
+														))}
+
+														{!isEventMessageMax && (
+															<div className="text-center mt-5">
+																<button
+																	className="btn btn-zeroloss-primary btn-sm text-zeroloss-base-white w-100"
+																	onClick={loadMoreEventMessage}>
+																	ดูเพิ่มเติม
+																</button>
+															</div>
+														)}
+													</React.Fragment>
+												)}
 											</div>
 										</div>
 

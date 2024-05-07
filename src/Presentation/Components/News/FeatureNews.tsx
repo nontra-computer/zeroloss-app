@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import moment from 'moment'
 import 'moment/locale/th'
 
-const FeatureNews: React.FC<FeatureNewsProps> = () => {
+const FeatureNews: React.FC<FeatureNewsProps> = ({ date, detail, img }) => {
 	const { mode } = useThemeMode()
 	let themeMode = ''
 	if (mode === 'system') {
@@ -24,9 +24,13 @@ const FeatureNews: React.FC<FeatureNewsProps> = () => {
 				<div className="card-body p-0">
 					<div className="h-150px">
 						<img
-							src="/media/examples/incident-1.jpg"
+							src={img ?? '/media/icons/zeroloss/default-placeholder.png'}
+							onError={e => {
+								e.currentTarget.src = '/media/icons/zeroloss/default-placeholder.png'
+								e.currentTarget.onerror = null
+							}}
 							alt="Incident 1"
-							className="w-100 h-100 object-fit-cover"
+							className="w-100 h-100 object-fit-contain"
 						/>
 					</div>
 
@@ -36,24 +40,24 @@ const FeatureNews: React.FC<FeatureNewsProps> = () => {
 								'text-zeroloss-base-white': themeMode === 'dark',
 								'text-zeroloss-grey-500': themeMode === 'light',
 							})}>
-							{moment().format('DD/MM/YYYY HH:mm')}
+							{moment(date).tz('Asia/Bangkok').format('DD/MM/YYYY HH:mm')}
 						</div>
-						<h6
+						{/* <h6
 							className={clsx('new-title mt-2 fw-bold fs-4', {
 								'text-zeroloss-base-white': themeMode === 'dark',
 								'text-zeroloss-grey-900': themeMode === 'light',
 							})}>
 							ด่วน! เหตุเพลิงไหม้โรงงานพลาสติก จังหวัดนครปฐม
-						</h6>
+						</h6> */}
 						<p
 							className={clsx('new-description ', {
 								'text-zeroloss-base-white': themeMode === 'dark',
 								'text-zeroloss-grey-900': themeMode === 'light',
 							})}>
-							ระทึก 'ไฟไหม้' โรงงานผลิตกล่องโฟม ภายในนิคมอุต สาหกรรมโรจนะ ขณะนี้ยังไม่สามารถคุม
+							{detail}
 						</p>
 
-						<div className="mb-7">
+						{/* <div className="mb-7">
 							<i
 								className={clsx('d-inline-block bi bi-thermometer-high fs-4', {
 									'text-zeroloss-base-white': themeMode === 'dark',
@@ -100,7 +104,7 @@ const FeatureNews: React.FC<FeatureNewsProps> = () => {
 								<span>Pressure : </span>
 								<span> 1024 mBar</span>
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>

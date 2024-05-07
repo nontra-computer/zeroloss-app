@@ -1,3 +1,5 @@
 export interface NewsHorizontalProps {
-	img: string
+	detail: string
+	date: string
+	img: string | null
 }
