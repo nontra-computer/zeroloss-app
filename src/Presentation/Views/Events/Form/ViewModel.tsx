@@ -5,6 +5,7 @@ import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useEventStore, ICreateEvent } from '@/Store/Event'
+import { useEventMediaStore } from '@/Store/EventMedia'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { LocationSelectionContext } from './LocationSelection/Context'
 import moment from 'moment-timezone'
@@ -20,22 +21,37 @@ import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineIma
 import DoubleLine from '@/Presentation/Components/Table/Cells/DoubleLine'
 import clsx from 'clsx'
 import { toast } from 'react-toastify'
+import { EventDangerLevelOptions } from '@/Configuration/EventDangerLevel'
 
 const INITIAL_STATE = {
-	createdAt: moment().toISOString(),
+	id: 0,
+	location: {} as any,
+	calledTime: moment().toISOString(),
 	start: moment().toISOString(),
 	end: moment().toISOString(),
 	eventTypeId: 0,
+	eventType: {
+		id: 0,
+		name: '',
+	},
 	eventSubTypeId: 0,
 	title: '',
 	detail: '',
 	pictureCover: null,
-	additionalPictures: [] as File[],
+	galleries: [] as any[],
+	dangerLevel: 0,
 	latitude: 13.7563,
 	longitude: 100.5018,
+	wastewater: 0,
+	dust: 0,
+	smell: 0,
+	soot: 0,
+	waste: 0,
+	noise: 0,
+	isLocationFromDatabase: false,
 	informerName: '',
-	informerPhone: '',
-	informerLineID: '',
+	informerTel: '',
+	informerLineId: '',
 	informerEmail: '',
 	impactAnnoyAmount: '',
 	impactBreathTakingAmount: '',
@@ -127,15 +143,35 @@ const ViewModel = () => {
 		return intl.formatMessage({ id: 'ZEROLOSS.HEADER.CURRENT_TIME' }) + ' ' + time
 	}, [currentTime, intl, selectedLang])
 	const { mode } = useThemeMode()
-	const { eventTypes, eventSubTypes, getTypes, getSubTypes, createEvent, clearState } =
-		useEventStore(state => ({
-			eventTypes: state.types,
-			eventSubTypes: state.subTypes,
-			getTypes: state.getTypes,
-			getSubTypes: state.getSubTypes,
-			createEvent: state.create,
-			clearState: state.clearState,
-		}))
+	const {
+		selected,
+		eventTypes,
+		eventSubTypes,
+		pollutionTypes,
+		getPollution,
+		getOne,
+		getTypes,
+		getSubTypes,
+		createEvent,
+		getMediaPath,
+		clearState,
+	} = useEventStore(state => ({
+		selected: state.selected,
+		pollutionTypes: state.pollutions,
+		eventTypes: state.types,
+		eventSubTypes: state.subTypes,
+		getOne: state.getOne,
+		getTypes: state.getTypes,
+		getPollution: state.getPollution,
+		getSubTypes: state.getSubTypes,
+		createEvent: state.create,
+		getMediaPath: state.getEventMediaPath,
+		clearState: state.clearState,
+	}))
+	const { createEventMedia, removeEventMedia } = useEventMediaStore(state => ({
+		createEventMedia: state.create,
+		removeEventMedia: state.remove,
+	}))
 	const {
 		setOpen: setOpenSelectLocation,
 		changeConfirm,
@@ -151,6 +187,12 @@ const ViewModel = () => {
 	const [hasChanged, setHasChanged] = useState(false)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [formState, setFormState] = useState(INITIAL_STATE)
+	const [pollutionState, setPollutionState] = useState<
+		{
+			label: string
+			value: boolean
+		}[]
+	>([])
 
 	const [isOpenLightBox, setIsOpenLightBox] = useState(false)
 	const [imageIdx, setImageIdx] = useState(0)
@@ -241,6 +283,39 @@ const ViewModel = () => {
 			}))
 	}, [formState.eventTypeId, eventSubTypes])
 
+	const pollutionOptions = useMemo(() => {
+		let pollutionData: {
+			[key: string]: {
+				label: string
+				value: any
+			}
+		} = {}
+
+		if (Object.keys(pollutionTypes).length !== 0) {
+			pollutionData = Object.keys(pollutionTypes).reduce(
+				(
+					acc: {
+						[key: string]: {
+							label: string
+							value: any
+						}
+					},
+					curr
+				) => {
+					acc[curr] = {
+						label: pollutionTypes[curr],
+						value: curr,
+					}
+
+					return acc
+				},
+				{}
+			)
+		}
+
+		return Object.entries(pollutionData).map(([, value]) => value)
+	}, [pollutionTypes])
+
 	const impactWaterResourceOptions = useMemo(() => {
 		return [
 			{
@@ -279,16 +354,92 @@ const ViewModel = () => {
 	}, [])
 
 	const steppers = useMemo(() => {
-		return STEPPERS.map((step, idx) => ({
-			...step,
-			status: isCreate && idx === 0 ? 'done' : 'pending',
-			description:
-				idx === 0 && isCreate
-					? moment().locale('th').add(543, 'years').format('DD/MM/YYYY HH:mm')
-					: '-',
-		}))
+		if (isCreate) {
+			return STEPPERS.map((step, idx) => ({
+				...step,
+				status: isCreate && idx === 0 ? 'done' : 'pending',
+				description:
+					idx === 0 && isCreate
+						? moment().locale('th').add(543, 'years').format('DD/MM/YYYY HH:mm')
+						: '-',
+			}))
+		} else {
+			return STEPPERS.map(step => {
+				let status = 'pending'
+				let description = '-'
+
+				if (step.id === 1) {
+					status = 'done'
+					description = selected?.calledTime
+						? moment(selected.calledTime).tz('Asia/Bangkok').format('DD/MM/YYYY HH:mm')
+						: '-'
+				}
+				if (step.id === 2) {
+					if (selected?.isApproved === true || selected?.isApproved === 1) {
+						status = 'done'
+						description = `${selected?.approvedTime ? moment(selected.approvedTime).tz('Asia/Bangkok').format('DD/MM/YYYY HH:mm') : '-'} ผลการตรวจสอบ: ${selected?.isTrue ? 'เป็นจริง' : 'ไม่เป็นจริง'}`
+					}
+				}
+				if (step.id === 3) {
+					if (
+						(selected?.isApproved === true || selected?.isApproved === 1) &&
+						selected?.isTrue === true
+					) {
+						status = 'done'
+						description = ''
+					}
+				}
+				if (step.id === 4) {
+					if (selected?.state === 4) {
+						status = 'done'
+						description = `${selected?.end ? moment(selected.end).tz('Asia/Bangkok').format('DD/MM/YYYY HH:mm') : '-'} สถานะ: สิ้นสุดเหตุการณ์`
+					}
+				}
+
+				return {
+					...step,
+					status: status,
+					description: description,
+				}
+			})
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isCreate])
+	}, [isCreate, selected])
+
+	const eventCoordinators = useMemo(() => {
+		if (formState.isLocationFromDatabase) {
+			return {
+				latitude: formState?.location?.latitude,
+				longitude: formState?.location?.longitude,
+			}
+		} else {
+			return {
+				latitude: formState.latitude,
+				longitude: formState.longitude,
+			}
+		}
+	}, [formState])
+
+	const eventPictureCover = useMemo(() => {
+		const galleries = selected?.galleries || []
+		const finded = galleries.find((g: any) => g.isPictureCover === true)
+
+		return finded ? getMediaPath(finded.picturePath) : null
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [selected])
+	const eventPictures = useMemo(() => {
+		const galleries = selected?.galleries || []
+
+		return galleries
+			.filter((g: any) => g.isPictureCover !== true)
+			.map((g: any) => {
+				return {
+					...g,
+					picturePath: getMediaPath(g.picturePath),
+				}
+			})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [selected])
 
 	const isAdmin = useMemo(() => {
 		return true
@@ -332,11 +483,68 @@ const ViewModel = () => {
 	const fetchData = () => {
 		getTypes()
 		getSubTypes()
+		getPollution().then(({ data: dataPollution }) => {
+			if (eventId !== undefined && location.pathname.includes('edit')) {
+				getOne(eventId).then(({ success, data }) => {
+					if (!success) {
+						toast.error(`เกิดข้อผิดพลาดในการดึงข้อมูล : ${data}`)
+					} else {
+						const galleries = (data?.galleries || []).map((g: any) => {
+							return {
+								...g,
+								picturePath: getMediaPath(g.picturePath),
+								isPictureCover: g.isPictureCover === true || g.isPictureCover === 1,
+							}
+						})
+						const pictureCover = galleries.find((g: any) => g.isPictureCover === true)?.picturePath
+
+						setFormState({
+							...data,
+							galleries,
+							pictureCover,
+						})
+
+						let pollutionData: {
+							[key: string]: {
+								label: string
+								value: any
+							}
+						} = {}
+
+						if (Object.keys(dataPollution).length !== 0) {
+							pollutionData = Object.keys(dataPollution).reduce(
+								(
+									acc: {
+										[key: string]: {
+											label: string
+											value: any
+										}
+									},
+									curr
+								) => {
+									if (data[curr] === true || data[curr] === 1)
+										acc[curr] = {
+											label: dataPollution[curr],
+											value: curr,
+										}
+
+									return acc
+								},
+								{}
+							)
+
+							const pollutionDataOptions = Object.entries(pollutionData).map(([, value]) => value)
+
+							setPollutionState(pollutionDataOptions)
+						}
+					}
+				})
+			}
+		})
 	}
 
 	const onChangeFormState = (key: string, value: any) => {
-		console.log(key, value)
-		if (key === 'start' || key === 'createdAt') {
+		if (key === 'start' || key === 'end') {
 			setFormState(prevState => ({
 				...prevState,
 				[key]: moment(value).toISOString(),
@@ -351,6 +559,11 @@ const ViewModel = () => {
 		setHasChanged(true)
 	}
 
+	const onChangePollutionState = (input: any[]) => {
+		setPollutionState(input)
+		setHasChanged(true)
+	}
+
 	const onOpenLightBox = (imgIdx: number) => {
 		setImageIdx(imgIdx)
 		setIsOpenLightBox(true)
@@ -362,29 +575,60 @@ const ViewModel = () => {
 	}
 
 	const onAddAdditionalPicture = (file: File) => {
-		setFormState(prevState => ({
-			...prevState,
-			additionalPictures: [...prevState.additionalPictures, file],
-		}))
+		// setFormState(prevState => ({
+		// 	...prevState,
+		// 	galleries: [
+		// 		...prevState.galleries,
+		// 		{
+		// 			picturePath: file,
+		// 			isPictureCover: false,
+		// 			isCreate: true,
+		// 		},
+		// 	],
+		// }))
+
+		createEventMedia(eventId ?? '', {
+			pictureCovers: file,
+		}).then(({ success, data }) => {
+			if (!success) {
+				toast.error(`เกิดข้อผิดพลาดในการเพิ่มรูปภาพ : ${data}`)
+			} else {
+				toast.success('เพิ่มรูปภาพสำเร็จ')
+				fetchData()
+			}
+		})
 	}
 
 	const onRemoveAdditionalPicture = (index: number) => {
 		setFormState(prevState => {
-			const newPictures = [...prevState.additionalPictures]
+			const newPictures = [...prevState.galleries]
 			newPictures.splice(index, 1)
 			return {
 				...prevState,
-				additionalPictures: newPictures,
+				galleries: newPictures,
 			}
 		})
 	}
 
 	const onDownloadAdditionalPicture = (index: number) => {
-		const url = URL.createObjectURL(formState.additionalPictures[index])
-		const fileType = formState.additionalPictures[index]?.type.split('/')[1]
+		const isFileTypeIncludedImage = (formState.galleries[index]?.picturePath?.type ?? '').includes(
+			'image'
+		)
+
+		const url = isFileTypeIncludedImage
+			? URL.createObjectURL(formState.galleries[index]?.picturePath)
+			: formState.galleries[index]?.picturePath
+		let fileType = ''
+		if (isFileTypeIncludedImage) {
+			fileType = formState.galleries[index]?.type.split('/')[1]
+		} else {
+			fileType = formState.galleries[index]?.picturePath?.split('.')[1]
+		}
 
 		const a = document.createElement('a')
 		a.href = url
+		a.target = '_blank'
+		a.rel = 'noopener noreferrer'
 		a.download = `download.${fileType}`
 		a.click()
 	}
@@ -521,7 +765,7 @@ const ViewModel = () => {
 			Header: '',
 			accessor: 'action',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: ({ row }: any) => (
+			Cell: () => (
 				<div className="d-flex flex-row justify-content-center align-items-center">
 					<button
 						className="btn btn-sm btn-icon btn-muted btn-active-light"
@@ -578,9 +822,14 @@ const ViewModel = () => {
 		reportingData: MOCK_DATA_REPORTING,
 		eventTypesOptions,
 		eventSubTypesOptions,
+		eventDangerLevelOptions: EventDangerLevelOptions,
+		eventCoordinators,
 		steppers,
 		formState,
+		pollutionOptions,
+		pollutionState,
 		onChangeFormState,
+		onChangePollutionState,
 		onOpenLocationSelection,
 		onChangeEditTab,
 		onAddAdditionalPicture,
@@ -593,6 +842,8 @@ const ViewModel = () => {
 		impactGroundResourceOptions,
 		impactAnimalOptions,
 		onSubmit,
+		eventPictureCover,
+		eventPictures,
 	}
 }
 

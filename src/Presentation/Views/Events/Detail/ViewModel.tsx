@@ -129,7 +129,7 @@ const ViewModel = () => {
 	const locationAddress = useMemo(() => {
 		if (data?.isLocationFromDatabase !== undefined) {
 			if (data.isLocationFromDatabase) {
-				return data.location?.address ?? null
+				return data.location?.nameTh ?? null
 			} else {
 				const finded = locationData.find((l: any) => l.id === data.locationId)
 				return finded?.nameTh ?? null
@@ -178,7 +178,7 @@ const ViewModel = () => {
 					toast.error(`ดึงข้อมูลรายงานเหตุการณ์ไม่สำเร็จ : ${data}`)
 				}
 			})
-			getLocation()
+			if (!location.pathname.includes('map')) getLocation()
 		}
 	}
 
@@ -214,7 +214,7 @@ const ViewModel = () => {
 	useEffect(() => {
 		fetchData()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [eventId])
+	}, [eventId, location.pathname])
 
 	useEffect(() => {
 		return () => {

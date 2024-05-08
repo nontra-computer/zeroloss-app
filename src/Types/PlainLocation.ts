@@ -3,6 +3,7 @@ export interface PlainLocationProps {
 	nameTh: string
 	nameEn: string
 	locationTypeId: number
+	locationType?: string
 	latitude: number
 	longitude: number
 	popup?: React.FunctionComponent<any>

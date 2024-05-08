@@ -5,25 +5,16 @@ import { EventDangerLevelOptions } from '@/Configuration/EventDangerLevel'
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
-	const {
-		data,
-		eventTypes,
-		eventSubTypes,
-		pollutionTypes,
-		getTypes,
-		getSubTypes,
-		getPollution,
-		clearState,
-	} = useEventStore(state => ({
-		data: state.selected,
-		eventTypes: state.types,
-		eventSubTypes: state.subTypes,
-		pollutionTypes: state.pollutions,
-		getTypes: state.getTypes,
-		getSubTypes: state.getSubTypes,
-		getPollution: state.getPollution,
-		clearState: state.clearState,
-	}))
+	const { data, eventTypes, eventSubTypes, pollutionTypes, getTypes, getSubTypes, getPollution } =
+		useEventStore(state => ({
+			data: state.selected,
+			eventTypes: state.types,
+			eventSubTypes: state.subTypes,
+			pollutionTypes: state.pollutions,
+			getTypes: state.getTypes,
+			getSubTypes: state.getSubTypes,
+			getPollution: state.getPollution,
+		}))
 
 	const eventTypesOptions: {
 		label: string
@@ -93,13 +84,6 @@ const ViewModel = () => {
 
 	useEffect(() => {
 		fetchData()
-		// eslint-disable-next-line
-	}, [])
-
-	useEffect(() => {
-		return () => {
-			clearState()
-		}
 		// eslint-disable-next-line
 	}, [])
 

@@ -1,16 +1,10 @@
-import React, { createElement, useEffect, useRef } from 'react'
+import React, { createElement, useRef } from 'react'
 import { Circle, Polygon } from 'react-leaflet'
 import { Popup } from 'react-leaflet'
 import { LocationShapeProps } from '@/Types/LocationPolygon'
 
 const LocationShape: React.FC<LocationShapeProps> = ({ type, position, popup, radius }) => {
 	const markerRef = useRef<any>(null)
-
-	useEffect(() => {
-		if (markerRef.current) {
-			console.log('markerRef', markerRef.current)
-		}
-	}, [])
 
 	return (
 		<React.Fragment>

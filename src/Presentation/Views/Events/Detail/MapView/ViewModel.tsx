@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useEventStore } from '@/Store/Event'
 import { useLocationStore } from '@/Store/Location'
 import { useLocationTypeStore } from '@/Store/LocationType'
+import { useMeasurementStore } from '@/Store/Measurement'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 
 const MOCK_DATA = {
@@ -23,7 +24,7 @@ const INITIAL_FILTER_STATE = {
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
-	const { eventTypes, getTypes, clearState } = useEventStore(state => ({
+	const { eventTypes, getTypes } = useEventStore(state => ({
 		eventTypes: state.types,
 		getTypes: state.getTypes,
 		clearState: state.clearState,
@@ -36,6 +37,10 @@ const ViewModel = () => {
 	const { locationTypes, getAllLocationTypes } = useLocationTypeStore(state => ({
 		locationTypes: state.data,
 		getAllLocationTypes: state.getAll,
+	}))
+	const { measurements, getAllMeasurements } = useMeasurementStore(state => ({
+		measurements: state.data,
+		getAllMeasurements: state.getAll,
 	}))
 	const [filter, setFilter] = useState(INITIAL_FILTER_STATE)
 
@@ -82,10 +87,11 @@ const ViewModel = () => {
 				nameTh: l.nameTh,
 				nameEn: l.nameEn,
 				locationTypeId: l.locationTypeId,
+				locationType: locationTypes.find(t => t.id === l.locationTypeId)?.name,
 				latitude: l?.latitude ? parseFloat(l.latitude) : 0,
 				longitude: l?.longitude ? parseFloat(l.longitude) : 0,
 			})),
-		[locations]
+		[locations, locationTypes]
 	)
 
 	let themeMode = ''
@@ -96,6 +102,7 @@ const ViewModel = () => {
 	}
 
 	const fetchData = () => {
+		getAllMeasurements()
 		getTypes()
 		getAllLocationTypes()
 	}
@@ -108,7 +115,12 @@ const ViewModel = () => {
 	}
 
 	const confirmFilter = () => {
-		if (filter.locationTypeId) {
+		if (
+			filter.locationTypeId !== null &&
+			filter.locationTypeId !== undefined &&
+			filter.locationTypeId !== '' &&
+			filter.locationTypeId !== 0
+		) {
 			getAllLocations(filter)
 		}
 	}
@@ -126,9 +138,6 @@ const ViewModel = () => {
 	useEffect(() => {
 		setLocations([])
 
-		return () => {
-			clearState()
-		}
 		// eslint-disable-next-line
 	}, [])
 

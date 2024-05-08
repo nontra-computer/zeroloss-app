@@ -40,11 +40,18 @@ const EventFormView: React.FC = () => {
 		isOpenLightBox,
 		eventTypesOptions,
 		eventSubTypesOptions,
+		eventDangerLevelOptions,
+		eventCoordinators,
+		eventPictureCover,
+		eventPictures,
 		steppers,
 		formState,
+		pollutionState,
+		pollutionOptions,
 		reportingData,
 		REPORTING_TABLE_CONFIGS,
 		onChangeFormState,
+		onChangePollutionState,
 		onOpenLocationSelection,
 		onChangeEditTab,
 		onAddAdditionalPicture,
@@ -135,7 +142,7 @@ const EventFormView: React.FC = () => {
 					</div>
 				</div>
 
-				<div className="col-12 p-10">
+				<div className="col-12 px-10 pt-10" style={{ paddingBottom: '12rem' }}>
 					<div className="row">
 						<div className="d-none d-lg-block col-12 col-lg-3">
 							<div className="mb-10">
@@ -191,10 +198,10 @@ const EventFormView: React.FC = () => {
 															timeFormat="HH:mm"
 															dateFormat="dd/MM/yyyy HH:mm"
 															selected={
-																formState.createdAt ? moment(formState.createdAt).toDate() : null
+																formState.calledTime ? moment(formState.calledTime).toDate() : null
 															}
 															onChange={date => {
-																onChangeFormState('createdAt', date)
+																onChangeFormState('calledTime', date)
 															}}
 														/>
 													</div>
@@ -242,6 +249,7 @@ const EventFormView: React.FC = () => {
 																className="form-control form-control-sm"
 																timeFormat="HH:mm"
 																dateFormat="dd/MM/yyyy HH:mm"
+																minDate={formState.start ? moment(formState.start).toDate() : null}
 																selected={formState.end ? moment(formState.end).toDate() : null}
 																onChange={date => {
 																	onChangeFormState('end', date)
@@ -466,6 +474,13 @@ const EventFormView: React.FC = () => {
 															<Select
 																placeholder="เลือกระดับความรุนแรง"
 																noOptionsMessage={() => 'ไม่พบข้อมูล'}
+																options={eventDangerLevelOptions}
+																value={
+																	eventDangerLevelOptions.find(
+																		o => o.value === formState.dangerLevel
+																	) ?? null
+																}
+																onChange={option => onChangeFormState('dangerLevel', option?.value)}
 																className="w-100 shadow-sm"
 																styles={{
 																	container: styles => ({
@@ -525,29 +540,15 @@ const EventFormView: React.FC = () => {
 															</label>
 															<Select
 																isMulti
+																isClearable
+																isSearchable
 																placeholder="เลือกระดับความรุนแรง"
 																noOptionsMessage={() => 'ไม่พบข้อมูล'}
-																className="w-100 shadow-sm pointer-events-none"
-																value={[
-																	{
-																		label: 'น้ำเสีย',
-																		value: 1,
-																	},
-																	{
-																		label: 'กลิ่นเหม็น',
-																		value: 2,
-																	},
-																]}
-																options={[
-																	{
-																		label: 'น้ำเสีย',
-																		value: 1,
-																	},
-																	{
-																		label: 'กลิ่นเหม็น',
-																		value: 2,
-																	},
-																]}
+																className="w-100 shadow-sm"
+																value={pollutionState}
+																options={pollutionOptions}
+																// @ts-ignore
+																onChange={val => onChangePollutionState(val)}
 																styles={{
 																	container: styles => ({
 																		...styles,
@@ -573,10 +574,6 @@ const EventFormView: React.FC = () => {
 																}}
 																components={{
 																	IndicatorSeparator: () => null,
-																	Menu: () => null,
-																	DownChevron: () => null,
-																	ClearIndicator: () => null,
-																	DropdownIndicator: () => null,
 																	Placeholder: props => (
 																		<components.Placeholder
 																			{...props}
@@ -688,70 +685,15 @@ const EventFormView: React.FC = () => {
 												</React.Fragment>
 											)}
 
-											{(isCreate ? false : isEditLocation) && (
+											{(isCreate ? false : isEditLocation && formState.id !== 0) && (
 												<React.Fragment>
-													<div className="col-12 col-lg-8">
-														<label
-															className={`form-label d-flex flex-row`}
-															data-testid="form-input-label-component">
-															<div className="d-flex flex-column">
-																<span>ค้นหาจากฐานข้อมูล</span>
-															</div>
-														</label>
-														<Select
-															className="w-100 shadow-sm"
-															placeholder="ค้นหาจากฐานข้อมูล"
-															noOptionsMessage={() => 'ไม่พบข้อมูล'}
-															styles={{
-																container: styles => ({
-																	...styles,
-																	// height: '44px',
-																	marginTop: '-2px',
-																}),
-																control: styles => ({
-																	...styles,
-																	// height: '44px',
-																	borderColor: themeMode === 'dark' ? '#363843' : '#dbdfe9',
-																	backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
-																	color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
-																}),
-																menu: styles => ({
-																	...styles,
-																	backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
-																	color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
-																}),
-																input: styles => ({
-																	...styles,
-																	color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
-																}),
-															}}
-															components={{
-																IndicatorSeparator: () => null,
-																Placeholder: props => (
-																	<components.Placeholder
-																		{...props}
-																		className="cursor-pointer fs-7 fw-normal">
-																		ค้นหาจากฐานข้อมูล
-																	</components.Placeholder>
-																),
-																NoOptionsMessage: props => (
-																	<components.NoOptionsMessage
-																		{...props}
-																		className="cursor-pointer fs-7 fw-normal">
-																		ไม่พบข้อมูล
-																	</components.NoOptionsMessage>
-																),
-															}}
-														/>
-													</div>
-
 													<div className="col-12">
 														<div className="card h-500px overflow-hidden">
 															<div className="card-body p-0">
 																<MapContainer
 																	center={{
-																		lat: formState.latitude,
-																		lng: formState.longitude,
+																		lat: eventCoordinators.latitude,
+																		lng: eventCoordinators.longitude,
 																	}}
 																	zoom={13}>
 																	<TileLayer
@@ -760,18 +702,19 @@ const EventFormView: React.FC = () => {
 																	/>
 
 																	<LocationWithStatus
-																		title="เหตุการณ์"
-																		detail="รายละเอียดเหตุการณ์"
+																		title={formState?.title ?? ''}
+																		detail={formState?.detail ?? ''}
+																		img={
+																			eventPictureCover ??
+																			'/media/icons/zeroloss/default-placeholder.png'
+																		}
 																		type="error"
 																		position={{
-																			lat: formState.latitude,
-																			lng: formState.longitude,
+																			lat: eventCoordinators.latitude,
+																			lng: eventCoordinators.longitude,
 																		}}
 																		popup={IncidentPopup}
-																		eventType={{
-																			id: 1,
-																			name: 'Accident',
-																		}}
+																		eventType={formState?.eventType ?? undefined}
 																	/>
 																</MapContainer>
 															</div>
@@ -793,12 +736,12 @@ const EventFormView: React.FC = () => {
 													</div>
 													<div className="col-12 col-lg-8">
 														<FormGenerator
-															formKey="informerPhone"
+															formKey="informerTel"
 															inputType="plain"
 															label="เบอร์โทรศัพท์ผู้แจ้ง"
 															additionalClassName="form-control-sm"
-															value={formState.informerPhone}
-															onChange={e => onChangeFormState('informerPhone', e.target.value)}
+															value={formState.informerTel}
+															onChange={e => onChangeFormState('informerTel', e.target.value)}
 															markInput
 															mark="999-999-9999"
 															markChar={null}
@@ -806,12 +749,12 @@ const EventFormView: React.FC = () => {
 													</div>
 													<div className="col-12 col-lg-8">
 														<FormGenerator
-															formKey="informerLineID"
+															formKey="informerLineId"
 															inputType="plain"
 															label="ไอดีไลน์ผู้แจ้ง"
 															additionalClassName="form-control-sm"
-															value={formState.informerLineID}
-															onChange={e => onChangeFormState('informerLineID', e.target.value)}
+															value={formState.informerLineId}
+															onChange={e => onChangeFormState('informerLineId', e.target.value)}
 														/>
 													</div>
 													<div className="col-12 col-lg-8">
@@ -832,8 +775,8 @@ const EventFormView: React.FC = () => {
 														index={imageIdx}
 														open={isOpenLightBox}
 														close={onCloseLightBox}
-														slides={(formState?.additionalPictures ?? []).map((p, idx) => ({
-															src: typeof p !== 'string' ? URL.createObjectURL(p as any) : p,
+														slides={eventPictures.map((p: any, idx: number) => ({
+															src: p.picturePath,
 															caption: `Event Picture ${idx + 1}`,
 														}))}
 														styles={{ container: { backgroundColor: 'rgba(0, 0, 0, .6)' } }}
@@ -873,21 +816,17 @@ const EventFormView: React.FC = () => {
 															</div>
 														</label>
 														<div className="row g-10 mb-10">
-															{formState.additionalPictures.length === 0 && (
+															{eventPictures.length === 0 && (
 																<div className="col-12 text-center fw-bold text-zeroloss-grey-700 my-10">
 																	ไม่มีรูปภาพ
 																</div>
 															)}
 
-															{formState.additionalPictures.map((image, index) => (
+															{eventPictures.map((image: any, index: number) => (
 																<div key={index} className="col-6 col-lg-3">
 																	<div className="position-relative h-300px cursor-pointer shadow-lg">
 																		<img
-																			src={
-																				typeof image !== 'string'
-																					? URL.createObjectURL(image as any)
-																					: image
-																			}
+																			src={image.picturePath}
 																			className="w-100 rounded object-fit-cover h-100 hover-filter-brightness transition-300"
 																			alt="Additional Picture"
 																			onClick={() => onOpenLightBox(index)}
@@ -916,7 +855,7 @@ const EventFormView: React.FC = () => {
 														</div>
 
 														<FormGenerator
-															formKey="additionalPictures"
+															formKey="galleries"
 															inputType="drag-and-drop"
 															multiple={false}
 															accept="image/*"

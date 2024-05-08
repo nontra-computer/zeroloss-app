@@ -6,6 +6,7 @@ import PlainLocation from '@/Presentation/Components/LeafletMap/PlainLocation'
 import LocationPolygon from '@/Presentation/Components/LeafletMap/LocationPolygon'
 import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
 import InfoBoard from '@/Presentation/Components/InfoBoard'
+import LocationPopup from '../Components/LocationPopup'
 
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
@@ -62,7 +63,7 @@ const EventDetailMapView: React.FC = () => {
 							</button>
 						</div>
 					</div>
-					<div className="card-body p-0 position-relative">
+					<div className="card-body p-0 position-relative event-detail-map-container">
 						<InfoBoard data={eventTypesOptions} />
 
 						<MapContainer
@@ -82,6 +83,7 @@ const EventDetailMapView: React.FC = () => {
 									{...l}
 									latitude={l?.latitude ?? 0}
 									longitude={l?.longitude ?? 0}
+									popup={LocationPopup}
 								/>
 							))}
 

@@ -16,7 +16,7 @@ export const useEventMediaStore = create<EventMediaStore>(() => ({
 		})
 
 		return axios
-			.post(`${API_SLUG.replace(':eventId', eventId)}`, data)
+			.post(`${API_SLUG.replace(':eventId', eventId)}`, formData)
 			.then(response => {
 				return {
 					data: response.data,

@@ -8,6 +8,7 @@ const PlainLocation: React.FC<PlainLocationProps> = ({
 	nameTh,
 	nameEn,
 	locationTypeId,
+	locationType,
 	latitude,
 	longitude,
 	popup,
@@ -40,6 +41,7 @@ const PlainLocation: React.FC<PlainLocationProps> = ({
 						nameTh,
 						nameEn,
 						locationTypeId,
+						locationType,
 					})}
 				</Popup>
 			)}
