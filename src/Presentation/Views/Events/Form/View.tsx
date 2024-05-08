@@ -16,7 +16,7 @@ import { ClientSideTable } from '@/Presentation/Components/Table'
 import EventMessageForm from '../MessageForm/View'
 
 import Lightbox from 'yet-another-react-lightbox'
- 
+
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
 import moment from 'moment'
@@ -86,6 +86,7 @@ const EventFormView: React.FC = () => {
 			</PageTitle>
 
 			<LocationSelection />
+			<EventMessageForm />
 
 			<div className="row">
 				<div className="col-12 px-0">
@@ -549,6 +550,7 @@ const EventFormView: React.FC = () => {
 																className="w-100 shadow-sm"
 																value={pollutionState}
 																options={pollutionOptions}
+																// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 																// @ts-ignore
 																onChange={val => onChangePollutionState(val)}
 																styles={{
@@ -854,7 +856,7 @@ const EventFormView: React.FC = () => {
 																	</div>
 																	{image.createdAt && (
 																		<div className="mt-3 text-zeroloss-grey-500 fw-bold text-center">
-																			วันและเวลาที่อัพโหลด: ​{' '}
+																			วันและเวลาที่อัพโหลด:{' '}
 																			{moment(image.createdAt)
 																				.tz('Asia/Bangkok')
 																				.format('DD/MM/YYYY HH:mm')}
@@ -1048,12 +1050,10 @@ const EventFormView: React.FC = () => {
 														options={impactWaterResourceOptions}
 														value={
 															impactWaterResourceOptions.find(
-																option => option.value === formState.impactWaterResource
+																option => option.value === formState.isWasteWater
 															) ?? null
 														}
-														onChange={option =>
-															onChangeFormState('impactWaterResource', option?.value)
-														}
+														onChange={option => onChangeFormState('isWasteWater', option?.value)}
 														styles={{
 															container: styles => ({
 																...styles,
@@ -1111,12 +1111,10 @@ const EventFormView: React.FC = () => {
 														options={impactGroundResourceOptions}
 														value={
 															impactGroundResourceOptions.find(
-																option => option.value === formState.impactGroundResource
+																option => option.value === formState.isSoilPollution
 															) ?? null
 														}
-														onChange={option =>
-															onChangeFormState('impactGroundResource', option?.value)
-														}
+														onChange={option => onChangeFormState('isSoilPollution', option?.value)}
 														styles={{
 															container: styles => ({
 																...styles,
@@ -1174,10 +1172,10 @@ const EventFormView: React.FC = () => {
 														options={impactAnimalOptions}
 														value={
 															impactAnimalOptions.find(
-																option => option.value === formState.impactAnimal
+																option => option.value === formState.isAnimal
 															) ?? null
 														}
-														onChange={option => onChangeFormState('impactAnimal', option?.value)}
+														onChange={option => onChangeFormState('isAnimal', option?.value)}
 														styles={{
 															container: styles => ({
 																...styles,

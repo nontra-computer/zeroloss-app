@@ -37,6 +37,7 @@ interface EventStore {
 	getPollution: () => Promise<{ data: any; success: boolean }>
 	getEventMediaPath: (value: string) => string
 	create: (data: ICreateEvent) => Promise<{ data: any; success: boolean }>
+	edit: (id: string, data: any) => Promise<{ data: any; success: boolean }>
 	clearState: () => void
 }
 
@@ -163,11 +164,31 @@ export const useEventStore = create<EventStore>(set => ({
 	create: async (data: ICreateEvent) => {
 		const formData = new FormData()
 		Object.keys(data).forEach(key => {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			formData.append(key, data[key])
 		})
 		return axios
 			.post(`${API_SLUG}`, formData)
+			.then(response => {
+				return { data: response.data, success: true }
+			})
+			.catch(error => {
+				return {
+					data: error.response?.data.message?.toString() ?? 'Something went wrong.',
+					success: false,
+				}
+			})
+	},
+	edit: async (id: string, data: any) => {
+		const formData = new FormData()
+		Object.keys(data).forEach(key => {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			formData.append(key, data[key])
+		})
+		return axios
+			.patch(`${API_SLUG}/${id}`, formData)
 			.then(response => {
 				return { data: response.data, success: true }
 			})

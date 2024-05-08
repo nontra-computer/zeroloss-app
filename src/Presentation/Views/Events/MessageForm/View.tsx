@@ -143,6 +143,84 @@ const EventMessageForm: React.FC = () => {
 								))}
 							</div>
 						)}
+
+						{formType === 'edit' && (
+							<div className="row g-5">
+								{formState.pictures.map((p, idx) => {
+									let isImage = false
+									let isVideo = false
+
+									if (p?.isNew) {
+										isImage = p.picturePath.type.includes('image')
+										isVideo = p.picturePath.type.includes('video')
+									} else {
+										isImage =
+											p.picturePath.includes('png') ||
+											p.picturePath.includes('jpg') ||
+											p.picturePath.includes('jpeg')
+										isVideo =
+											p.picturePath.includes('mp4') ||
+											p.picturePath.includes('mov') ||
+											p.picturePath.includes('avi')
+									}
+
+									return (
+										<div className="col-12 col-lg-4">
+											{isImage && (
+												<Fragment>
+													<div className="position-relative h-150px shadow-lg">
+														<img
+															src={
+																p?.isNew
+																	? URL.createObjectURL(p.picturePath)
+																	: p.picturePath ?? '/media/icons/zeroloss/default-placeholder.png'
+															}
+															onError={e => {
+																e.currentTarget.src =
+																	'/media/icons/zeroloss/default-placeholder.png'
+																e.currentTarget.onerror = null
+															}}
+															alt="Additional Picture"
+															className="w-100 rounded object-fit-contain h-100 hover-filter-brightness cursor-pointer  transition-300"
+														/>
+														<button
+															className="btn btn-sm btn-icon btn-danger btn-active-light-danger position-absolute"
+															style={{ top: -10, right: -10 }}
+															onClick={() => onRemovePicture(idx)}>
+															<KTSVG
+																className="svg-icon-1"
+																path="media/icons/duotune/general/gen027.svg"
+															/>
+														</button>
+													</div>
+												</Fragment>
+											)}
+
+											{isVideo && (
+												<Fragment>
+													<div className="position-relative h-150px shadow-lg">
+														<video
+															src={p.picturePath}
+															className="w-100 rounded object-fit-contain h-100 hover-filter-brightness cursor-pointer  transition-300"
+															controls
+														/>
+														<button
+															className="btn btn-sm btn-icon btn-danger btn-active-light-danger position-absolute"
+															style={{ top: -10, right: -10 }}
+															onClick={() => onRemovePicture(idx)}>
+															<KTSVG
+																className="svg-icon-1"
+																path="media/icons/duotune/general/gen027.svg"
+															/>
+														</button>
+													</div>
+												</Fragment>
+											)}
+										</div>
+									)
+								})}
+							</div>
+						)}
 					</div>
 					<FormGenerator
 						formKey="picture"

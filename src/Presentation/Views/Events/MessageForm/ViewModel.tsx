@@ -3,7 +3,9 @@ import { useParams } from 'react-router-dom'
 import { EventMessageFormContext } from './Context'
 import { useEventStore } from '@/Store/Event'
 import { useEventMessageStore } from '@/Store/EventMessage'
+import { useEventMediaStore } from '@/Store/EventMedia'
 import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
 
 const INITIAL_STATE = {
 	detail: '',
@@ -23,14 +25,22 @@ const ViewModel = () => {
 	const [formState, setFormState] = useState(INITIAL_STATE)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const getMediaPath = useEventStore(state => state.getEventMediaPath)
-	const { messages, uploadProgress, setUploadProgress, getAllMessages, createMessage } =
-		useEventMessageStore(state => ({
-			messages: state.data,
-			uploadProgress: state.uploadProgress,
-			setUploadProgress: state.setUploadProgress,
-			getAllMessages: state.getAll,
-			createMessage: state.create,
-		}))
+	const {
+		messages,
+		uploadProgress,
+		setUploadProgress,
+		getAllMessages,
+		createMessage,
+		editMessage,
+	} = useEventMessageStore(state => ({
+		messages: state.data,
+		uploadProgress: state.uploadProgress,
+		setUploadProgress: state.setUploadProgress,
+		getAllMessages: state.getAll,
+		createMessage: state.create,
+		editMessage: state.edit,
+	}))
+	const removeEventMedia = useEventMediaStore(state => state.remove)
 
 	const handleOpenEditForm = () => {
 		if (open && formType === 'edit' && editId !== 0) {
@@ -49,10 +59,17 @@ const ViewModel = () => {
 
 	const onChangeFormState = (key: string, value: any) => {
 		if (key === 'pictures') {
-			setFormState(prevState => ({
-				...formState,
-				pictures: [...prevState.pictures, value],
-			}))
+			if (formType === 'create') {
+				setFormState(prevState => ({
+					...formState,
+					pictures: [...prevState.pictures, value],
+				}))
+			} else {
+				setFormState(prevState => ({
+					...formState,
+					pictures: [...prevState.pictures, { picturePath: value, isNew: true }],
+				}))
+			}
 		} else {
 			setFormState({
 				...formState,
@@ -62,13 +79,36 @@ const ViewModel = () => {
 	}
 
 	const onRemovePicture = (index: number) => {
-		setFormState(prevState => {
-			const newPictures = prevState.pictures.filter((_, i) => i !== index)
-			return {
-				...prevState,
-				pictures: newPictures,
+		if (formType === 'create') {
+			setFormState(prevState => {
+				const newPictures = prevState.pictures.filter((_, i) => i !== index)
+				return {
+					...prevState,
+					pictures: newPictures,
+				}
+			})
+		} else {
+			const finded = formState.pictures.find((m, i) => i === index)
+			if (finded) {
+				Swal.fire({
+					title: 'คุณแน่ใจหรือไม่ที่จะลบรูปภาพหรือวีดีโอนี้ใช่หรือไม่?',
+					showCancelButton: true,
+					confirmButtonText: 'ใช่',
+					cancelButtonText: 'ไม่ใช่',
+				}).then(result => {
+					if (result.isConfirmed) {
+						removeEventMedia(eventId ?? '', finded.id).then(({ success }) => {
+							if (success) {
+								getAllMessages(eventId ?? '')
+							} else {
+								toast.error('ไม่สามารถลบรูปภาพนี้ได้')
+								return
+							}
+						})
+					}
+				})
 			}
-		})
+		}
 	}
 
 	const onClose = () => {
@@ -88,27 +128,53 @@ const ViewModel = () => {
 			setIsSubmitting(false)
 			return
 		} else if (eventId !== undefined) {
-			const body: { [key: string]: any } = {
-				detail: formState.detail,
-			}
-			formState.pictures.forEach((p, i) => {
-				body[`pictures[${i}]`] = p
-			})
-
-			toast.info('กำลังสร้างรายงานเหตุการณ์...')
-			createMessage(eventId, body).then(({ success, data }) => {
-				if (!success) {
-					toast.error(`เพิ่มรายงานเหตุการณ์ ไม่สำเร็จ : ${data}`)
-					setIsSubmitting(false)
-				} else {
-					toast.success('เพิ่มรายงานเหตุการณ์ สำเร็จ')
-					onClose()
-					setIsSubmitting(false)
-					getAllMessages(eventId)
+			if (formType === 'create') {
+				const body: { [key: string]: any } = {
+					detail: formState.detail,
 				}
+				formState.pictures.forEach((p, i) => {
+					body[`pictures[${i}]`] = p
+				})
 
-				setUploadProgress(0)
-			})
+				toast.info('กำลังสร้างรายงานเหตุการณ์...')
+				createMessage(eventId, body).then(({ success, data }) => {
+					if (!success) {
+						toast.error(`เพิ่มรายงานเหตุการณ์ ไม่สำเร็จ : ${data}`)
+						setIsSubmitting(false)
+					} else {
+						toast.success('เพิ่มรายงานเหตุการณ์ สำเร็จ')
+						onClose()
+						setIsSubmitting(false)
+						getAllMessages(eventId)
+					}
+
+					setUploadProgress(0)
+				})
+			} else if (editId !== 0) {
+				const body: { [key: string]: any } = {
+					detail: formState.detail,
+				}
+				formState.pictures.forEach((p, i) => {
+					if (p.isNew) {
+						body[`pictures[${i}]`] = p.picturePath
+					}
+				})
+
+				toast.info('กำลังแก้ไขรายงานเหตุการณ์...')
+				editMessage(eventId, editId, body).then(({ success, data }) => {
+					if (!success) {
+						toast.error(`แก้ไขรายงานเหตุการณ์ ไม่สำเร็จ : ${data}`)
+						setIsSubmitting(false)
+					} else {
+						toast.success('แก้ไขรายงานเหตุการณ์ สำเร็จ')
+						onClose()
+						setIsSubmitting(false)
+						getAllMessages(eventId)
+					}
+
+					setUploadProgress(0)
+				})
+			}
 		}
 	}
 

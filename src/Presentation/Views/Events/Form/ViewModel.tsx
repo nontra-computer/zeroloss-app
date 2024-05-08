@@ -13,12 +13,7 @@ import { LocationSelectionContext } from './LocationSelection/Context'
 import { EventMessageFormContext } from '../MessageForm/Context'
 import moment from 'moment-timezone'
 import 'moment-timezone'
-import {
-	TAB_HEADER_ITEMS,
-	IMPACT_WATER_RESOURCE,
-	IMPACT_GROUND_RESOURCE,
-	IMPACT_ANIMAL,
-} from './Config'
+import { TAB_HEADER_ITEMS } from './Config'
 
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
 import { toast } from 'react-toastify'
@@ -61,9 +56,9 @@ const INITIAL_STATE = {
 	effectOnEyes: '',
 	effectOnSickness: '',
 	effectOnDeaths: '',
-	impactWaterResource: '',
-	impactGroundResource: '',
-	impactAnimal: '',
+	isWasteWater: false,
+	isSoilPollution: false,
+	isAnimal: false,
 	effectOnProperty: '',
 	impactOther: '',
 	locationName: '',
@@ -115,6 +110,7 @@ const ViewModel = () => {
 		getTypes,
 		getSubTypes,
 		createEvent,
+		editEvent,
 		getMediaPath,
 		clearState,
 	} = useEventStore(state => ({
@@ -127,6 +123,7 @@ const ViewModel = () => {
 		getPollution: state.getPollution,
 		getSubTypes: state.getSubTypes,
 		createEvent: state.create,
+		editEvent: state.edit,
 		getMediaPath: state.getEventMediaPath,
 		clearState: state.clearState,
 	}))
@@ -163,7 +160,7 @@ const ViewModel = () => {
 	const [pollutionState, setPollutionState] = useState<
 		{
 			label: string
-			value: boolean
+			value: string
 		}[]
 	>([])
 
@@ -293,36 +290,36 @@ const ViewModel = () => {
 		return [
 			{
 				label: 'ไม่มี',
-				value: '',
+				value: false,
 			},
-			...IMPACT_WATER_RESOURCE.map(d => ({
-				label: d.name,
-				value: d.value,
-			})),
+			{
+				label: 'มี',
+				value: true,
+			},
 		]
 	}, [])
 	const impactGroundResourceOptions = useMemo(() => {
 		return [
 			{
 				label: 'ไม่มี',
-				value: '',
+				value: false,
 			},
-			...IMPACT_GROUND_RESOURCE.map(d => ({
-				label: d.name,
-				value: d.value,
-			})),
+			{
+				label: 'มี',
+				value: true,
+			},
 		]
 	}, [])
 	const impactAnimalOptions = useMemo(() => {
 		return [
 			{
 				label: 'ไม่มี',
-				value: '',
+				value: false,
 			},
-			...IMPACT_ANIMAL.map(d => ({
-				label: d.name,
-				value: d.value,
-			})),
+			{
+				label: 'มี',
+				value: true,
+			},
 		]
 	}, [])
 
@@ -720,6 +717,98 @@ const ViewModel = () => {
 				}
 			})
 		} else if (eventId !== undefined) {
+			const editableFields = [
+				'start',
+				'end',
+				'title',
+				'eventTypeId',
+				'eventSubTypeId',
+				'detail',
+				'dangerLevel',
+				'locationName',
+				'locationAddress',
+				'latitude',
+				'longitude',
+				'informerName',
+				'informerTel',
+				'informerLineId',
+				'informerEmail',
+				'pictureCover',
+				'effectOnPeople',
+				'effectOnBreathing',
+				'effectOnSkin',
+				'effectOnEyes',
+				'effectOnSickness',
+				'effectOnDeaths',
+				'effectOnProperty',
+				'isWasteWater',
+				'isSoilPollution',
+				'isAnimal',
+			]
+
+			const body: { [key: string]: any } = {}
+			editableFields.forEach(field => {
+				if (['start', 'end'].includes(field)) {
+					if (
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						moment(formState[field]).isValid() &&
+						moment(selected?.[field]).isValid() &&
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						moment(formState[field]).toISOString() !== moment(selected?.[field]).toISOString()
+					)
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						body[field] = moment(formState[field]).toISOString()
+				} else if (field === 'pictureCover') {
+					if (formState[field] !== null && typeof formState[field] === 'object') {
+						body[field] = formState[field]
+					} else if (formState[field] === null) {
+						body[field] = null
+					}
+				} else {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					if (selected?.[field] !== formState[field])
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						body[field] = formState[field]
+				}
+			})
+
+			const availablePollutionTypes = Object.keys(pollutionTypes)
+			availablePollutionTypes.forEach(pollutionType => {
+				const foundPollution = pollutionState.find(p => p.value === pollutionType)
+				if (foundPollution) {
+					body[pollutionType] = true
+				} else {
+					body[pollutionType] = false
+				}
+			})
+
+			Swal.fire({
+				title: 'คุณต้องการที่จะแก้ไขเหตุการณ์นี้ใช่หรือไม่',
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonText: 'ใช่',
+				cancelButtonText: 'ไม่ใช่',
+			}).then(result => {
+				if (result.isConfirmed) {
+					editEvent(eventId, body).then(({ success, data }) => {
+						if (!success) {
+							toast.error(`แก้ไขเหตุการณ์ไม่สำเร็จ : ${data}`)
+							setIsSubmitting(false)
+						} else {
+							toast.success('แก้ไขเหตุการณ์สำเร็จ')
+							setIsSubmitting(false)
+							fetchData()
+						}
+					})
+				} else {
+					setIsSubmitting(false)
+				}
+			})
 		}
 	}
 
@@ -763,17 +852,22 @@ const ViewModel = () => {
 			Header: 'รายชื่อเหตุการณ์',
 			accessor: 'name',
 			minWidth: is4K || is8K ? 450 : 300,
-			Cell: (props: any) => (
-				<DoubleLineImage
-					img={
-						props.row.original?.medias?.[0]?.picturePath
-							? getMediaPath(props.row.original?.medias?.[0]?.picturePath)
-							: null
-					}
-					label={props.row.original?.detail ?? '-'}
-					description={''}
-				/>
-			),
+			Cell: (props: any) => {
+				const findedMediaImage = props.row.original?.medias?.find(
+					(m: any) =>
+						m.picturePath.includes('.png') ||
+						m.picturePath.includes('.jpg') ||
+						m.picturePath.includes('.jpeg')
+				)
+
+				return (
+					<DoubleLineImage
+						img={findedMediaImage?.picturePath ? getMediaPath(findedMediaImage?.picturePath) : null}
+						label={props.row.original?.detail ?? '-'}
+						description={''}
+					/>
+				)
+			},
 		},
 		{
 			Header: 'ไฟล์ที่แนบมา',
