@@ -43,7 +43,7 @@ export const IMPACT_WATER_RESOURCE = [
 		value: 'color_change',
 	},
 	{
-		name: 'มีฟิลม์ผิดคลุมผิวน้ำ',
+		name: 'มีฟิลม์ปิดคลุมผิวน้ำ',
 		value: 'film_on_water',
 	},
 	{

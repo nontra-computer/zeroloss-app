@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useContext } from 'react'
+import { Fragment, useEffect, useMemo, useState, useContext } from 'react'
 import { useLocation, useParams, useNavigate } from 'react-router-dom'
 import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
@@ -6,8 +6,11 @@ import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useEventStore, ICreateEvent } from '@/Store/Event'
 import { useEventMediaStore } from '@/Store/EventMedia'
+import { useEventMessageStore } from '@/Store/EventMessage'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
+import { TableContext } from '@/Context/Table'
 import { LocationSelectionContext } from './LocationSelection/Context'
+import { EventMessageFormContext } from '../MessageForm/Context'
 import moment from 'moment-timezone'
 import 'moment-timezone'
 import {
@@ -18,10 +21,9 @@ import {
 } from './Config'
 
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
-import DoubleLine from '@/Presentation/Components/Table/Cells/DoubleLine'
-import clsx from 'clsx'
 import { toast } from 'react-toastify'
 import { EventDangerLevelOptions } from '@/Configuration/EventDangerLevel'
+import Swal from 'sweetalert2'
 
 const INITIAL_STATE = {
 	id: 0,
@@ -53,17 +55,19 @@ const INITIAL_STATE = {
 	informerTel: '',
 	informerLineId: '',
 	informerEmail: '',
-	impactAnnoyAmount: '',
-	impactBreathTakingAmount: '',
-	impactSkinAmount: '',
-	impactEyeSightAmount: '',
-	impactSickAmount: '',
-	impactDeathAmount: '',
+	effectOnPeople: '',
+	effectOnBreathing: '',
+	effectOnSkin: '',
+	effectOnEyes: '',
+	effectOnSickness: '',
+	effectOnDeaths: '',
 	impactWaterResource: '',
 	impactGroundResource: '',
 	impactAnimal: '',
-	impactBelongingDamage: '',
+	effectOnProperty: '',
 	impactOther: '',
+	locationName: '',
+	locationAddress: '',
 }
 
 const STEPPERS = [
@@ -82,48 +86,6 @@ const STEPPERS = [
 	{
 		id: 4,
 		title: 'เหตุการณ์สิ้นสุด',
-	},
-]
-
-const MOCK_DATA_REPORTING = [
-	{
-		id: 1,
-		name: 'เหตุการณ์ที่ 1',
-		eventType: {
-			id: 1,
-			name: 'ประเภท 1',
-		},
-		eventSubTypeTitle: 'ประเภทย่อย 1',
-		title: 'เหตุการณ์ที่ 1',
-		detail: 'รายละเอียดเหตุการณ์ที่ 1',
-		longDescription: 'รายละเอียดยาวเหตุการณ์ที่ 1',
-		img: '/media/pictures/zeroloss/1.jpg',
-	},
-	{
-		id: 2,
-		name: 'เหตุการณ์ที่ 2',
-		eventType: {
-			id: 2,
-			name: 'ประเภท 2',
-		},
-		eventSubTypeTitle: 'ประเภทย่อย 2',
-		title: 'เหตุการณ์ที่ 2',
-		detail: 'รายละเอียดเหตุการณ์ที่ 2',
-		longDescription: 'รายละเอียดยาวเหตุการณ์ที่ 2',
-		img: '/media/pictures/zeroloss/2.jpg',
-	},
-	{
-		id: 3,
-		name: 'เหตุการณ์ที่ 3',
-		eventType: {
-			id: 3,
-			name: 'ประเภท 3',
-		},
-		eventSubTypeTitle: 'ประเภทย่อย 3',
-		title: 'เหตุการณ์ที่ 3',
-		detail: 'รายละเอียดเหตุการณ์ที่ 3',
-		longDescription: 'รายละเอียดยาวเหตุการณ์ที่ 3',
-		img: '/media/pictures/zeroloss/3.jpg',
 	},
 ]
 
@@ -172,6 +134,11 @@ const ViewModel = () => {
 		createEventMedia: state.create,
 		removeEventMedia: state.remove,
 	}))
+	const { messages, getAllMessages, removeMessage } = useEventMessageStore(state => ({
+		messages: state.data,
+		getAllMessages: state.getAll,
+		removeMessage: state.remove,
+	}))
 	const {
 		setOpen: setOpenSelectLocation,
 		changeConfirm,
@@ -179,6 +146,12 @@ const ViewModel = () => {
 		position,
 		setPosition,
 	} = useContext(LocationSelectionContext)
+	const { updateLoading, updatePagination, updateSorting, updateError } = useContext(TableContext)
+	const {
+		onOpen: onOpenEventMessageForm,
+		setEditId,
+		setFormType,
+	} = useContext(EventMessageFormContext)
 	const { is4K, is8K } = useResolutionDetection()
 
 	const isCreate = location.pathname === '/events/new'
@@ -480,6 +453,11 @@ const ViewModel = () => {
 		}
 	}
 
+	const setupTable = () => {
+		updatePagination(true)
+		updateSorting('name', true)
+	}
+
 	const fetchData = () => {
 		getTypes()
 		getSubTypes()
@@ -537,6 +515,19 @@ const ViewModel = () => {
 
 							setPollutionState(pollutionDataOptions)
 						}
+					}
+				})
+
+				updateLoading(true)
+				updateError(false)
+				getAllMessages(eventId).then(({ success: successMessage, data: dataMessage }) => {
+					if (!successMessage) {
+						toast.error(`เกิดข้อผิดพลาดในการดึงข้อมูล : ${dataMessage}`)
+						updateLoading(false)
+						updateError(true)
+					} else {
+						updateLoading(false)
+						updateError(false)
 					}
 				})
 			}
@@ -600,14 +591,22 @@ const ViewModel = () => {
 	}
 
 	const onRemoveAdditionalPicture = (index: number) => {
-		setFormState(prevState => {
-			const newPictures = [...prevState.galleries]
-			newPictures.splice(index, 1)
-			return {
-				...prevState,
-				galleries: newPictures,
+		removeEventMedia(eventId ?? '', eventPictures[index].id).then(({ success, data }) => {
+			if (!success) {
+				toast.error(`เกิดข้อผิดพลาดในการลบรูปภาพ : ${data}`)
+			} else {
+				toast.success('ลบรูปภาพสำเร็จ')
+				fetchData()
 			}
 		})
+		// setFormState(prevState => {
+		// 	const newPictures = [...prevState.galleries]
+		// 	newPictures.splice(index, 1)
+		// 	return {
+		// 		...prevState,
+		// 		galleries: newPictures,
+		// 	}
+		// })
 	}
 
 	const onDownloadAdditionalPicture = (index: number) => {
@@ -655,6 +654,10 @@ const ViewModel = () => {
 		setOpenSelectLocation(true)
 	}
 
+	const onCancel = () => {
+		navigate('/events')
+	}
+
 	const onSubmit = () => {
 		if (!hasChanged) {
 			return
@@ -670,6 +673,7 @@ const ViewModel = () => {
 						toast.error('กรุณากรอกวันและเวลาที่เกิดเหตุ')
 					}
 				} else {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					if ((formState[field] === '' || formState[field] === 0) && !hasAlertErrorField) {
 						toast.error('กรุณากรอกข้อมูลให้ครบถ้วน')
@@ -678,6 +682,8 @@ const ViewModel = () => {
 					}
 				}
 			})
+
+			if (hasAlertErrorField) return
 
 			const body: ICreateEvent = {
 				start: formState.start,
@@ -689,20 +695,67 @@ const ViewModel = () => {
 				longitude: formState.longitude,
 			}
 
-			createEvent(body).then(({ success, data }) => {
-				if (!success) {
-					toast.error(`เกิดข้อผิดพลาดในการสร้างเหตุการณ์ : ${data}`)
-					setIsSubmitting(false)
+			Swal.fire({
+				title: 'คุณต้องการสร้างเหตุการณ์ใช่หรือไม่',
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonText: 'ใช่',
+				cancelButtonText: 'ไม่ใช่',
+			}).then(result => {
+				if (result.isConfirmed) {
+					createEvent(body).then(({ success, data }) => {
+						if (!success) {
+							toast.error(`เกิดข้อผิดพลาดในการสร้างเหตุการณ์ : ${data}`)
+							setIsSubmitting(false)
+						} else {
+							toast.success('สร้างเหตุการณ์สำเร็จ')
+							setTimeout(() => {
+								navigate(`/events/edit/${data.id}`)
+								setIsSubmitting(false)
+							}, 500)
+						}
+					})
 				} else {
-					toast.success('สร้างเหตุการณ์สำเร็จ')
-					setTimeout(() => {
-						navigate(`/events/edit/${data.id}`)
-						setIsSubmitting(false)
-					}, 500)
+					setIsSubmitting(false)
 				}
 			})
 		} else if (eventId !== undefined) {
 		}
+	}
+
+	const onEditReportingMessage = (id: number) => {
+		setFormType('edit')
+		setEditId(id)
+		onOpenEventMessageForm()
+	}
+
+	const onRemoveReportingMessage = (id: string) => {
+		Swal.fire({
+			title: 'คุณต้องการที่จะลบรายงานเหตุการณ์นี้ใช่หรือไม่',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonText: 'ใช่',
+			cancelButtonText: 'ไม่ใช่',
+		}).then(result => {
+			if (result.isConfirmed) {
+				removeMessage(eventId ?? '', id).then(({ success, data }) => {
+					if (!success) {
+						toast.error(`ลบรายงานเหตุการณ์ไม่สำเร็จ : ${data}`)
+					} else {
+						toast.success('ลบรายงานเหตุการณ์สำเร็จ')
+						fetchData()
+					}
+				})
+			}
+		})
+	}
+
+	const onViewReportingMedia = (path: string) => {
+		const a = document.createElement('a')
+		a.href = path
+		a.target = '_blank'
+		a.rel = 'noopener noreferrer'
+		a.click()
 	}
 
 	const REPORTING_TABLE_CONFIGS: any[] = [
@@ -712,52 +765,73 @@ const ViewModel = () => {
 			minWidth: is4K || is8K ? 450 : 300,
 			Cell: (props: any) => (
 				<DoubleLineImage
-					img={props.row.original?.img}
-					label={props.row.original?.eventSubTypeTitle ?? '-'}
-					description={props.row.original?.title ?? '-'}
+					img={
+						props.row.original?.medias?.[0]?.picturePath
+							? getMediaPath(props.row.original?.medias?.[0]?.picturePath)
+							: null
+					}
+					label={props.row.original?.detail ?? '-'}
+					description={''}
 				/>
 			),
 		},
 		{
-			Header: 'ประเภทงาน',
+			Header: 'ไฟล์ที่แนบมา',
 			accessor: 'eventType',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: ({ value }: any) => {
+			Cell: ({ row }: any) => {
+				const medias = row.original?.medias ?? []
+				const hasImage =
+					medias.length > 0
+						? medias.find(
+								(m: any) =>
+									m.picturePath.includes('.png') ||
+									m.picturePath.includes('.jpg') ||
+									m.picturePath.includes('.jpeg')
+							)
+						: false
+
+				const hasVideo =
+					medias.length > 0
+						? medias.find(
+								(m: any) =>
+									m.picturePath.includes('.mp4') ||
+									m.picturePath.includes('.avi') ||
+									m.picturePath.includes('.mov') ||
+									m.picturePath.includes('.flv')
+							)
+						: false
+
+				const mediaPath = getMediaPath(medias?.[0]?.picturePath)
+
 				return (
-					<span
-						className={clsx('badge text-zeroloss-grey-700', {
-							'bg-zeroloss-error-300': value?.id === 1,
-							'bg-zeroloss-warning-300': value?.id === 2,
-							'bg-zeroloss-success-300': value?.id === 3,
-							'bg-zeroloss-primary-300': value?.id === 4,
-							'bg-zeroloss-purple-1': value?.id === 5,
-							'bg-zeroloss-primary-200': value?.id === 6,
-						})}>
-						<span
-							className={clsx('p-1 rounded-circle w-2px h-2px me-2 animation-blink', {
-								'bg-zeroloss-error': value?.id === 1,
-								'bg-zeroloss-warning': value?.id === 2,
-								'bg-zeroloss-success': value?.id === 3,
-								'bg-zeroloss-primary': value?.id === 4,
-								'bg-zeroloss-brand-600': value?.id === 5,
-								'bg-zeroloss-primary-400': value?.id === 6,
-							})}
-						/>{' '}
-						{value?.name}
-					</span>
-				)
-			},
-		},
-		{
-			Header: 'About',
-			accessor: 'about',
-			minWidth: is4K || is8K ? 450 : 300,
-			Cell: (props: any) => {
-				return (
-					<DoubleLine
-						label={props.row.original.detail ?? '-'}
-						description={props.row.original.longDescription ?? ''}
-					/>
+					<Fragment>
+						{hasImage && (
+							<span
+								className={'badge text-zeroloss-grey-700 bg-zeroloss-success-300 me-3'}
+								onClick={() => onViewReportingMedia(mediaPath)}>
+								<span
+									className={
+										'p-1 rounded-circle w-2px h-2px me-2 animation-blink bg-zeroloss-success'
+									}
+								/>{' '}
+								รูปภาพ
+							</span>
+						)}
+
+						{hasVideo && (
+							<span
+								className={'badge text-zeroloss-grey-700 bg-zeroloss-warning-300'}
+								onClick={() => onViewReportingMedia(mediaPath)}>
+								<span
+									className={
+										'p-1 rounded-circle w-2px h-2px me-2 animation-blink bg-zeroloss-warning'
+									}
+								/>{' '}
+								วีดีโอ
+							</span>
+						)}
+					</Fragment>
 				)
 			},
 		},
@@ -765,25 +839,31 @@ const ViewModel = () => {
 			Header: '',
 			accessor: 'action',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: () => (
-				<div className="d-flex flex-row justify-content-center align-items-center">
-					<button
-						className="btn btn-sm btn-icon btn-muted btn-active-light"
-						// onClick={() => onViewDetail(row.original.id)}
-					>
-						<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
-					</button>
+			Cell: ({ row }: any) => (
+				<Fragment>
 					{(isAdmin || isApprover) && (
-						<button className="btn btn-sm btn-icon btn-muted btn-active-light">
-							<img src="/media/icons/zeroloss/trash-01.svg" alt="Action Icon" />
-						</button>
+						<div className="d-flex flex-row justify-content-center align-items-center">
+							<button
+								className="btn btn-sm btn-icon btn-muted btn-active-light"
+								onClick={() => onEditReportingMessage(row.original.id)}>
+								<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
+							</button>
+
+							<button
+								className="btn btn-sm btn-icon btn-muted btn-active-light"
+								onClick={() => onRemoveReportingMessage(row.original.id)}>
+								<img src="/media/icons/zeroloss/trash-01.svg" alt="Action Icon" />
+							</button>
+						</div>
 					)}
-				</div>
+				</Fragment>
 			),
+			disableSortBy: true,
 		},
 	]
 
 	useEffect(() => {
+		setupTable()
 		fetchData()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -819,13 +899,13 @@ const ViewModel = () => {
 		timeStr,
 		themeMode,
 		title,
-		reportingData: MOCK_DATA_REPORTING,
 		eventTypesOptions,
 		eventSubTypesOptions,
 		eventDangerLevelOptions: EventDangerLevelOptions,
 		eventCoordinators,
 		steppers,
 		formState,
+		messages,
 		pollutionOptions,
 		pollutionState,
 		onChangeFormState,
@@ -841,6 +921,7 @@ const ViewModel = () => {
 		impactWaterResourceOptions,
 		impactGroundResourceOptions,
 		impactAnimalOptions,
+		onCancel,
 		onSubmit,
 		eventPictureCover,
 		eventPictures,

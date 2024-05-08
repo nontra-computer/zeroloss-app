@@ -1,10 +1,10 @@
 .Toastify__toast-container:has(.zeroloss-toast) {
-    min-width: 600px !important;
-    min-height: 80px !important;
+	min-width: 600px !important;
+	min-height: 80px !important;
 }
 
 .Toastify__toast-container:has(.zeroloss-toast) .Toastify__toast {
-    padding: 0px !important;
+	padding: 0px !important;
 }
 
 .zeroloss-toast {
@@ -13,7 +13,11 @@
 }
 
 .zeroloss-toast-body {
-    min-width: 600px !important;
-    min-height: 80px !important;
-    padding: 0px !important;
+	min-width: 600px !important;
+	min-height: 80px !important;
+	padding: 0px !important;
+}
+
+.Toastify__toast-container {
+	z-index: 10000 !important;
 }

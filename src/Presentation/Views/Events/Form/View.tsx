@@ -13,12 +13,14 @@ import LocationWithStatus from '@/Presentation/Components/LeafletMap/LocationWit
 import IncidentPopup from '@/Presentation/Components/LeafletMap/IncidentPopup'
 import ImageUploader1 from '@/Presentation/Components/Uploader/Images/ImageUploader1'
 import { ClientSideTable } from '@/Presentation/Components/Table'
+import EventMessageForm from '../MessageForm/View'
 
 import Lightbox from 'yet-another-react-lightbox'
-
+ 
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
 import moment from 'moment'
+import 'moment-timezone'
 
 const EventFormView: React.FC = () => {
 	const {
@@ -41,14 +43,13 @@ const EventFormView: React.FC = () => {
 		eventTypesOptions,
 		eventSubTypesOptions,
 		eventDangerLevelOptions,
-		eventCoordinators,
 		eventPictureCover,
 		eventPictures,
 		steppers,
 		formState,
+		messages,
 		pollutionState,
 		pollutionOptions,
-		reportingData,
 		REPORTING_TABLE_CONFIGS,
 		onChangeFormState,
 		onChangePollutionState,
@@ -62,6 +63,7 @@ const EventFormView: React.FC = () => {
 		impactWaterResourceOptions,
 		impactGroundResourceOptions,
 		impactAnimalOptions,
+		onCancel,
 		onSubmit,
 	} = useViewModel()
 
@@ -118,13 +120,13 @@ const EventFormView: React.FC = () => {
 						</div> */}
 
 						{/* Call to Action */}
-						{!isCreate && (
-							<div className="text-end">
-								<button className="btn white-button fw-bold w-100 w-lg-auto">
-									<span>ยกเลิก</span>
-								</button>
-							</div>
-						)}
+
+						<div className="text-end">
+							<button className="btn white-button fw-bold w-100 w-lg-auto" onClick={onCancel}>
+								<span>ยกเลิก</span>
+							</button>
+						</div>
+
 						<div className="text-end">
 							<button
 								type="button"
@@ -692,8 +694,8 @@ const EventFormView: React.FC = () => {
 															<div className="card-body p-0">
 																<MapContainer
 																	center={{
-																		lat: eventCoordinators.latitude,
-																		lng: eventCoordinators.longitude,
+																		lat: formState.latitude,
+																		lng: formState.longitude,
 																	}}
 																	zoom={13}>
 																	<TileLayer
@@ -710,8 +712,8 @@ const EventFormView: React.FC = () => {
 																		}
 																		type="error"
 																		position={{
-																			lat: eventCoordinators.latitude,
-																			lng: eventCoordinators.longitude,
+																			lat: formState.latitude,
+																			lng: formState.longitude,
 																		}}
 																		popup={IncidentPopup}
 																		eventType={formState?.eventType ?? undefined}
@@ -823,7 +825,7 @@ const EventFormView: React.FC = () => {
 															)}
 
 															{eventPictures.map((image: any, index: number) => (
-																<div key={index} className="col-6 col-lg-3">
+																<div key={index} className="col-6 col-md-4">
 																	<div className="position-relative h-300px cursor-pointer shadow-lg">
 																		<img
 																			src={image.picturePath}
@@ -850,6 +852,14 @@ const EventFormView: React.FC = () => {
 																			/>
 																		</button>
 																	</div>
+																	{image.createdAt && (
+																		<div className="mt-3 text-zeroloss-grey-500 fw-bold text-center">
+																			วันและเวลาที่อัพโหลด: ​{' '}
+																			{moment(image.createdAt)
+																				.tz('Asia/Bangkok')
+																				.format('DD/MM/YYYY HH:mm')}
+																		</div>
+																	)}
 																</div>
 															))}
 														</div>
@@ -870,7 +880,7 @@ const EventFormView: React.FC = () => {
 														<div className="card">
 															<div className="card-body pt-0 px-0">
 																<ClientSideTable
-																	data={reportingData}
+																	data={messages}
 																	columns={REPORTING_TABLE_CONFIGS}
 																	items_per_page={10}
 																/>
@@ -884,6 +894,63 @@ const EventFormView: React.FC = () => {
 								</div>
 							)}
 
+							{isCreate
+								? false
+								: isEditLocation && (
+										<div className="card my-5">
+											<div className="card-header bg-zeroloss-soft-blue">
+												<div className="card-title text-zeroloss-primary fw-bolder">
+													รายละเอียดสถานที่เกิดเหตุ
+												</div>
+											</div>
+											<div className="card-body">
+												<div className="row gy-5">
+													<div className="col-12 col-lg-8">
+														<FormGenerator
+															formKey="locationName"
+															inputType="plain"
+															label="ชื่อสถานที่"
+															additionalClassName="form-control-sm"
+															value={formState.locationName}
+															onChange={e => onChangeFormState('locationName', e.target.value)}
+														/>
+													</div>
+
+													<div className="col-12 col-lg-8">
+														<FormGenerator
+															formKey="locationAddress"
+															inputType="textarea"
+															label="ที่ตั้ง"
+															additionalClassName="form-control-sm"
+															value={formState.locationAddress}
+															onChange={e => onChangeFormState('locationAddress', e.target.value)}
+															limitCharacter={300}
+														/>
+													</div>
+
+													<div className="col-12 col-lg-8">
+														<FormGenerator
+															formKey="longitude"
+															value={`${formState.latitude ?? ''}, ${formState.longitude ?? ''}`}
+															inputType="plain"
+															additionalLabelCom={<span className="required" />}
+															additionalComInput={
+																<button
+																	className="mt-5 btn btn-sm btn-zeroloss-primary text-zeroloss-base-white"
+																	onClick={onOpenLocationSelection}>
+																	คลิกเพื่อเลือกจากแผนที่
+																</button>
+															}
+															placeholder="100.5018"
+															containerClassName="mb-5"
+															disabled
+														/>
+													</div>
+												</div>
+											</div>
+										</div>
+									)}
+
 							{(isCreate ? false : isEditImpact) && (
 								<React.Fragment>
 									<div className="card mb-5">
@@ -896,66 +963,62 @@ const EventFormView: React.FC = () => {
 											<div className="row gy-5">
 												<div className="col-12 col-lg-8">
 													<FormGenerator
-														formKey="impactAnnoyAmount"
+														formKey="effectOnPeople"
 														inputType="plain"
 														label="ได้รับความเดือนร้อนรำคาญ (ราย)*"
 														additionalClassName="form-control-sm"
-														value={formState.impactAnnoyAmount}
-														onChange={e => onChangeFormState('impactAnnoyAmount', e.target.value)}
+														value={formState.effectOnPeople}
+														onChange={e => onChangeFormState('effectOnPeople', e.target.value)}
 													/>
 												</div>
 												<div className="col-12 col-lg-8">
 													<FormGenerator
-														formKey="impactAnnoyAmount"
+														formKey="effectOnBreathing"
 														inputType="plain"
 														label="สูดดม ระคายเคืองจมูกและคอ มีเสมหะ หายใจติดขัด เจ็บหน้าอก (ราย)*"
 														additionalClassName="form-control-sm"
-														value={formState.impactBreathTakingAmount}
-														onChange={e =>
-															onChangeFormState('impactBreathTakingAmount', e.target.value)
-														}
+														value={formState.effectOnBreathing}
+														onChange={e => onChangeFormState('effectOnBreathing', e.target.value)}
 													/>
 												</div>
 												<div className="col-12 col-lg-8">
 													<FormGenerator
-														formKey="impactAnnoyAmount"
+														formKey="effectOnSkin"
 														inputType="plain"
 														label="สัมผัสผิวหนัง ผื่นแดง ปวด ผิวหนังอักเสบ กัดกร่อนผิวหนัง แผลไหม้ (ราย)*"
 														additionalClassName="form-control-sm"
-														value={formState.impactSkinAmount}
-														onChange={e => onChangeFormState('impactSkinAmount', e.target.value)}
+														value={formState.effectOnSkin}
+														onChange={e => onChangeFormState('effectOnSkin', e.target.value)}
 													/>
 												</div>
 												<div className="col-12 col-lg-8">
 													<FormGenerator
-														formKey="impactAnnoyAmount"
+														formKey="effectOnEyes"
 														inputType="plain"
 														label="สัมผัสตา เจ็บตา น้ำตาไหล ตาบวม คันตา (ราย)*"
 														additionalClassName="form-control-sm"
-														value={formState.impactEyeSightAmount}
-														onChange={e =>
-															onChangeFormState('impactEyeSightAmount', e.target.value)
-														}
+														value={formState.effectOnEyes}
+														onChange={e => onChangeFormState('effectOnEyes', e.target.value)}
 													/>
 												</div>
 												<div className="col-12 col-lg-8">
 													<FormGenerator
-														formKey="impactAnnoyAmount"
+														formKey="effectOnSickness"
 														inputType="plain"
 														label="เจ็บป่วย (ราย)*"
 														additionalClassName="form-control-sm"
-														value={formState.impactSickAmount}
-														onChange={e => onChangeFormState('impactSickAmount', e.target.value)}
+														value={formState.effectOnSickness}
+														onChange={e => onChangeFormState('effectOnSickness', e.target.value)}
 													/>
 												</div>
 												<div className="col-12 col-lg-8">
 													<FormGenerator
-														formKey="impactAnnoyAmount"
+														formKey="effectOnDeaths"
 														inputType="plain"
 														label="เสียชีวิต (ราย)*"
 														additionalClassName="form-control-sm"
-														value={formState.impactDeathAmount}
-														onChange={e => onChangeFormState('impactDeathAmount', e.target.value)}
+														value={formState.effectOnDeaths}
+														onChange={e => onChangeFormState('effectOnDeaths', e.target.value)}
 													/>
 												</div>
 											</div>
@@ -975,7 +1038,7 @@ const EventFormView: React.FC = () => {
 														className={`form-label d-flex flex-row`}
 														data-testid="form-input-label-component">
 														<div className="d-flex flex-column">
-															<span>แม่น้ำ ลำคอลง มีสภาพผิดพปกติ</span>
+															<span>แม่น้ำ ลำคลอง มีสภาพผิดปกติ</span>
 														</div>
 													</label>
 													<Select
@@ -1101,7 +1164,7 @@ const EventFormView: React.FC = () => {
 														className={`form-label d-flex flex-row`}
 														data-testid="form-input-label-component">
 														<div className="d-flex flex-column">
-															<span>สิ่งมีชีวิต เช่น ปลา นก ต้นไม่ ฯ มีความผิดปกติเฉียบพลัน</span>
+															<span>สิ่งมีชีวิต เช่น ปลา นก ต้นไม้ ฯ มีความผิดปกติเฉียบพลัน</span>
 														</div>
 													</label>
 													<Select
@@ -1171,14 +1234,13 @@ const EventFormView: React.FC = () => {
 											<div className="row gy-5">
 												<div className="col-12 col-lg-8">
 													<FormGenerator
-														formKey="impactAnnoyAmount"
+														formKey="effectOnProperty"
 														inputType="textarea"
 														label="ทรัพย์สินเสียหาย (ระบุ)"
 														additionalClassName="form-control-sm"
-														value={formState.impactBelongingDamage}
-														onChange={e =>
-															onChangeFormState('impactBelongingDamage', e.target.value)
-														}
+														value={formState.effectOnProperty}
+														onChange={e => onChangeFormState('effectOnProperty', e.target.value)}
+														limitCharacter={100}
 													/>
 												</div>
 												<div className="col-12 col-lg-8">
@@ -1189,6 +1251,7 @@ const EventFormView: React.FC = () => {
 														additionalClassName="form-control-sm"
 														value={formState.impactOther}
 														onChange={e => onChangeFormState('impactOther', e.target.value)}
+														limitCharacter={100}
 													/>
 												</div>
 											</div>

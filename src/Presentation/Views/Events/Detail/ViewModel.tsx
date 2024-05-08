@@ -33,7 +33,11 @@ const STEPPERS = [
 
 const ViewModel = () => {
 	const { eventId } = useParams()
-	const { onOpen: onOpenEventMessageForm } = useContext(EventMessageFormContext)
+	const {
+		onOpen: handleOpenEventMessageForm,
+		setFormType,
+		setEditId,
+	} = useContext(EventMessageFormContext)
 	const { data, eventSubTypes, getOne, getMediaPath, clearState } = useEventStore(state => ({
 		data: state.selected,
 		eventSubTypes: state.subTypes,
@@ -184,6 +188,12 @@ const ViewModel = () => {
 
 	const loadMoreEventMessage = () => {
 		setEventMessagePage(prev => prev + 1)
+	}
+
+	const onOpenEventMessageForm = () => {
+		handleOpenEventMessageForm()
+		setFormType('create')
+		setEditId(0)
 	}
 
 	const onOpenLightBox = (imgIdx: number) => {

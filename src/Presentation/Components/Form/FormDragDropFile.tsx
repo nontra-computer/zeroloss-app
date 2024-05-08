@@ -2,6 +2,7 @@ import React, { useRef, ChangeEvent } from 'react'
 import { useDropzone } from 'react-dropzone'
 
 import { FormDragAndDropFileProp } from '@/Types/Form'
+import clsx from 'clsx'
 
 const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
 	formKey,
@@ -72,7 +73,9 @@ const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
 				{...getRootProps()}
 				key={formKey}
 				onSubmit={e => e.preventDefault()}
-				className="form-file-upload"
+				className={clsx('form-file-upload', {
+					'pointer-events-none': disabled,
+				})}
 				onClick={onButtonClick}>
 				<input
 					{...getInputProps()}
@@ -84,7 +87,11 @@ const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
 					onChange={handleChange}
 				/>
 
-				<div id="label-file-upload" className={disabled ? ' disabled' : ''}>
+				<div
+					id="label-file-upload"
+					className={clsx({
+						'pointer-events-none': disabled,
+					})}>
 					<div>
 						<div
 							className="mb-10 cursor-pointer bg-zeroloss-grey-100 rounded-circle d-flex align-items-center justify-content-center mx-auto"
