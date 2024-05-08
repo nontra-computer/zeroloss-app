@@ -67,8 +67,8 @@ const ViewModel = () => {
 
 	const data = useMemo(() => {
 		return rawData
-			.map((rd: any, idx) => ({
-				id: `incident_${idx}`,
+			.map((rd: any) => ({
+				id: rd.id,
 				title: rd?.title,
 				detail: rd?.detail,
 				start: moment(rd?.start).toISOString(),

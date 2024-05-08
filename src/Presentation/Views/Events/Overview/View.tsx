@@ -1,14 +1,12 @@
 import React from 'react'
 import { PageTitle } from '@/_metronic/layout/core'
 import { KTSVG } from '@/_metronic/helpers'
-import ReactDatePicker from 'react-datepicker'
 
 import Filter from './Components/Filter'
 import EventListTableView from './Table/View'
 import EventListCalendarView from './Calendar/View'
 
 import useViewModel from './ViewModel'
-import moment from 'moment'
 import clsx from 'clsx'
 
 const EventOverviewView: React.FC = () => {
@@ -19,13 +17,11 @@ const EventOverviewView: React.FC = () => {
 		themeMode,
 		filter,
 		eventTypesOptions,
+		eventSubTypesOptions,
 		eventStatusOptions,
 		confirmFilter,
 		clearFilter,
 		onChangeFilter,
-		isOpenDatePicker,
-		setIsOpenDatePicker,
-		dateRange,
 		onClickView,
 	} = useViewModel()
 
@@ -53,6 +49,7 @@ const EventOverviewView: React.FC = () => {
 				confirmFilter={confirmFilter}
 				clearFilter={clearFilter}
 				eventTypeOptions={eventTypesOptions}
+				eventSubTypeOptions={eventSubTypesOptions}
 				eventStatusOptions={eventStatusOptions}
 			/>
 
@@ -96,7 +93,7 @@ const EventOverviewView: React.FC = () => {
 						</div>
 
 						<div>
-							{isShowTable && (
+							{/* {isShowTable && (
 								<button
 									className={clsx('btn btn-sm w-100 w-lg-auto me-lg-2', {
 										'white-button': themeMode === 'light',
@@ -131,7 +128,7 @@ const EventOverviewView: React.FC = () => {
 										onClickOutside={() => setIsOpenDatePicker(false)}
 									/>
 								</div>
-							)}
+							)} */}
 
 							<button
 								id="kt_events_list_filter_toggle"

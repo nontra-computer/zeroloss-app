@@ -336,7 +336,7 @@ const EventListCalendarView: React.FC = () => {
 												<IncidentEvent
 													{...arg}
 													type={arg.event.extendedProps.type}
-													name={arg.event.title}
+													title={arg.event.extendedProps.title}
 													detail={arg.event.extendedProps.detail}
 													img={arg.event.extendedProps.img}
 													onClick={onClick}

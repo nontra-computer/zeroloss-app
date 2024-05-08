@@ -1,15 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { KTSVG } from '@/_metronic/helpers'
 import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
 import Select, { components } from 'react-select'
+import ReactDatePicker from 'react-datepicker'
 import { DrawerComponent } from '@/_metronic/assets/ts/components'
 import clsx from 'clsx'
+import moment from 'moment'
+import 'moment-timezone'
 
 interface Props {
 	filter: any
 	onChangeFilter: (key: string, value: any) => void
 	eventTypeOptions: any[]
+	eventSubTypeOptions: any[]
 	eventStatusOptions: any[]
 	confirmFilter: () => void
 	clearFilter: () => void
@@ -19,16 +23,31 @@ const Filter: React.FC<Props> = ({
 	filter,
 	onChangeFilter,
 	eventTypeOptions,
+	eventSubTypeOptions,
 	eventStatusOptions,
 	confirmFilter,
 	clearFilter,
 }) => {
+	const [isOpenCreatedDatePicker, setIsOpenCreatedDatePicker] = useState(false)
+	const [isOpenCaseDatePicker, setIsOpenCaseDatePicker] = useState(false)
 	const { mode } = useThemeMode()
+
 	let themeMode = ''
 	if (mode === 'system') {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 	} else {
 		themeMode = mode
+	}
+
+	let createdPeriodText = ''
+	if (filter.createdAtStartPeriod && filter.createdAtEndPeriod) {
+		createdPeriodText = `${moment(filter.createdAtStartPeriod).format('DD/MM/YYYY')} - ${moment(
+			filter.createdAtEndPeriod
+		).format('DD/MM/YYYY')}`
+	}
+	let casePeriodText = ''
+	if (filter.caseStartPeriod && filter.caseEndPeriod) {
+		casePeriodText = `${moment(filter.caseStartPeriod).format('DD/MM/YYYY')} - ${moment(filter.caseEndPeriod).format('DD/MM/YYYY')}`
 	}
 
 	useEffect(() => {
@@ -90,11 +109,93 @@ const Filter: React.FC<Props> = ({
 									label="ค้นหาด้วยคำค้น"
 									placeholder="ค้นหาด้วยรายละเอียเหตุการณ์, สถานที่เกิดเหตุ"
 									additionalClassName="fs-7 bg-zeroloss-base-white"
-									// value={filter.contract_code}
-									// onChange={e => onChangeFilter('contract_code', e.target.value)}
+									value={filter.q}
+									onChange={e => onChangeFilter('q', e.target.value)}
 								/>
 							</div>
 							{/* END:: Search Text */}
+
+							{/* START:: Created Period */}
+							<div className="col-12">
+								<label className="form-label">ช่วงเวลาแจ้งเหตุ</label>
+								<input
+									onClick={() => setIsOpenCreatedDatePicker(true)}
+									className="form-control form-control-sm"
+									value={createdPeriodText}
+								/>
+								{isOpenCreatedDatePicker && (
+									<div className="position-absolute" style={{ zIndex: 999, marginTop: '10px' }}>
+										<ReactDatePicker
+											inline
+											fixedHeight
+											selectsRange
+											selectsStart
+											selectsEnd
+											startDate={
+												filter.createdAtStartPeriod
+													? moment(filter.createdAtStartPeriod).toDate()
+													: null
+											}
+											endDate={
+												filter.createdAtEndPeriod
+													? moment(filter.createdAtEndPeriod).toDate()
+													: null
+											}
+											onChange={dates => {
+												if (dates) {
+													onChangeFilter('createdAtStartPeriod', dates[0])
+													onChangeFilter('createdAtEndPeriod', dates[1])
+
+													if (dates[0] && dates[1]) {
+														setIsOpenCreatedDatePicker(false)
+													}
+												}
+											}}
+											onBlur={() => setIsOpenCreatedDatePicker(false)}
+											onClickOutside={() => setIsOpenCreatedDatePicker(false)}
+										/>
+									</div>
+								)}
+							</div>
+							{/* END:: Created Period */}
+
+							{/* START:: Case Period */}
+							<div className="col-12">
+								<label className="form-label">ช่วงเวลาเกิดเหตุ</label>
+								<input
+									onClick={() => setIsOpenCaseDatePicker(true)}
+									className="form-control form-control-sm"
+									value={casePeriodText}
+								/>
+								{isOpenCaseDatePicker && (
+									<div className="position-absolute" style={{ zIndex: 999, marginTop: '10px' }}>
+										<ReactDatePicker
+											inline
+											fixedHeight
+											selectsRange
+											selectsStart
+											selectsEnd
+											startDate={
+												filter.caseStartPeriod ? moment(filter.caseStartPeriod).toDate() : null
+											}
+											endDate={filter.caseEndPeriod ? moment(filter.caseEndPeriod).toDate() : null}
+											onChange={dates => {
+												if (dates) {
+													onChangeFilter('caseStartPeriod', dates[0])
+													onChangeFilter('caseEndPeriod', dates[1])
+
+													if (dates[0] && dates[1]) {
+														setIsOpenCaseDatePicker(false)
+													}
+												}
+											}}
+											onBlur={() => setIsOpenCaseDatePicker(false)}
+											onClickOutside={() => setIsOpenCaseDatePicker(false)}
+										/>
+									</div>
+								)}
+							</div>
+							{/* END:: Case Period */}
 
 							{/* BEGIN:: Event Type */}
 							<div className="col-12">
@@ -185,11 +286,12 @@ const Filter: React.FC<Props> = ({
 									placeholder="เลือกประเภทเหตุการณ์"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
 									className="w-100 shadow-sm"
-									options={eventTypeOptions}
-									// value={
-									// 	eventTypeOptions.find(option => option.value === filter.eventTypeId) ?? null
-									// }
-									// onChange={option => onChangeFilter('eventTypeId', option?.value)}
+									options={eventSubTypeOptions}
+									value={
+										eventSubTypeOptions.find(option => option.value === filter.eventSubTypeId) ??
+										null
+									}
+									onChange={option => onChangeFilter('eventSubTypeId', option?.value)}
 									styles={{
 										container: styles => ({
 											...styles,
@@ -215,37 +317,9 @@ const Filter: React.FC<Props> = ({
 									}}
 									components={{
 										IndicatorSeparator: () => null,
-										SingleValue: props => (
-											<components.SingleValue {...props} className="cursor-pointer fs-7 fw-normal">
-												<span
-													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
-														'bg-zeroloss-error': props.data.value === 1,
-														'bg-zeroloss-warning': props.data.value === 2,
-														'bg-zeroloss-success': props.data.value === 3,
-														'bg-zeroloss-primary': props.data.value === 4,
-														'bg-zeroloss-brand-600': props.data.value === 5,
-														'bg-zeroloss-primary-400': props.data.value === 6,
-													})}></span>
-												{props.data.label}
-											</components.SingleValue>
-										),
-										Option: props => (
-											<components.Option {...props} className="cursor-pointer fs-7 fw-normal">
-												<span
-													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
-														'bg-zeroloss-error': props.data.value === 1,
-														'bg-zeroloss-warning': props.data.value === 2,
-														'bg-zeroloss-success': props.data.value === 3,
-														'bg-zeroloss-primary': props.data.value === 4,
-														'bg-zeroloss-brand-600': props.data.value === 5,
-														'bg-zeroloss-primary-400': props.data.value === 6,
-													})}></span>
-												{props.data.label}
-											</components.Option>
-										),
 										Placeholder: props => (
 											<components.Placeholder {...props} className="cursor-pointer fs-7 fw-normal">
-												เลือกประเภทเหตุการณ์
+												เลือกประเภทเหตุการณ์ย่อย
 											</components.Placeholder>
 										),
 										NoOptionsMessage: props => (

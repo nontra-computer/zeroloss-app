@@ -9,9 +9,13 @@ import moment from 'moment-timezone'
 import { toast } from 'react-toastify'
 
 const INITIAL_FILTER = {
-	startPeriod: moment().startOf('month').format('YYYY-MM-DD'),
-	endPeriod: moment().endOf('month').format('YYYY-MM-DD'),
+	q: '',
+	createdAtStartPeriod: null,
+	createdAtEndPeriod: null,
+	caseStartPeriod: null,
+	caseEndPeriod: null,
 	eventTypeId: null,
+	eventSubTypeId: null,
 	state: null,
 }
 
@@ -49,26 +53,29 @@ const ViewModel = () => {
 		return intl.formatMessage({ id: 'ZEROLOSS.HEADER.CURRENT_TIME' }) + ' ' + time
 	}, [currentTime, intl, selectedLang])
 	const { mode } = useThemeMode()
-	const { setIsLoadingData, eventTypes, getAll, getTypes, clearState } = useEventStore(state => ({
-		setIsLoadingData: state.setIsLoadingData,
-		eventTypes: state.types,
-		getAll: state.getAll,
-		getTypes: state.getTypes,
-		clearState: state.clearState,
-	}))
+	const { setIsLoadingData, eventTypes, eventSubTypes, getAll, getSubTypes, getTypes, clearState } =
+		useEventStore(state => ({
+			setIsLoadingData: state.setIsLoadingData,
+			eventTypes: state.types,
+			eventSubTypes: state.subTypes,
+			getAll: state.getAll,
+			getTypes: state.getTypes,
+			getSubTypes: state.getSubTypes,
+			clearState: state.clearState,
+		}))
 
 	const [filter, setFilter] = useState(INITIAL_FILTER)
 	const [isOpenDatePicker, setIsOpenDatePicker] = useState(false)
 
-	const dateRange = useMemo(() => {
-		if (filter.startPeriod && filter.endPeriod) {
-			return `${moment(filter.startPeriod).format('MMM D, YYYY')} - ${moment(
-				filter.endPeriod
-			).format('MMM D, YYYY')}`
-		}
+	// const dateRange = useMemo(() => {
+	// 	if (filter.startPeriod && filter.endPeriod) {
+	// 		return `${moment(filter.startPeriod).format('MMM D, YYYY')} - ${moment(
+	// 			filter.endPeriod
+	// 		).format('MMM D, YYYY')}`
+	// 	}
 
-		return 'Select Date Range'
-	}, [filter.startPeriod, filter.endPeriod])
+	// 	return 'Select Date Range'
+	// }, [filter.startPeriod, filter.endPeriod])
 
 	const isShowTable = location.pathname === '/events/overview/table'
 	const isShowCalendar = location.pathname === '/events/overview/calendar'
@@ -91,25 +98,37 @@ const ViewModel = () => {
 		[]
 	)
 
+	const eventSubTypesOptions = useMemo(() => {
+		return eventSubTypes
+			.filter((d: any) => d.eventTypeId === filter.eventTypeId)
+			.map((d: any) => ({
+				label: d.name,
+				value: d.id,
+			}))
+	}, [filter.eventTypeId, eventSubTypes])
+
 	const fetchData = () => {
 		setIsLoadingData(true)
-		let finaleFilter: { [key: string]: any } = {
-			...filter,
-		}
-
-		if (isShowCalendar) {
-			finaleFilter = Object.entries(filter).reduce((acc: { [key: string]: any }, [key, value]) => {
-				if (key === 'startPeriod' || key === 'endPeriod') {
+		const finaleFilter: { [key: string]: any } = Object.entries(filter).reduce(
+			(acc: { [key: string]: any }, [key, value]) => {
+				if (
+					[
+						'createdAtStartPeriod',
+						'createdAtEndPeriod',
+						'caseStartPeriod',
+						'caseEndPeriod',
+					].includes(key) &&
+					value === null
+				) {
 					return acc
-				} else {
+				} else if (value !== null && value !== '') {
 					acc[key] = value
 				}
 
 				return acc
-			}, {})
-		} else {
-			finaleFilter = filter
-		}
+			},
+			{}
+		)
 
 		getAll(finaleFilter).then(({ success, data }) => {
 			if (!success) {
@@ -118,7 +137,9 @@ const ViewModel = () => {
 				setIsLoadingData(false)
 			}
 		})
+
 		getTypes()
+		getSubTypes()
 	}
 
 	const confirmFilter = () => {
@@ -146,10 +167,16 @@ const ViewModel = () => {
 	}
 
 	const onChangeFilter = (key: string, value: any) => {
-		if (key === 'startPeriod' || key === 'endPeriod') {
+		if (
+			['createdAtStartPeriod', 'createdAtEndPeriod', 'caseStartPeriod', 'caseEndPeriod'].includes(
+				key
+			)
+		) {
 			const finale = value !== null ? moment(value).format('YYYY-MM-DD') : null
 
 			setFilter(prev => ({ ...prev, [key]: finale }))
+		} else if (key === 'eventTypeId') {
+			setFilter(prev => ({ ...prev, [key]: value, eventSubTypeId: null }))
 		} else {
 			setFilter(prev => ({ ...prev, [key]: value }))
 		}
@@ -175,9 +202,9 @@ const ViewModel = () => {
 		themeMode,
 		filter,
 		isOpenDatePicker,
-		dateRange,
 		eventTypesOptions,
 		eventStatusOptions: EVENT_STATUS_OPTIONS,
+		eventSubTypesOptions,
 		setIsOpenDatePicker,
 		confirmFilter,
 		clearFilter,
