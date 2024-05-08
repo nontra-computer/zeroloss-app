@@ -71,10 +71,10 @@ export const ZEROLOSS_MENU = [
 		className: 'py-3',
 		subMenu: [
 			{
-				key: 'measurement',
+				key: 'form-select',
 				icon: 'bi-calendar3',
-				path: '/report/measurement',
-				label: 'ZEROLOSS.MENU.REPORT_MEASUREMENT',
+				path: '/report/form/select',
+				label: 'ZEROLOSS.MENU.REPORT_SELECT',
 			},
 			{
 				key: 'event',
