@@ -12,6 +12,7 @@ import DashboardRoutes from './Routes/Dashboard'
 import EventsRoutes from './Routes/Events'
 
 import Error404View from '@/Presentation/Views/Error/404/View'
+import HazardManagementRoutes from './Routes/Hazard'
 
 const PrivateRoutes = () => {
 	const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -30,6 +31,7 @@ const PrivateRoutes = () => {
 
 				<Route path="dashboard/*" element={<DashboardRoutes />} />
 				<Route path="events/*" element={<EventsRoutes />} />
+				<Route path="hazard-modeling/*" element={<HazardManagementRoutes />} />
 
 				<Route path="builder" element={<BuilderPageWrapper />} />
 				<Route path="menu-test" element={<MenuTestPage />} />
