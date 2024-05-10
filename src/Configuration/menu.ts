@@ -117,7 +117,7 @@ export const ZEROLOSS_SETTING_MENU = [
 			{
 				key: 'hazard_modeling',
 				icon: 'bi-droplet-half',
-				path: '/hazard-model',
+				path: '/dashboard/overview/hazard-model',
 				label: 'ZEROLOSS.MENU.HAZARD_MODELING',
 			},
 			{

@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import MainDashboardView from '@/Presentation/Views/Dashboard/Main/View'
 import MwaMeasurementDashboardView from '@/Presentation/Views/Dashboard/MWA/Dashboard/View'
 import MwaBuildingDashboardView from '@/Presentation/Views/Dashboard/MWA/Building/View'
-import HazardTable from '@/Presentation/Views/Dashboard/Main/HazardTable/View'
+import HazardTable from '@/Presentation/Views/Dashboard/HazardTable/View'
 
 const DashboardRoutes = () => (
 	<Routes>
