@@ -42,13 +42,13 @@ const ViewModel = ({ onClose }: { onClose: () => void }) => {
 			Header: 'สถานะ',
 			accessor: 'measurementStatus',
 			minWidth: 10,
-			Cell: (props: any) => (
+			Cell: ({ value }: any) => (
 				<div
 					className={clsx('p-1 rounded-circle w-2px h-2px me-2', {
-						'bg-zeroloss-base-black': props.row.original.status === 0,
-						'bg-zeroloss-success-500 animation-blink': props.row.original.status === 1,
-						'bg-zeroloss-warning animation-blink': props.row.original.status === 2,
-						'bg-zeroloss-error-500 animation-blink': props.row.original.status === 3,
+						'bg-zeroloss-base-black': value === 0,
+						'bg-zeroloss-success-500 animation-blink': value === 1,
+						'bg-zeroloss-warning animation-blink': value === 2,
+						'bg-zeroloss-error-500 animation-blink': value === 3,
 					})}
 				/>
 			),
