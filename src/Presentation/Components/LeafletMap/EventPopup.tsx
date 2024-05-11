@@ -16,7 +16,7 @@ interface Props {
 	id: number
 }
 
-const IncidentPopup: React.FC<Props> = ({
+const EventPopup: React.FC<Props> = ({
 	id,
 	title,
 	detail,
@@ -97,4 +97,4 @@ const IncidentPopup: React.FC<Props> = ({
 	)
 }
 
-export default IncidentPopup
+export default EventPopup

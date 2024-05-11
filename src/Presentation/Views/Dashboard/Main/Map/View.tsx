@@ -4,7 +4,7 @@ import { KTSVG } from '@/_metronic/helpers'
 import PlainLocation from '@/Presentation/Components/LeafletMap/PlainLocation'
 import LocationPopup from '@/Presentation/Views/Events/Detail/Components/LocationPopup'
 import EventWithStatus from '@/Presentation/Components/LeafletMap/EventWithStatus'
-import IncidentPopup from '@/Presentation/Components/LeafletMap/IncidentPopup'
+import EventPopup from '@/Presentation/Components/LeafletMap/EventPopup'
 import WindDirection from '@/Presentation/Components/LeafletMap/WindDirection'
 import WindPopup from '@/Presentation/Components/LeafletMap/WindPopup'
 import LocationPolygon from '@/Presentation/Components/LeafletMap/LocationPolygon'
@@ -12,6 +12,7 @@ import LocationMeasurementStation from '@/Presentation/Components/LeafletMap/Loc
 import InfoBoard from '../../Components/InfoBoard/View'
 // import Alert from '../../Components/Alert/View'
 import MeasurementTable from '../../Components/MeasurementTable/View'
+import MeasurementDetailPopup from '@/Presentation/Components/LeafletMap/MeasurementDetailPopup'
 // import FeatureNews from '@/Presentation/Components/News/FeatureNews'
 // import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
 import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
@@ -45,6 +46,10 @@ const MainDashboardMapView: React.FC = () => {
 		clearFilterEvent,
 		confirmFilterLocation,
 		clearFilterLocation,
+		measurementData,
+		showMeasurementTable,
+		onOpenMeasurementTable,
+		onCloseMeasurementTable,
 	} = useViewModel()
 
 	return (
@@ -256,7 +261,12 @@ const MainDashboardMapView: React.FC = () => {
 
 											{type === 'measurement' && (
 												<React.Fragment>
-													<MeasurementTable />
+													{showMeasurementTable && (
+														<MeasurementTable
+															data={measurementData}
+															onClose={onCloseMeasurementTable}
+														/>
+													)}
 												</React.Fragment>
 											)}
 
@@ -324,7 +334,7 @@ const MainDashboardMapView: React.FC = () => {
 														<React.Fragment key={`map-data-${index}`}>
 															{type === 'all' && (
 																<React.Fragment>
-																	<EventWithStatus {...d} popup={IncidentPopup} />
+																	<EventWithStatus {...d} popup={EventPopup} />
 																</React.Fragment>
 															)}
 															{type === 'wind-direction' && (
@@ -352,6 +362,8 @@ const MainDashboardMapView: React.FC = () => {
 																		lat: d?.latitude ?? 0,
 																		lng: d?.longitude ?? 0,
 																	}}
+																	popup={MeasurementDetailPopup}
+																	onClick={onOpenMeasurementTable}
 																/>
 															)}
 														</React.Fragment>

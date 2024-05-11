@@ -10,7 +10,7 @@ import { KTSVG } from '@/_metronic/helpers'
 import LocationSelection from './LocationSelection/View'
 import { MapContainer, TileLayer } from 'react-leaflet'
 import EventWithStatus from '@/Presentation/Components/LeafletMap/EventWithStatus'
-import IncidentPopup from '@/Presentation/Components/LeafletMap/IncidentPopup'
+import EventPopup from '@/Presentation/Components/LeafletMap/EventPopup'
 import ImageUploader1 from '@/Presentation/Components/Uploader/Images/ImageUploader1'
 import { ClientSideTable } from '@/Presentation/Components/Table'
 import EventMessageForm from '../MessageForm/View'
@@ -717,7 +717,7 @@ const EventFormView: React.FC = () => {
 																			lat: formState.latitude,
 																			lng: formState.longitude,
 																		}}
-																		popup={IncidentPopup}
+																		popup={EventPopup}
 																		eventType={formState?.eventType ?? undefined}
 																	/>
 																</MapContainer>

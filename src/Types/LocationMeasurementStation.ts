@@ -5,4 +5,7 @@ export interface LocationMeasurementStationProps {
 	}
 	draggable?: boolean
 	popup?: React.FunctionComponent<any>
+	onClick?: (data: any) => void
+	id?: number
+	title?: string
 }

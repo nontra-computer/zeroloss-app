@@ -197,6 +197,9 @@ const ViewModel = () => {
 	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
 	const [preFilterState, setPreFilterState] = useState(INITIAL_STATE_FILTER)
 
+	const [showMeasurementTable, setShowMeasurementTable] = useState<boolean>(false)
+	const [measurementId, setMeasurementId] = useState<any>(null)
+
 	const displayFilter = useMemo(() => {
 		const results: any = {}
 
@@ -268,6 +271,9 @@ const ViewModel = () => {
 			value: 10,
 		},
 	]
+	const measurementData = useMemo(() => {
+		return rawData?.measurements?.find((d: any) => d.id === measurementId)
+	}, [rawData?.measurements, measurementId])
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -367,7 +373,7 @@ const ViewModel = () => {
 			case 'measurement':
 				return rawData?.measurements ?? []
 			default:
-				return MOCK_DATA
+				return []
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type, dataEvents, rawData, filter, dataTypes])
@@ -448,6 +454,16 @@ const ViewModel = () => {
 		}
 	}
 
+	const onOpenMeasurementTable = (id: any) => {
+		setMeasurementId(id)
+		setShowMeasurementTable(true)
+	}
+
+	const onCloseMeasurementTable = () => {
+		setMeasurementId(null)
+		setShowMeasurementTable(false)
+	}
+
 	useEffect(() => {
 		fetchData()
 
@@ -481,6 +497,10 @@ const ViewModel = () => {
 		confirmFilterLocation,
 		clearFilterLocation,
 		getEventMediaPath,
+		showMeasurementTable,
+		measurementData,
+		onOpenMeasurementTable,
+		onCloseMeasurementTable,
 	}
 }
 

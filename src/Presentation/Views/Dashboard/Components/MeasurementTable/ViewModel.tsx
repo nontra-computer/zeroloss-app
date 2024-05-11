@@ -1,57 +1,26 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { TableContext } from '@/Context/Table'
 import clsx from 'clsx'
 
-const MOCK_DATA: any[] = [
-	{
-		parameter: 'Temperature',
-		value: '30',
-		standard: '25-30',
-		unit: 'C',
-		status: 1,
-	},
-	{
-		parameter: 'Humidity',
-		value: '60',
-		standard: '50-60',
-		unit: '%',
-		status: 1,
-	},
-	{
-		parameter: 'CO2',
-		value: '400',
-		standard: '300-500',
-		unit: 'ppm',
-		status: 1,
-	},
-	{
-		parameter: 'PM2.5',
-		value: '10',
-		standard: '0-50',
-		unit: 'ug/m3',
-		status: 0,
-	},
-	{
-		parameter: 'PM10',
-		value: '20',
-		standard: '0-50',
-		unit: 'ug/m3',
-		status: 0,
-	},
-]
-
-const ViewModel = () => {
+const ViewModel = ({ onClose }: { onClose: () => void }) => {
 	const { updatePagination, updateLoading } = useContext(TableContext)
+	const tableRef = useRef<any>(null)
 
 	const setupTable = () => {
 		updatePagination(false)
 		updateLoading(false)
 	}
 
+	const handleOnClickOutside = (e: any) => {
+		if (tableRef.current && !tableRef.current.contains(e.target)) {
+			onClose()
+		}
+	}
+
 	const TABLE_CONFIGS: any[] = [
 		{
 			Header: 'พารามิเตอร์',
-			accessor: 'parameter',
+			accessor: 'name',
 			minWidth: 150,
 		},
 		{
@@ -61,7 +30,7 @@ const ViewModel = () => {
 		},
 		{
 			Header: 'มาตรฐาน',
-			accessor: 'standard',
+			accessor: 'std',
 			minWidth: 30,
 		},
 		{
@@ -71,13 +40,15 @@ const ViewModel = () => {
 		},
 		{
 			Header: 'สถานะ',
-			accessor: 'status',
+			accessor: 'measurementStatus',
 			minWidth: 10,
 			Cell: (props: any) => (
 				<div
 					className={clsx('p-1 rounded-circle w-2px h-2px me-2', {
-						'bg-zeroloss-error-500': props.row.original.status === 0,
+						'bg-zeroloss-base-black': props.row.original.status === 0,
 						'bg-zeroloss-success-500 animation-blink': props.row.original.status === 1,
+						'bg-zeroloss-warning animation-blink': props.row.original.status === 2,
+						'bg-zeroloss-error-500 animation-blink': props.row.original.status === 3,
 					})}
 				/>
 			),
@@ -89,8 +60,16 @@ const ViewModel = () => {
 		// eslint-disable-next-line
 	}, [])
 
+	useEffect(() => {
+		document.addEventListener('mousedown', handleOnClickOutside)
+		return () => {
+			document.removeEventListener('mousedown', handleOnClickOutside)
+		}
+		// eslint-disable-next-line
+	}, [onClose])
+
 	return {
-		data: MOCK_DATA,
+		tableRef,
 		TABLE_CONFIGS,
 	}
 }
