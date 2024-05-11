@@ -9,7 +9,7 @@ import Select, { components } from 'react-select'
 import { KTSVG } from '@/_metronic/helpers'
 import LocationSelection from './LocationSelection/View'
 import { MapContainer, TileLayer } from 'react-leaflet'
-import LocationWithStatus from '@/Presentation/Components/LeafletMap/LocationWithStatus'
+import EventWithStatus from '@/Presentation/Components/LeafletMap/EventWithStatus'
 import IncidentPopup from '@/Presentation/Components/LeafletMap/IncidentPopup'
 import ImageUploader1 from '@/Presentation/Components/Uploader/Images/ImageUploader1'
 import { ClientSideTable } from '@/Presentation/Components/Table'
@@ -705,7 +705,7 @@ const EventFormView: React.FC = () => {
 																		url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 																	/>
 
-																	<LocationWithStatus
+																	<EventWithStatus
 																		title={formState?.title ?? ''}
 																		detail={formState?.detail ?? ''}
 																		img={

@@ -1,0 +1,98 @@
+import React from 'react'
+import { KTSVG } from '@/_metronic/helpers'
+import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { ToastContentProps } from 'react-toastify'
+import clsx from 'clsx'
+import moment from 'moment'
+import 'moment/locale/th'
+
+interface Props extends ToastContentProps {}
+
+const EventAlert: React.FC<Props> = ({ closeToast }) => {
+	const { mode } = useThemeMode()
+	let themeMode = ''
+	if (mode === 'system') {
+		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+	} else {
+		themeMode = mode
+	}
+
+	const onClose = () => {
+		if (closeToast) {
+			closeToast()
+		}
+	}
+
+	return (
+		<React.Fragment>
+			<div
+				className={clsx('alert-map-card card w-100 min-h-80px overflow-hidden shadow', {
+					'bg-zeroloss-base-white border-1px border-zeroloss-grey-100': themeMode === 'light',
+					'bg-zeroloss-grey-true-800 border-zeroloss-base-white border-1px': themeMode === 'dark',
+				})}
+				// style={{ right: '2%', top: '1.5%', zIndex: 1000 }}
+			>
+				<div className="card-body p-0">
+					<div className="row min-h-80px w-100 gx-0">
+						<div className="col-4">
+							<img
+								src="/media/examples/incident-1.jpg"
+								alt="Incident 1"
+								className="w-100 h-100 object-fit-cover"
+							/>
+						</div>
+						<div className="col-8">
+							<div className="p-4 pt-1">
+								<div className="d-flex flex-row align-items-center justify-content-between">
+									<div
+										className={clsx('', {
+											'text-zeroloss-base-white': themeMode === 'dark',
+											'text-zeroloss-grey-500': themeMode === 'light',
+										})}>
+										{moment().format('DD/MM/YYYY HH:mm')}
+									</div>
+									<button className="btn btn-sm btn-icon btn-active-light" onClick={onClose}>
+										<KTSVG path="media/icons/zeroloss/x-close.svg" />
+									</button>
+								</div>
+								<h6
+									className={clsx('alert-title mt-2 fw-bold fs-4', {
+										'text-zeroloss-base-white': themeMode === 'dark',
+										'text-zeroloss-grey-900': themeMode === 'light',
+									})}>
+									ด่วน! เหตุเพลิงไหม้โรงงานพลาสติก จังหวัดนครปฐม
+								</h6>
+								<p
+									className={clsx('alert-description ', {
+										'text-zeroloss-base-white': themeMode === 'dark',
+										'text-zeroloss-grey-900': themeMode === 'light',
+									})}>
+									ระทึก 'ไฟไหม้' โรงงานผลิตกล่องโฟม ภายในนิคมอุต สาหกรรมโรจนะ ขณะนี้ยังไม่สามารถคุม
+									<span className="ms-1 text-underline cursor-pointer">เพิ่มเติม</span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<style>{`
+				.alert-map-card .alert-title {
+					display: -webkit-box;
+					-webkit-line-clamp: 1;
+					-webkit-box-orient: vertical;
+					overflow: hidden;
+				}
+
+				.alert-map-card .alert-description {
+					display: -webkit-box;
+					-webkit-line-clamp: 3s;
+					-webkit-box-orient: vertical;
+					overflow: hidden;
+				}
+			`}</style>
+		</React.Fragment>
+	)
+}
+
+export default EventAlert

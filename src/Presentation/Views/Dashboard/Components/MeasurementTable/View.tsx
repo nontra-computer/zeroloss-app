@@ -10,9 +10,10 @@ const MeasurementTable: React.FC = () => {
 	return (
 		<React.Fragment>
 			<div
-				className="card position-absolute overflow-scroll h-500px w-50"
+				className="card position-absolute overflow-scroll h-500px"
 				style={{
 					height: '40%',
+					width: '35%',
 					top: '15%',
 					left: '1%',
 					zIndex: 1000,

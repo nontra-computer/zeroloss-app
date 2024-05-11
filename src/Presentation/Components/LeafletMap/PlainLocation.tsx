@@ -14,7 +14,7 @@ const PlainLocation: React.FC<PlainLocationProps> = ({
 	popup,
 }) => {
 	const icon = new Icon({
-		iconUrl: '/media/icons/zeroloss/map/cluster/success.svg',
+		iconUrl: '/media/icons/zeroloss/red-location-marker.svg',
 		iconSize: [40, 40],
 	})
 	const markerRef = useRef<any>(null)

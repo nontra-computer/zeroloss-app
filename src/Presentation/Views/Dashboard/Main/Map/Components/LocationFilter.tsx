@@ -1,27 +1,24 @@
 import React, { useEffect } from 'react'
 import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
-import Select, { components } from 'react-select'
+import Select from 'react-select'
 import { DrawerComponent } from '@/_metronic/assets/ts/components'
 import { KTSVG } from '@/_metronic/helpers'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
-import clsx from 'clsx'
 
 interface Props {
-	eventTypeOptions: any[]
+	locationOptions: any[]
+	distanceOccuredOptions: any[]
 	filter: any
-	searchText: string
-	setSearchText: (value: string) => void
 	onChangeFilter: (key: string, value: any) => void
 	confirmFilter: () => void
 	clearFilter: () => void
 }
 
-const Filter: React.FC<Props> = ({
-	searchText,
-	setSearchText,
+const LocationFilter: React.FC<Props> = ({
 	filter,
 	onChangeFilter,
-	eventTypeOptions,
+	locationOptions,
+	// distanceOccuredOptions,
 	confirmFilter,
 	clearFilter,
 }) => {
@@ -39,7 +36,7 @@ const Filter: React.FC<Props> = ({
 
 	return (
 		<div
-			id="kt_main_dashboard_map_filter"
+			id="kt_main_dashboard_map_location_filter"
 			className="bg-body"
 			data-kt-drawer="true"
 			data-kt-drawer-name="chat"
@@ -47,8 +44,8 @@ const Filter: React.FC<Props> = ({
 			data-kt-drawer-overlay="true"
 			data-kt-drawer-width="{default:'300px', 'md': '500px'}"
 			data-kt-drawer-direction="end"
-			data-kt-drawer-toggle="#kt_main_dashboard_map_filter_toggle"
-			data-kt-drawer-close="#kt_main_dashboard_map_filter_close"
+			data-kt-drawer-toggle="#kt_main_dashboard_map_location_filter_toggle"
+			data-kt-drawer-close="#kt_main_dashboard_map_location_filter_close"
 			style={{ zIndex: 9999 }}>
 			<div className="card w-100 rounded-0" style={{ zIndex: 9999 }}>
 				<div className="card-header pe-5">
@@ -56,7 +53,7 @@ const Filter: React.FC<Props> = ({
 						{/* begin:: Title */}
 						<div className="d-flex justify-content-center flex-column me-3">
 							<span className="fs-4 fw-bolder text-zeroloss-grey-900 text-hover-primary me-1 mb-2 lh-1">
-								ตัวกรองเหตุการณ์
+								ค้นหาสถานที่เพิ่มเติม
 							</span>
 						</div>
 						{/* end:: Title */}
@@ -66,7 +63,7 @@ const Filter: React.FC<Props> = ({
 						{/* begin:: Close Button */}
 						<button
 							className="btn btn-sm btn-bg-white btn-active-light-danger text-center"
-							id="kt_main_dashboard_map_filter_close">
+							id="kt_main_dashboard_map_location_filter_close">
 							<KTSVG
 								path="media/icons/duotune/arrows/arr015.svg"
 								className="svg-icon svg-icon-2x mx-auto"
@@ -89,28 +86,32 @@ const Filter: React.FC<Props> = ({
 								<FormGenerator
 									formKey="search"
 									inputType="plain"
-									containerClassName="w-100 d-inline-block"
-									additionalClassName="shadow-sm"
-									placeholder="ค้นหาสถานที่/เหตุการณ์"
-									label="ค้นหาเหตุการณ์"
-									value={searchText}
-									onChange={e => setSearchText(e.target.value)}
+									label="ค้นหาด้วยชื่อสถานที่"
+									placeholder=""
+									additionalClassName="fs-7 bg-zeroloss-base-white"
+									// value={filter.contract_code}
+									// onChange={e => onChangeFilter('contract_code', e.target.value)}
 								/>
 							</div>
 							{/* END:: Search Text */}
 
-							{/* BEGIN:: Event Type */}
+							{/* BEGIN:: Location Type */}
 							<div className="col-12">
-								<label className="form-label">ประเภทเหตุการณ์</label>
+								<label className="form-label">ประเภทสถานที่</label>
 								<Select
-									isMulti
-									placeholder="เลือกประเภทเหตุการณ์"
+									placeholder="เลือกประเภทสถานที่"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
-									className="shadow-sm w-100"
+									className="w-100 shadow-sm"
+									options={locationOptions}
+									value={
+										locationOptions.find(option => option.value === filter.locationTypeId) ?? null
+									}
+									onChange={option => onChangeFilter('locationTypeId', option?.value)}
 									styles={{
 										container: styles => ({
 											...styles,
 											height: '44px',
+											marginTop: '-2px',
 										}),
 										control: styles => ({
 											...styles,
@@ -123,65 +124,67 @@ const Filter: React.FC<Props> = ({
 											...styles,
 											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
 											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
-											zIndex: 1000,
 										}),
 										input: styles => ({
 											...styles,
 											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
 										}),
 									}}
-									options={eventTypeOptions}
-									value={
-										eventTypeOptions.filter(option =>
-											filter.type.find((item: any) => item.value === option.value)
-										) ?? null
-									}
-									onChange={option => onChangeFilter('type', option)}
 									components={{
 										IndicatorSeparator: () => null,
-										SingleValue: props => (
-											<components.SingleValue {...props} className="cursor-pointer">
-												<span
-													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
-														'bg-zeroloss-error': props.data.value === 1,
-														'bg-zeroloss-warning': props.data.value === 2,
-														'bg-zeroloss-success': props.data.value === 3,
-														'bg-zeroloss-primary': props.data.value === 4,
-														'bg-zeroloss-brand-600': props.data.value === 5,
-														'bg-zeroloss-primary-400': props.data.value === 6,
-													})}></span>
-												{props.data.label}
-											</components.SingleValue>
-										),
-										Option: props => (
-											<components.Option {...props} className="cursor-pointer">
-												<span
-													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
-														'bg-zeroloss-error': props.data.value === 1,
-														'bg-zeroloss-warning': props.data.value === 2,
-														'bg-zeroloss-success': props.data.value === 3,
-														'bg-zeroloss-primary': props.data.value === 4,
-														'bg-zeroloss-brand-600': props.data.value === 5,
-														'bg-zeroloss-primary-400': props.data.value === 6,
-													})}></span>
-												{props.data.label}
-											</components.Option>
-										),
 									}}
 								/>
 							</div>
-							{/* END:: Event Type */}
+							{/* END:: Location Type */}
+
+							{/* BEGIN:: Distance from Event */}
+							{/* <div className="col-12">
+								<label className="form-label">ระยะห่างจากจุดเกิดเหตุ</label>
+								<Select
+									placeholder="เลือกระยะห่างจากจุดเกิดเหตุ"
+									noOptionsMessage={() => 'ไม่พบข้อมูล'}
+									className="w-100 shadow-sm"
+									options={distanceOccuredOptions}
+									components={{
+										IndicatorSeparator: () => null,
+									}}
+									styles={{
+										container: styles => ({
+											...styles,
+											height: '44px',
+											marginTop: '-2px',
+										}),
+										control: styles => ({
+											...styles,
+											height: '44px',
+											borderColor: themeMode === 'dark' ? '#363843' : '#dbdfe9',
+											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+										}),
+										menu: styles => ({
+											...styles,
+											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+										}),
+										input: styles => ({
+											...styles,
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+										}),
+									}}
+								/>
+							</div> */}
+							{/* END:: Distance from Event */}
 
 							{/* BEGIN:: Call to Action */}
 							<div className="col-12 d-flex flex-row">
 								<button
-									id="kt_main_dashboard_map_filter_close"
+									id="kt_main_dashboard_map_location_filter_close"
 									className="btn btn-sm btn-zeroloss-primary-500 text-zeroloss-base-white me-4 w-50 fw-bold"
 									onClick={confirmFilter}>
 									ค้นหา
 								</button>
 								<button
-									id="kt_main_dashboard_map_filter_close"
+									id="kt_main_dashboard_map_location_filter_close"
 									className="btn btn-sm btn-zeroloss-grey-100 btn-zeroloss-grey-500 w-50 fw-bolder"
 									onClick={clearFilter}>
 									ล้างตัวกรอง
@@ -196,4 +199,4 @@ const Filter: React.FC<Props> = ({
 	)
 }
 
-export default Filter
+export default LocationFilter

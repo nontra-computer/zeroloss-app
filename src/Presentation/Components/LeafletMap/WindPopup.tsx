@@ -1,9 +1,9 @@
-import { KTSVG } from '@/_metronic/helpers'
+// import { KTSVG } from '@/_metronic/helpers'
 import React from 'react'
 import { WIND_TO } from '@/Configuration/Wind'
 
 interface Props {
-	title: string
+	measurementName: string
 	direction: number
 	temp: number
 	rh: number
@@ -13,7 +13,7 @@ interface Props {
 	ws: number
 }
 
-const WindPopup: React.FC<Props> = ({ title, windDeg, windTo, temp, rh, bp, ws }) => {
+const WindPopup: React.FC<Props> = ({ measurementName, windDeg, windTo, temp, rh, bp, ws }) => {
 	const generateValue = (value: any, unit: string) => {
 		if (value === undefined || value === null) {
 			return '-'
@@ -34,11 +34,14 @@ const WindPopup: React.FC<Props> = ({ title, windDeg, windTo, temp, rh, bp, ws }
 						/>
 					</div>
 					<div className="mt-4 text-start">
-						<h6 className="text-start text-zeroloss-base-white fw-bold fs-4">{title ?? '-'}</h6>
+						<h6 className="text-start text-zeroloss-base-white fw-bold fs-4">
+							{measurementName ?? '-'}
+						</h6>
 						<div className="text-zeroloss-base-white text-start mb-1">
 							WS : {generateValue(ws, 'm/s')}
 						</div>
 						<div className="text-zeroloss-base-white text-start mb-1">
+							{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 							{/* @ts-ignore */}
 							WD : {generateValue(windDeg, `Deg ${WIND_TO[windTo] ?? ''}`)}
 						</div>
@@ -52,10 +55,10 @@ const WindPopup: React.FC<Props> = ({ title, windDeg, windTo, temp, rh, bp, ws }
 							BP :{generateValue(bp, 'HHmg')}
 						</div>
 
-						<span className="cursor-pointer fw-bold text-zeroloss-base-white">
+						{/* <span className="cursor-pointer fw-bold text-zeroloss-base-white">
 							รายละเอียดเพิ่มเติม
 							<KTSVG path="media/icons/zeroloss/red-arrow-narrow-up-right.svg" className="ms-1" />
-						</span>
+						</span> */}
 					</div>
 				</div>
 			</div>

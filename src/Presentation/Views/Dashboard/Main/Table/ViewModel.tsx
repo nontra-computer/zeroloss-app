@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { TableContext } from '@/Context/Table'
+import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { useEventStore } from '@/Store/Event'
@@ -20,10 +21,11 @@ const INITIAL_STATE_FILTER: {
 }
 
 const ViewModel = () => {
+	const navigate = useNavigate()
 	const { updatePagination, updateDefaultSorting, updateLoading } = useContext(TableContext)
 	const { isMobile, is4K, is8K } = useResolutionDetection()
 	const { mode } = useThemeMode()
-	const { rawData, dataTypes, getAll, getTypes, clearState } = useEventStore(state => ({
+	const { rawData, dataTypes, getAll, getTypes } = useEventStore(state => ({
 		rawData: state.data,
 		dataTypes: state.types,
 		getAll: state.getAll,
@@ -45,7 +47,7 @@ const ViewModel = () => {
 
 				if (filter.type.length > 0) {
 					const type = filter.type.map((t: any) => t)
-					if (!type.includes(d.eventType.id)) return false
+					if (!type.includes(d.eventTypeId)) return false
 				}
 
 				return true
@@ -57,7 +59,7 @@ const ViewModel = () => {
 
 		Object.keys(filter).forEach(key => {
 			if (key === 'type') {
-				results[key] = dataTypes.filter((d: any) => filter[key].includes(d.id))
+				results[key] = dataTypes.filter((d: any) => filter[key].includes(d?.id))
 			} else if (key === 'search') {
 				results[key] = filter[key]
 			}
@@ -177,30 +179,30 @@ const ViewModel = () => {
 		},
 		{
 			Header: 'ประเภทงาน',
-			accessor: 'eventType',
+			accessor: 'eventTypeId',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: ({ value }: any) => {
+			Cell: ({ value, row }: any) => {
 				return (
 					<span
 						className={clsx('badge text-zeroloss-grey-700', {
-							'bg-zeroloss-error-300': value?.id === 1,
-							'bg-zeroloss-warning-300': value?.id === 2,
-							'bg-zeroloss-success-300': value?.id === 3,
-							'bg-zeroloss-primary-300': value?.id === 4,
-							'bg-zeroloss-purple-1': value?.id === 5,
-							'bg-zeroloss-primary-200': value?.id === 6,
+							'bg-zeroloss-error-300': value === 1,
+							'bg-zeroloss-warning-300': value === 2,
+							'bg-zeroloss-success-300': value === 3,
+							'bg-zeroloss-primary-300': value === 4,
+							'bg-zeroloss-purple-1': value === 5,
+							'bg-zeroloss-primary-200': value === 6,
 						})}>
 						<span
 							className={clsx('p-1 rounded-circle w-2px h-2px me-2 animation-blink', {
-								'bg-zeroloss-error': value?.id === 1,
-								'bg-zeroloss-warning': value?.id === 2,
-								'bg-zeroloss-success': value?.id === 3,
-								'bg-zeroloss-primary': value?.id === 4,
-								'bg-zeroloss-brand-600': value?.id === 5,
-								'bg-zeroloss-primary-400': value?.id === 6,
+								'bg-zeroloss-error': value === 1,
+								'bg-zeroloss-warning': value === 2,
+								'bg-zeroloss-success': value === 3,
+								'bg-zeroloss-primary': value === 4,
+								'bg-zeroloss-brand-600': value === 5,
+								'bg-zeroloss-primary-400': value === 6,
 							})}
 						/>{' '}
-						{value?.name}
+						{row?.original?.eventTypeTitle}
 					</span>
 				)
 			},
@@ -243,9 +245,13 @@ const ViewModel = () => {
 			Header: '',
 			accessor: 'action',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: () => (
+			Cell: ({ row }: any) => (
 				<div className="d-flex flex-row justify-content-center align-items-center">
-					<button className="btn btn-sm btn-icon btn-muted btn-active-light">
+					<button
+						className="btn btn-sm btn-icon btn-muted btn-active-light"
+						onClick={() => {
+							navigate(`/events/detail/${row.original.id}`)
+						}}>
 						<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
 					</button>
 					<button className="btn btn-sm btn-icon btn-muted btn-active-light">
@@ -299,9 +305,6 @@ const ViewModel = () => {
 	useEffect(() => {
 		fetchData()
 
-		return () => {
-			clearState()
-		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 

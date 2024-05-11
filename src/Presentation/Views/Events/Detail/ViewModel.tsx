@@ -45,8 +45,9 @@ const ViewModel = () => {
 		getMediaPath: state.getEventMediaPath,
 		clearState: state.clearState,
 	}))
-	const { locationData, getLocation } = useLocationStore(state => ({
+	const { locationData, setLocationData, getLocation } = useLocationStore(state => ({
 		locationData: state.dataMapMarker,
+		setLocationData: state.setDataMapMarker,
 		getLocation: state.getAllMapMarker,
 	}))
 	const { eventMessageData, getAllEventMessage } = useEventMessageStore(state => ({
@@ -229,6 +230,7 @@ const ViewModel = () => {
 	useEffect(() => {
 		return () => {
 			clearState()
+			setLocationData([])
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])

@@ -77,12 +77,12 @@ const EventDetailView: React.FC = () => {
 						}
 						style={{ gap: '12px' }}>
 						{/* Background Image */}
-						<img
+						{/* <img
 							src="/media/icons/zeroloss/soft-grey-image-plus.svg"
 							className={'position-absolute pointer-events-none'}
 							style={{ left: '43%', top: '25%' }}
 							alt="Event Detail Background"
-						/>
+						/> */}
 
 						{/* Header */}
 						<div>
