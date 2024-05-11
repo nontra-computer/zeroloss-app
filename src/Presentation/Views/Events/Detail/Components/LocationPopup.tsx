@@ -26,10 +26,14 @@ const LocationPopup: React.FC<Props> = ({
 					<p className="text-zeroloss-base-white text-start">{fullAddress}</p>
 
 					<div className="text-zeroloss-base-white fs-7 mt-4 text-start">เบอร์โทรศัพท์</div>
-					<p className="text-zeroloss-base-white text-start">{phone}</p>
+					<p className="text-zeroloss-base-white text-start">
+						{String(phone).length !== 0 && phone !== null ? phone : '-'}
+					</p>
 
 					<div className="text-zeroloss-base-white fs-7 mt-4 text-start">เบอร์มือถือ</div>
-					<p className="text-zeroloss-base-white text-start">{mobile}</p>
+					<p className="text-zeroloss-base-white text-start">
+						{String(mobile).length !== 0 && mobile !== null ? mobile : '-'}
+					</p>
 				</div>
 			</div>
 

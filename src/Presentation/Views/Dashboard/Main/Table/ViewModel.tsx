@@ -11,6 +11,7 @@ import 'moment/locale/th'
 
 import Skeleton from 'react-loading-skeleton'
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
+import DoubleLine from '@/Presentation/Components/Table/Cells/DoubleLine'
 
 const INITIAL_STATE_FILTER: {
 	type: any[]
@@ -25,11 +26,12 @@ const ViewModel = () => {
 	const { updatePagination, updateDefaultSorting, updateLoading } = useContext(TableContext)
 	const { isMobile, is4K, is8K } = useResolutionDetection()
 	const { mode } = useThemeMode()
-	const { rawData, dataTypes, getAll, getTypes } = useEventStore(state => ({
+	const { rawData, dataTypes, getAll, getTypes, getEventMediaPath } = useEventStore(state => ({
 		rawData: state.data,
 		dataTypes: state.types,
 		getAll: state.getAll,
 		getTypes: state.getTypes,
+		getEventMediaPath: state.getEventMediaPath,
 		clearState: state.clearState,
 	}))
 	const [isLoading, setIsLoading] = useState(false)
@@ -38,20 +40,28 @@ const ViewModel = () => {
 
 	const data = useMemo(
 		() =>
-			rawData.filter(d => {
-				if (filter.search.length > 0) {
-					const search = filter.search.join(' ').toLowerCase()
-					const searchValues = Object.values(d).join(' ').toLowerCase()
-					if (!searchValues.includes(search)) return false
-				}
+			rawData
+				.filter(d => {
+					if (filter.search.length > 0) {
+						const search = filter.search.join(' ').toLowerCase()
+						const searchValues = Object.values(d).join(' ').toLowerCase()
+						if (!searchValues.includes(search)) return false
+					}
 
-				if (filter.type.length > 0) {
-					const type = filter.type.map((t: any) => t)
-					if (!type.includes(d.eventTypeId)) return false
-				}
+					if (filter.type.length > 0) {
+						const type = filter.type.map((t: any) => t)
+						if (!type.includes(d.eventTypeId)) return false
+					}
 
-				return true
-			}),
+					return true
+				})
+				.map((d: any) => ({
+					...d,
+					pictureCover: d?.pictureCover
+						? getEventMediaPath(d.pictureCover)
+						: '/media/icons/zeroloss/default-placeholder.png',
+				})),
+		// 	eslint-disable-next-line react-hooks/exhaustive-deps
 		[rawData, filter]
 	)
 	const displayFilter = useMemo(() => {
@@ -137,7 +147,7 @@ const ViewModel = () => {
 			minWidth: is4K || is8K ? 450 : 300,
 			Cell: (props: any) => (
 				<DoubleLineImage
-					img={props.row.original?.img}
+					img={props.row.original?.pictureCover}
 					label={props.row.original?.eventSubTypeTitle ?? '-'}
 					description={props.row.original?.title ?? '-'}
 				/>
@@ -233,8 +243,8 @@ const ViewModel = () => {
 			minWidth: is4K || is8K ? 450 : 300,
 			Cell: (props: any) => {
 				return (
-					<DoubleLineImage
-						img={'/media/icons/zeroloss/default-placeholder.png'}
+					<DoubleLine
+						// img={'/media/icons/zeroloss/default-placeholder.png'}
 						label={props.row.original.detail ?? '-'}
 						description={props.row.original.longDescription ?? ''}
 					/>

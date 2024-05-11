@@ -7,4 +7,7 @@ export interface PlainLocationProps {
 	latitude: number
 	longitude: number
 	popup?: React.FunctionComponent<any>
+	fullAddress?: string
+	phone?: string
+	mobile?: string
 }

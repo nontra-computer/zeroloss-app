@@ -38,7 +38,7 @@ const ViewModel = () => {
 		locationTypes: state.data,
 		getAllLocationTypes: state.getAll,
 	}))
-	const { measurements, getAllMeasurements } = useMeasurementStore(state => ({
+	const { getAllMeasurements } = useMeasurementStore(state => ({
 		measurements: state.data,
 		getAllMeasurements: state.getAll,
 	}))
@@ -90,6 +90,9 @@ const ViewModel = () => {
 				locationType: locationTypes.find(t => t.id === l.locationTypeId)?.name,
 				latitude: l?.latitude ? parseFloat(l.latitude) : 0,
 				longitude: l?.longitude ? parseFloat(l.longitude) : 0,
+				fullAddress: l?.fullAddress,
+				phone: l?.phone,
+				mobile: l?.mobile,
 			})),
 		[locations, locationTypes]
 	)

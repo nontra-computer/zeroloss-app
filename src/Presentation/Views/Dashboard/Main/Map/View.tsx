@@ -309,22 +309,22 @@ const MainDashboardMapView: React.FC = () => {
 													url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 												/>
 
+												{locationData.map((l, idx) => (
+													<PlainLocation
+														key={`location-${idx}`}
+														{...l}
+														latitude={l?.latitude ?? 0}
+														longitude={l?.longitude ?? 0}
+														popup={LocationPopup}
+													/>
+												))}
+
 												{data.map((d: any, index: number) => {
 													return (
 														<React.Fragment key={`map-data-${index}`}>
 															{type === 'all' && (
 																<React.Fragment>
 																	<EventWithStatus {...d} popup={IncidentPopup} />
-
-																	{locationData.map((l, idx) => (
-																		<PlainLocation
-																			key={`location-${idx}`}
-																			{...l}
-																			latitude={l?.latitude ?? 0}
-																			longitude={l?.longitude ?? 0}
-																			popup={LocationPopup}
-																		/>
-																	))}
 																</React.Fragment>
 															)}
 															{type === 'wind-direction' && (
