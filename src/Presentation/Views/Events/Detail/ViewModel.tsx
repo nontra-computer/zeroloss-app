@@ -31,6 +31,25 @@ const STEPPERS = [
 	},
 ]
 
+const EVENT_STATUS_OPTIONS = [
+	{
+		label: 'ไม่เป็นจริงและสิ้นสุดเหตุการณ์',
+		value: 1,
+	},
+	{
+		label: 'เป็นจริงและสิ้นสุดเหตุการณ์',
+		value: 2,
+	},
+	{
+		label: 'เป็นจริงและเหตุการณ์ต่อเนื่อง',
+		value: 3,
+	},
+	{
+		label: 'เหตุการณ์สิ้นสุด',
+		value: 4,
+	},
+]
+
 const ViewModel = () => {
 	const { eventId } = useParams()
 	const {
@@ -240,6 +259,7 @@ const ViewModel = () => {
 		isMapView,
 		timeStr,
 		themeMode,
+		eventStatusOptions: EVENT_STATUS_OPTIONS,
 		data: data,
 		pictureCover,
 		galleryImages,

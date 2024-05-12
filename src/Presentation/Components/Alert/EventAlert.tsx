@@ -1,15 +1,39 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { KTSVG } from '@/_metronic/helpers'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { ToastContentProps } from 'react-toastify'
 import clsx from 'clsx'
 import moment from 'moment'
 import 'moment/locale/th'
+import { useEventStore } from '@/Store/Event'
 
-interface Props extends ToastContentProps {}
+interface Props extends ToastContentProps {
+	id: number
+	calledTime: string
+	title: string
+	detail: string
+	galleries: any[]
+}
 
-const EventAlert: React.FC<Props> = ({ closeToast }) => {
+const EventAlert: React.FC<Props> = ({ closeToast, id, calledTime, title, detail, galleries }) => {
 	const { mode } = useThemeMode()
+	const getEventMediaPath = useEventStore(state => state.getEventMediaPath)
+
+	const findedPictureCover = useMemo(() => {
+		const finded = galleries.find(gallery => gallery.isPictureCover === true)
+
+		if (finded) {
+			return getEventMediaPath(finded.picturePath)
+		} else {
+			return '/media/icons/zeroloss/default-placeholder.png'
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [galleries])
+
+	const onClick = () => {
+		window.open(`/events/detail/${id}`, '_blank')
+	}
+
 	let themeMode = ''
 	if (mode === 'system') {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -30,13 +54,18 @@ const EventAlert: React.FC<Props> = ({ closeToast }) => {
 					'bg-zeroloss-base-white border-1px border-zeroloss-grey-100': themeMode === 'light',
 					'bg-zeroloss-grey-true-800 border-zeroloss-base-white border-1px': themeMode === 'dark',
 				})}
+				onClick={onClick}
 				// style={{ right: '2%', top: '1.5%', zIndex: 1000 }}
 			>
 				<div className="card-body p-0">
 					<div className="row min-h-80px w-100 gx-0">
 						<div className="col-4">
 							<img
-								src="/media/examples/incident-1.jpg"
+								src={findedPictureCover}
+								onError={e => {
+									e.currentTarget.src = '/media/icons/zeroloss/default-placeholder.png'
+									e.currentTarget.onerror = null
+								}}
 								alt="Incident 1"
 								className="w-100 h-100 object-fit-cover"
 							/>
@@ -49,7 +78,9 @@ const EventAlert: React.FC<Props> = ({ closeToast }) => {
 											'text-zeroloss-base-white': themeMode === 'dark',
 											'text-zeroloss-grey-500': themeMode === 'light',
 										})}>
-										{moment().format('DD/MM/YYYY HH:mm')}
+										{calledTime
+											? moment(calledTime).format('DD/MM/YYYY HH:mm')
+											: 'ไม่มีข้อมูลเวลาที่แจ้งเหตุ'}
 									</div>
 									<button className="btn btn-sm btn-icon btn-active-light" onClick={onClose}>
 										<KTSVG path="media/icons/zeroloss/x-close.svg" />
@@ -60,15 +91,17 @@ const EventAlert: React.FC<Props> = ({ closeToast }) => {
 										'text-zeroloss-base-white': themeMode === 'dark',
 										'text-zeroloss-grey-900': themeMode === 'light',
 									})}>
-									ด่วน! เหตุเพลิงไหม้โรงงานพลาสติก จังหวัดนครปฐม
+									{title}
 								</h6>
 								<p
 									className={clsx('alert-description ', {
 										'text-zeroloss-base-white': themeMode === 'dark',
 										'text-zeroloss-grey-900': themeMode === 'light',
 									})}>
-									ระทึก 'ไฟไหม้' โรงงานผลิตกล่องโฟม ภายในนิคมอุต สาหกรรมโรจนะ ขณะนี้ยังไม่สามารถคุม
-									<span className="ms-1 text-underline cursor-pointer">เพิ่มเติม</span>
+									{detail}
+									<span className="ms-1 text-underline cursor-pointer" onClick={onClick}>
+										เพิ่มเติม
+									</span>
 								</p>
 							</div>
 						</div>

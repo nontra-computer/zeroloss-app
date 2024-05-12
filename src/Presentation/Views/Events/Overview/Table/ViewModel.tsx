@@ -26,12 +26,12 @@ const ViewModel = () => {
 	const [searchText, setSearchText] = useState('')
 	const [selectedEventTypeId, setSelectedEventTypeId] = useState<number>(0)
 
-	const isAdmin = useMemo(() => {
-		return true
-	}, [])
-	const isApprover = useMemo(() => {
-		return true
-	}, [])
+	// const isAdmin = useMemo(() => {
+	// 	return true
+	// }, [])
+	// const isApprover = useMemo(() => {
+	// 	return true
+	// }, [])
 
 	const data = useMemo(
 		() =>
@@ -93,7 +93,8 @@ const ViewModel = () => {
 	}
 
 	const onViewDetail = (id: string) => {
-		navigate(`/events/detail/${id}`)
+		window.open(`/events/detail/${id}`, '_blank')
+		// navigate(`/events/detail/${id}`)
 	}
 
 	const TABLE_CONFIGS: any[] = [
@@ -218,11 +219,11 @@ const ViewModel = () => {
 						onClick={() => onViewDetail(row.original.id)}>
 						<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
 					</button>
-					{(isAdmin || isApprover) && (
+					{/* {(isAdmin || isApprover) && (
 						<button className="btn btn-sm btn-icon btn-muted btn-active-light">
 							<img src="/media/icons/zeroloss/trash-01.svg" alt="Action Icon" />
 						</button>
-					)}
+					)} */}
 				</div>
 			),
 		},

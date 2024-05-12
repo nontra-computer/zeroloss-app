@@ -15,149 +15,149 @@ const TYPE_OPTIONS = [
 		label: 'ข้อมูลทิศทางลม',
 		value: 'wind-direction',
 	},
-	{
-		label: 'ข้อมูลจำลอง',
-		value: 'simulation',
-	},
+	// {
+	// 	label: 'ข้อมูลจำลอง',
+	// 	value: 'simulation',
+	// },
 	{
 		label: 'ข้อมูลการวัด',
 		value: 'measurement',
 	},
 ]
 
-const MOCK_DATA: any[] = [
-	{
-		id: 1,
-		type: 'success',
-		draggable: false,
-		shapeType: 'circle',
-		popup: null,
-		position: {
-			lat: 13.7473729,
-			lng: 100.5137062,
-		},
-		degree: 0,
-	},
-	{
-		id: 2,
-		type: 'error',
-		draggable: false,
-		shapeType: 'circle',
-		popup: null,
-		position: {
-			lat: 13.8527366,
-			lng: 100.6882377,
-		},
-		degree: 78,
-	},
-	{
-		id: 3,
-		type: 'warning',
-		draggable: false,
-		shapeType: 'circle',
-		popup: null,
-		position: {
-			lat: 13.7374361,
-			lng: 100.7136729,
-		},
-		degree: 20,
-	},
-	{
-		id: 4,
-		type: 'success',
-		draggable: false,
-		shapeType: 'circle',
-		popup: null,
-		position: {
-			lat: 13.7723976,
-			lng: 100.5680649,
-		},
-		degree: 110,
-	},
-	{
-		id: 5,
-		type: 'error',
-		draggable: false,
-		shapeType: 'circle',
-		popup: null,
-		position: {
-			lat: 13.8010716,
-			lng: 100.5355079,
-		},
-		degree: 140,
-	},
-	{
-		id: 6,
-		type: 'warning',
-		draggable: false,
-		shapeType: 'circle',
-		popup: null,
-		position: {
-			lat: 13.7374361,
-			lng: 100.7136729,
-		},
-		degree: 270,
-	},
-	{
-		id: 7,
-		type: 'success',
-		shapeType: 'circle',
-		draggable: false,
-		popup: null,
-		position: {
-			lat: 13.7473729,
-			lng: 100.5137062,
-		},
-		degree: 150,
-	},
-	{
-		id: 8,
-		type: 'error',
-		shapeType: 'circle',
-		draggable: false,
-		popup: null,
-		position: {
-			lat: 13.8221382,
-			lng: 100.4998724,
-		},
-		degree: 290,
-	},
-	{
-		id: 9,
-		type: 'warning',
-		shapeType: 'circle',
-		draggable: false,
-		popup: null,
-		position: {
-			lat: 13.7240437,
-			lng: 100.4826123,
-		},
-	},
-	{
-		id: 10,
-		type: 'success',
-		shapeType: 'circle',
-		draggable: false,
-		popup: null,
-		position: {
-			lat: 13.7093509,
-			lng: 100.4475244,
-		},
-		degree: 310,
-	},
-	{
-		id: 11,
-		type: 'error',
-		shapeType: 'circle',
-		draggable: false,
-		popup: null,
-		position: {
-			lat: 13.6126487,
-			lng: 100.5380794,
-		},
-		degree: 340,
-	},
-]
+// const MOCK_DATA: any[] = [
+// 	{
+// 		id: 1,
+// 		type: 'success',
+// 		draggable: false,
+// 		shapeType: 'circle',
+// 		popup: null,
+// 		position: {
+// 			lat: 13.7473729,
+// 			lng: 100.5137062,
+// 		},
+// 		degree: 0,
+// 	},
+// 	{
+// 		id: 2,
+// 		type: 'error',
+// 		draggable: false,
+// 		shapeType: 'circle',
+// 		popup: null,
+// 		position: {
+// 			lat: 13.8527366,
+// 			lng: 100.6882377,
+// 		},
+// 		degree: 78,
+// 	},
+// 	{
+// 		id: 3,
+// 		type: 'warning',
+// 		draggable: false,
+// 		shapeType: 'circle',
+// 		popup: null,
+// 		position: {
+// 			lat: 13.7374361,
+// 			lng: 100.7136729,
+// 		},
+// 		degree: 20,
+// 	},
+// 	{
+// 		id: 4,
+// 		type: 'success',
+// 		draggable: false,
+// 		shapeType: 'circle',
+// 		popup: null,
+// 		position: {
+// 			lat: 13.7723976,
+// 			lng: 100.5680649,
+// 		},
+// 		degree: 110,
+// 	},
+// 	{
+// 		id: 5,
+// 		type: 'error',
+// 		draggable: false,
+// 		shapeType: 'circle',
+// 		popup: null,
+// 		position: {
+// 			lat: 13.8010716,
+// 			lng: 100.5355079,
+// 		},
+// 		degree: 140,
+// 	},
+// 	{
+// 		id: 6,
+// 		type: 'warning',
+// 		draggable: false,
+// 		shapeType: 'circle',
+// 		popup: null,
+// 		position: {
+// 			lat: 13.7374361,
+// 			lng: 100.7136729,
+// 		},
+// 		degree: 270,
+// 	},
+// 	{
+// 		id: 7,
+// 		type: 'success',
+// 		shapeType: 'circle',
+// 		draggable: false,
+// 		popup: null,
+// 		position: {
+// 			lat: 13.7473729,
+// 			lng: 100.5137062,
+// 		},
+// 		degree: 150,
+// 	},
+// 	{
+// 		id: 8,
+// 		type: 'error',
+// 		shapeType: 'circle',
+// 		draggable: false,
+// 		popup: null,
+// 		position: {
+// 			lat: 13.8221382,
+// 			lng: 100.4998724,
+// 		},
+// 		degree: 290,
+// 	},
+// 	{
+// 		id: 9,
+// 		type: 'warning',
+// 		shapeType: 'circle',
+// 		draggable: false,
+// 		popup: null,
+// 		position: {
+// 			lat: 13.7240437,
+// 			lng: 100.4826123,
+// 		},
+// 	},
+// 	{
+// 		id: 10,
+// 		type: 'success',
+// 		shapeType: 'circle',
+// 		draggable: false,
+// 		popup: null,
+// 		position: {
+// 			lat: 13.7093509,
+// 			lng: 100.4475244,
+// 		},
+// 		degree: 310,
+// 	},
+// 	{
+// 		id: 11,
+// 		type: 'error',
+// 		shapeType: 'circle',
+// 		draggable: false,
+// 		popup: null,
+// 		position: {
+// 			lat: 13.6126487,
+// 			lng: 100.5380794,
+// 		},
+// 		degree: 340,
+// 	},
+// ]
 
 const INITIAL_STATE_FILTER: {
 	type: any[]
@@ -271,7 +271,7 @@ const ViewModel = () => {
 			value: 10,
 		},
 	]
-	const measurementData = useMemo(() => {
+	const selectedMeasurementData = useMemo(() => {
 		return rawData?.measurements?.find((d: any) => d.id === measurementId)
 	}, [rawData?.measurements, measurementId])
 
@@ -335,48 +335,43 @@ const ViewModel = () => {
 	}
 
 	const data = useMemo(() => {
-		switch (type) {
-			case 'all': {
-				const results = dataEvents
-					.map((d: any) => ({
-						...d,
-						position: {
-							lat: d?.latitude ?? 0,
-							lng: d?.longitude ?? 0,
-						},
-						img: d?.pictureCover ? getEventMediaPath(d.pictureCover) : '',
-						eventTypeId: d?.eventTypeId ?? 0,
-						eventType: {
-							id: d?.eventTypeId ?? 0,
-							name: d?.eventTypeTitle ?? '',
-						},
-						eventSubTypeTitle: d?.eventSubTypeTitle ?? '',
-					}))
-					.filter((d: any) => {
-						if (filter.type?.length > 0) {
-							return filter.type.find((item: any) => item.value === d.eventTypeId)
-						}
+		const results = dataEvents
+			.map((d: any) => ({
+				...d,
+				position: {
+					lat: d?.latitude ?? 0,
+					lng: d?.longitude ?? 0,
+				},
+				img: d?.pictureCover ? getEventMediaPath(d.pictureCover) : '',
+				eventTypeId: d?.eventTypeId ?? 0,
+				eventType: {
+					id: d?.eventTypeId ?? 0,
+					name: d?.eventTypeTitle ?? '',
+				},
+				eventSubTypeTitle: d?.eventSubTypeTitle ?? '',
+			}))
+			.filter((d: any) => {
+				if (filter.type?.length > 0) {
+					return filter.type.find((item: any) => item.value === d.eventTypeId)
+				}
 
-						if (filter.search?.length > 0) {
-							return filter.search.includes(d.title)
-						}
+				if (filter.search?.length > 0) {
+					return filter.search.includes(d.title)
+				}
 
-						return true
-					})
+				return true
+			})
 
-				return results
-			}
-			case 'wind-direction':
-				return rawData?.wind ?? []
-			case 'simulation':
-				return MOCK_DATA
-			case 'measurement':
-				return rawData?.measurements ?? []
-			default:
-				return []
-		}
+		return results
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [type, dataEvents, rawData, filter, dataTypes])
+	}, [dataEvents, filter])
+
+	const windData = useMemo(() => {
+		return rawData?.wind ?? []
+	}, [rawData])
+	const measurementData = useMemo(() => {
+		return rawData?.measurements ?? []
+	}, [rawData])
 
 	const onTypeChange = (value: 'all' | 'wind-direction' | 'simulation' | 'measurement') => {
 		setType(value)
@@ -477,6 +472,9 @@ const ViewModel = () => {
 		isTablet,
 		themeMode,
 		data: data,
+		windData,
+		measurementData,
+		selectedMeasurementData,
 		dataTypeOptions,
 		locationOptions,
 		locationTypeOptions,
@@ -498,7 +496,6 @@ const ViewModel = () => {
 		clearFilterLocation,
 		getEventMediaPath,
 		showMeasurementTable,
-		measurementData,
 		onOpenMeasurementTable,
 		onCloseMeasurementTable,
 	}

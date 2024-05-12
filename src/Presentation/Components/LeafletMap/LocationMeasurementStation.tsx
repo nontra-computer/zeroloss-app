@@ -22,9 +22,10 @@ const LocationMeasurementStation: React.FC<LocationMeasurementStationProps> = ({
 			draggable={draggable}
 			position={position}
 			eventHandlers={{
-				mouseover: event => {
+				click: event => {
 					event.target.openPopup()
 				},
+				// mouseover: event => event.target.openPopup(),
 			}}>
 			{popup && (
 				<Popup closeButton={false}>

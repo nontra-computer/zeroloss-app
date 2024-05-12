@@ -107,6 +107,7 @@ const FormGenerator: React.FC<Prop> = ({
 					mark={mark}
 					markChar={markChar}
 					onPressEnter={onPressEnter}
+					limitCharacter={limitCharacter}
 				/>
 			)
 		case 'prefix':

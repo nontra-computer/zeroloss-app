@@ -7,7 +7,6 @@ import EventWithStatus from '@/Presentation/Components/LeafletMap/EventWithStatu
 import EventPopup from '@/Presentation/Components/LeafletMap/EventPopup'
 import WindDirection from '@/Presentation/Components/LeafletMap/WindDirection'
 import WindPopup from '@/Presentation/Components/LeafletMap/WindPopup'
-import LocationPolygon from '@/Presentation/Components/LeafletMap/LocationPolygon'
 import LocationMeasurementStation from '@/Presentation/Components/LeafletMap/LocationMeasurementStation'
 import InfoBoard from '../../Components/InfoBoard/View'
 // import Alert from '../../Components/Alert/View'
@@ -27,7 +26,10 @@ const MainDashboardMapView: React.FC = () => {
 		isMobile,
 		themeMode,
 		locationData,
+		selectedMeasurementData,
 		data,
+		windData,
+		measurementData,
 		dataTypeOptions,
 		locationTypeOptions,
 		distanceOptions,
@@ -46,7 +48,6 @@ const MainDashboardMapView: React.FC = () => {
 		clearFilterEvent,
 		confirmFilterLocation,
 		clearFilterLocation,
-		measurementData,
 		showMeasurementTable,
 		onOpenMeasurementTable,
 		onCloseMeasurementTable,
@@ -263,7 +264,7 @@ const MainDashboardMapView: React.FC = () => {
 												<React.Fragment>
 													{showMeasurementTable && (
 														<MeasurementTable
-															data={measurementData}
+															data={selectedMeasurementData}
 															onClose={onCloseMeasurementTable}
 														/>
 													)}
@@ -331,44 +332,43 @@ const MainDashboardMapView: React.FC = () => {
 
 												{data.map((d: any, index: number) => {
 													return (
-														<React.Fragment key={`map-data-${index}`}>
-															{type === 'all' && (
-																<React.Fragment>
-																	<EventWithStatus {...d} popup={EventPopup} />
-																</React.Fragment>
-															)}
-															{type === 'wind-direction' && (
-																<WindDirection
-																	{...d}
-																	popup={WindPopup}
-																	position={{
-																		lat: d?.latitude ?? 0,
-																		lng: d?.longitude ?? 0,
-																	}}
-																	degree={d?.direction ?? 0}
-																/>
-															)}
-															{type === 'simulation' && (
-																<LocationPolygon
-																	type={d.shapeType}
-																	position={[d.position]}
-																	radius={1500}
-																/>
-															)}
-															{type === 'measurement' && (
-																<LocationMeasurementStation
-																	{...d}
-																	position={{
-																		lat: d?.latitude ?? 0,
-																		lng: d?.longitude ?? 0,
-																	}}
-																	popup={MeasurementDetailPopup}
-																	onClick={onOpenMeasurementTable}
-																/>
-															)}
-														</React.Fragment>
+														<EventWithStatus key={`map-data-${index}`} {...d} popup={EventPopup} />
 													)
 												})}
+
+												{type === 'wind-direction' && (
+													<React.Fragment>
+														{windData.map((d: any, index: number) => (
+															<WindDirection
+																key={`wind-data-${index}`}
+																{...d}
+																popup={WindPopup}
+																position={{
+																	lat: d?.latitude ?? 0,
+																	lng: d?.longitude ?? 0,
+																}}
+																degree={d?.direction ?? 0}
+															/>
+														))}
+													</React.Fragment>
+												)}
+
+												{type === 'measurement' && (
+													<React.Fragment>
+														{measurementData.map((d: any, index: number) => (
+															<LocationMeasurementStation
+																key={`measurement-data-${index}`}
+																{...d}
+																position={{
+																	lat: d?.latitude ?? 0,
+																	lng: d?.longitude ?? 0,
+																}}
+																popup={MeasurementDetailPopup}
+																onClick={onOpenMeasurementTable}
+															/>
+														))}
+													</React.Fragment>
+												)}
 											</MapContainer>
 										</div>
 									</div>

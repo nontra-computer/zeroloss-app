@@ -21,7 +21,10 @@ const PlainLocation: React.FC<PlainLocationProps> = ({ latitude, longitude, popu
 				lng: longitude,
 			}}
 			eventHandlers={{
-				mouseover: event => event.target.openPopup(),
+				click: event => {
+					event.target.openPopup()
+				},
+				// mouseover: event => event.target.openPopup(),
 			}}>
 			{popup && (
 				<Popup closeButton={false}>

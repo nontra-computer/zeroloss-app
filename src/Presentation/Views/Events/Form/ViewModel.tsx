@@ -812,6 +812,11 @@ const ViewModel = () => {
 		}
 	}
 
+	const onCreateReportingMessage = () => {
+		setFormType('create')
+		onOpenEventMessageForm()
+	}
+
 	const onEditReportingMessage = (id: number) => {
 		setFormType('edit')
 		setEditId(id)
@@ -1017,6 +1022,7 @@ const ViewModel = () => {
 		impactAnimalOptions,
 		onCancel,
 		onSubmit,
+		onCreateReportingMessage,
 		eventPictureCover,
 		eventPictures,
 	}

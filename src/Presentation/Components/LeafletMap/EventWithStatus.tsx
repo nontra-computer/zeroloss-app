@@ -59,7 +59,10 @@ const EventWithStatusPopup: React.FC<EventWithStatusProps> = ({
 			draggable={draggable}
 			position={position}
 			eventHandlers={{
-				mouseover: event => event.target.openPopup(),
+				click: event => {
+					event.target.openPopup()
+				},
+				// mouseover: event => event.target.openPopup(),
 			}}>
 			{popup && (
 				<Popup closeButton={false}>

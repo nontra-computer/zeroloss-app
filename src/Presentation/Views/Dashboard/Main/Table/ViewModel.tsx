@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { TableContext } from '@/Context/Table'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { useEventStore } from '@/Store/Event'
@@ -22,7 +22,7 @@ const INITIAL_STATE_FILTER: {
 }
 
 const ViewModel = () => {
-	const navigate = useNavigate()
+	// const navigate = useNavigate()
 	const { updatePagination, updateDefaultSorting, updateLoading } = useContext(TableContext)
 	const { isMobile, is4K, is8K } = useResolutionDetection()
 	const { mode } = useThemeMode()
@@ -260,13 +260,14 @@ const ViewModel = () => {
 					<button
 						className="btn btn-sm btn-icon btn-muted btn-active-light"
 						onClick={() => {
-							navigate(`/events/detail/${row.original.id}`)
+							window.open(`/events/detail/${row.original.id}`, '_blank')
+							// navigate(`/events/detail/${row.original.id}`)
 						}}>
 						<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
 					</button>
-					<button className="btn btn-sm btn-icon btn-muted btn-active-light">
+					{/* <button className="btn btn-sm btn-icon btn-muted btn-active-light">
 						<img src="/media/icons/zeroloss/trash-01.svg" alt="Action Icon" />
-					</button>
+					</button> */}
 				</div>
 			),
 		},
