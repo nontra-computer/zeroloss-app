@@ -38,6 +38,7 @@ interface EventStore {
 	getEventMediaPath: (value: string) => string
 	create: (data: ICreateEvent) => Promise<{ data: any; success: boolean }>
 	edit: (id: string, data: any) => Promise<{ data: any; success: boolean }>
+	approve: (id: string, data: any) => Promise<{ data: any; success: boolean }>
 	clearState: () => void
 }
 
@@ -189,6 +190,26 @@ export const useEventStore = create<EventStore>(set => ({
 		})
 		return axios
 			.patch(`${API_SLUG}/${id}`, formData)
+			.then(response => {
+				return { data: response.data, success: true }
+			})
+			.catch(error => {
+				return {
+					data: error.response?.data.message?.toString() ?? 'Something went wrong.',
+					success: false,
+				}
+			})
+	},
+	approve: async (id: string, data: any) => {
+		const formData = new FormData()
+		Object.keys(data).forEach(key => {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			formData.append(key, data[key])
+		})
+
+		return axios
+			.post(`${API_SLUG}/${id}/approve`, formData)
 			.then(response => {
 				return { data: response.data, success: true }
 			})
