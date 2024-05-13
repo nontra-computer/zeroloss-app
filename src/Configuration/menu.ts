@@ -32,6 +32,13 @@ export const ZEROLOSS_MENU = [
 				path: '/dashboard/mwa',
 				label: 'ZEROLOSS.MENU.MWA_MEASUREMENT',
 			},
+			{
+				key: 'monitoring',
+				icon: 'bi-broadcast-pin',
+				path: 'https://emcc.zeroloss.tech/monitoring',
+				label: 'ZEROLOSS.MENU.MONITORING',
+				outside: true,
+			},
 		],
 	},
 	{
@@ -137,13 +144,7 @@ export const ZEROLOSS_SETTING_MENU = [
 				label: 'ZEROLOSS.MENU.MEASUREMENT_SETUP',
 				outside: true,
 			},
-			{
-				key: 'monitoring',
-				icon: 'bi-broadcast-pin',
-				path: 'https://emcc.zeroloss.tech/monitoring',
-				label: 'ZEROLOSS.MENU.MONITORING',
-				outside: true,
-			},
+
 			// {
 			// 	key: 'chat',
 			// 	icon: 'bi-chat-left-text-fill',
