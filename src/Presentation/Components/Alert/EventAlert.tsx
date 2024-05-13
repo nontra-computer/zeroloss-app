@@ -43,7 +43,7 @@ const EventAlert: React.FC<Props> = ({
 			return '/media/icons/zeroloss/default-placeholder.png'
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [galleries])
+	}, [pictureCover])
 
 	const onClick = () => {
 		window.open(`/events/detail/${id}`, '_blank')
