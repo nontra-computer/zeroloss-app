@@ -23,8 +23,9 @@ export const ZEROLOSS_MENU = [
 			{
 				key: 'measurement',
 				icon: 'bi-mask',
-				path: '/dashboard/measurement',
+				path: 'https://emcc.zeroloss.tech/monitoring',
 				label: 'ZEROLOSS.MENU.MEASUREMENT',
+				outside: true,
 			},
 			{
 				key: 'mwa_measurement',
@@ -32,13 +33,13 @@ export const ZEROLOSS_MENU = [
 				path: '/dashboard/mwa',
 				label: 'ZEROLOSS.MENU.MWA_MEASUREMENT',
 			},
-			{
-				key: 'monitoring',
-				icon: 'bi-broadcast-pin',
-				path: 'https://emcc.zeroloss.tech/monitoring',
-				label: 'ZEROLOSS.MENU.MONITORING',
-				outside: true,
-			},
+			// {
+			// 	key: 'monitoring',
+			// 	icon: 'bi-broadcast-pin',
+			// 	path: 'https://emcc.zeroloss.tech/monitoring',
+			// 	label: 'ZEROLOSS.MENU.MONITORING',
+			// 	outside: true,
+			// },
 		],
 	},
 	{
