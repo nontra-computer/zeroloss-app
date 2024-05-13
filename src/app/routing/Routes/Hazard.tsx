@@ -4,7 +4,7 @@ import EventOverviewView from '@/Presentation/Views/Events/Overview/View'
 import EventFormView from '@/Presentation/Views/Events/Form/View'
 import { LocationSelectionContextProvider } from '@/Presentation/Views/Events/Form/LocationSelection/Context'
 import HazardTable from '@/Presentation/Views/Dashboard/HazardTable/View'
-import HazardManagementDetailView from '@/Presentation/HazardManagement/Detail/View'
+import HazardManagementDetailView from '@/Presentation/Views/HazardManagement/Detail/View'
 
 const HazardManagementRoutes = () => (
 	<Routes>
@@ -82,7 +82,7 @@ const HazardManagementRoutes = () => (
 			<Route path="*" element={<Navigate to="." replace />} />
 		</Route>
 
-		<Route path="detail/view">
+		<Route path="detail/:id">
 			<Route index element={<HazardManagementDetailView />} />
 
 			<Route path="*" element={<Navigate to="." replace />} />

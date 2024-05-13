@@ -68,9 +68,9 @@ const NumberBox: React.FC<Props> = ({ id, title, type, value, unit, infos, heigh
 				<div
 					className="d-flex flex-row align-items-end justify-content-between"
 					style={{ columnGap: '12px' }}>
-					<h2
+					<h4
 						id={id}
-						className={clsx('fs-5x fs-lg-7x fw-bolder my-0', {
+						className={clsx('fs-5x fs-lg-3x fw-bolder my-0', {
 							'text-zeroloss-success': type === 'success' && themeMode === 'dark',
 							'text-zeroloss-warning': type === 'warning' && themeMode === 'dark',
 							'text-zeroloss-error': type === 'danger' && themeMode === 'dark',
@@ -79,7 +79,7 @@ const NumberBox: React.FC<Props> = ({ id, title, type, value, unit, infos, heigh
 						})}>
 						{formatNumberAbbreviation(value)}&nbsp;
 						{unit}
-					</h2>
+					</h4>
 
 					{infos && infos.length > 0 && (
 						<div className="d-flex flex-column" style={{ gap: '8px' }}>

@@ -1,6 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { TableContext } from '@/Context/Table'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { useNavigate } from 'react-router-dom'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { useHazardManagementStore } from '@/Store/Hazard'
 import { toast } from 'react-toastify'
@@ -19,6 +20,7 @@ const INITIAL_STATE_FILTER: {
 }
 
 const ViewModel = () => {
+	const navigate = useNavigate()
 	const { updatePagination, updateDefaultSorting, updateLoading } = useContext(TableContext)
 	const { isMobile, is4K, is8K } = useResolutionDetection()
 	const { mode } = useThemeMode()
@@ -66,6 +68,10 @@ const ViewModel = () => {
 		if (key === 'search') {
 			setSearchText('')
 		}
+	}
+
+	const onViewDetail = (id: string) => {
+		navigate(`/hazard-modeling/detail/${id}`)
 	}
 
 	const onRemoveFilter = (key: string, value: any) => {
@@ -138,9 +144,11 @@ const ViewModel = () => {
 			Header: 'action',
 			accessor: 'action',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: () => (
+			Cell: ({ row }: any) => (
 				<div className="d-flex flex-row justify-content-center align-items-center">
-					<button className="btn btn-sm btn-icon btn-muted btn-active-light">
+					<button
+						className="btn btn-sm btn-icon btn-muted btn-active-light"
+						onClick={() => onViewDetail(row.original.id)}>
 						<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
 					</button>
 					<button className="btn btn-sm btn-icon btn-muted btn-active-light">
@@ -198,6 +206,7 @@ const ViewModel = () => {
 		data: data,
 		LOADING_TABLE_CONFIGS,
 		TABLE_CONFIGS,
+		onViewDetail,
 	}
 }
 
