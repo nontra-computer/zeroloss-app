@@ -1,43 +1,47 @@
-import {useEffect, useState} from 'react'
-import {Tab} from 'bootstrap'
+import { useEffect, useState } from 'react'
+import { Tab } from 'bootstrap'
 import {
-  MenuComponent,
-  DrawerComponent,
-  ScrollComponent,
-  ScrollTopComponent,
-  StickyComponent,
-  ToggleComponent,
-  SwapperComponent,
+	MenuComponent,
+	DrawerComponent,
+	ScrollComponent,
+	ScrollTopComponent,
+	StickyComponent,
+	ToggleComponent,
+	SwapperComponent,
 } from '../assets/ts/components'
-import {ThemeModeComponent} from '../assets/ts/layout'
+import { ThemeModeComponent } from '../assets/ts/layout'
 
-import {useLayout} from './core'
+import { useLayout } from './core'
+import useEventNotification from '@/Hooks/useEventNotification'
 
 export function MasterInit() {
-  const {config} = useLayout()
-  const [initialized, setInitialized] = useState(false)
-  const pluginsInitialization = () => {
-    ThemeModeComponent.init()
-    setTimeout(() => {
-      ToggleComponent.bootstrap()
-      ScrollTopComponent.bootstrap()
-      DrawerComponent.bootstrap()
-      StickyComponent.bootstrap()
-      MenuComponent.bootstrap()
-      ScrollComponent.bootstrap()
-      SwapperComponent.bootstrap()
-      document.querySelectorAll('[data-bs-toggle="tab"]').forEach((tab) => {
-        Tab.getOrCreateInstance(tab)
-      })
-    }, 500)
-  }
+	const { config } = useLayout()
+	const [initialized, setInitialized] = useState(false)
 
-  useEffect(() => {
-    if (!initialized) {
-      setInitialized(true)
-      pluginsInitialization()
-    }
-  }, [config, initialized])
+	const pluginsInitialization = () => {
+		ThemeModeComponent.init()
+		setTimeout(() => {
+			ToggleComponent.bootstrap()
+			ScrollTopComponent.bootstrap()
+			DrawerComponent.bootstrap()
+			StickyComponent.bootstrap()
+			MenuComponent.bootstrap()
+			ScrollComponent.bootstrap()
+			SwapperComponent.bootstrap()
+			document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+				Tab.getOrCreateInstance(tab)
+			})
+		}, 500)
+	}
 
-  return <></>
+	useEffect(() => {
+		if (!initialized) {
+			setInitialized(true)
+			pluginsInitialization()
+		}
+	}, [config, initialized])
+
+	useEventNotification()
+
+	return <></>
 }

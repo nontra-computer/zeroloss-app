@@ -3,7 +3,7 @@ import React from 'react'
 interface Props {
 	nameTh: string
 	locationType: string
-	address: string
+	fullAddress: string
 	phone: string
 	mobile: string
 }
@@ -11,7 +11,7 @@ interface Props {
 const LocationPopup: React.FC<Props> = ({
 	nameTh = '',
 	locationType = '',
-	address = '-',
+	fullAddress = '-',
 	phone = '-',
 	mobile = '-',
 }) => {
@@ -23,18 +23,23 @@ const LocationPopup: React.FC<Props> = ({
 					<div className="text-zeroloss-base-white fs-6">{locationType}</div>
 
 					<div className="text-zeroloss-base-white fs-7 mt-4 text-start">ที่อยู่</div>
-					<p className="text-zeroloss-base-white text-start">{address}</p>
+					<p className="text-zeroloss-base-white text-start">{fullAddress}</p>
 
 					<div className="text-zeroloss-base-white fs-7 mt-4 text-start">เบอร์โทรศัพท์</div>
-					<p className="text-zeroloss-base-white text-start">{phone}</p>
+					<p className="text-zeroloss-base-white text-start">
+						{String(phone).length !== 0 && phone !== null ? phone : '-'}
+					</p>
 
 					<div className="text-zeroloss-base-white fs-7 mt-4 text-start">เบอร์มือถือ</div>
-					<p className="text-zeroloss-base-white text-start">{mobile}</p>
+					<p className="text-zeroloss-base-white text-start">
+						{String(mobile).length !== 0 && mobile !== null ? mobile : '-'}
+					</p>
 				</div>
 			</div>
 
 			<style>{`
-                .event-detail-map-container .leaflet-container .leaflet-popup .leaflet-popup-content-wrapper {
+                .main-dashboard-map-container .leaflet-container .leaflet-popup .leaflet-popup-content-wrapper,
+				.event-detail-map-container .leaflet-container .leaflet-popup .leaflet-popup-content-wrapper {
                     background-color: transparent !important;
 					box-shadow: none !important;
                 }

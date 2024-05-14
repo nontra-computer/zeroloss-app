@@ -3,18 +3,9 @@ import { Icon } from 'leaflet'
 import { Marker, Popup } from 'react-leaflet'
 import { PlainLocationProps } from '@/Types/PlainLocation'
 
-const PlainLocation: React.FC<PlainLocationProps> = ({
-	id,
-	nameTh,
-	nameEn,
-	locationTypeId,
-	locationType,
-	latitude,
-	longitude,
-	popup,
-}) => {
+const PlainLocation: React.FC<PlainLocationProps> = ({ latitude, longitude, popup, ...props }) => {
 	const icon = new Icon({
-		iconUrl: '/media/icons/zeroloss/map/cluster/success.svg',
+		iconUrl: '/media/icons/zeroloss/red-location-marker.svg',
 		iconSize: [40, 40],
 	})
 	const markerRef = useRef<any>(null)
@@ -30,18 +21,15 @@ const PlainLocation: React.FC<PlainLocationProps> = ({
 				lng: longitude,
 			}}
 			eventHandlers={{
-				mouseover: event => event.target.openPopup(),
+				click: event => {
+					event.target.openPopup()
+				},
+				// mouseover: event => event.target.openPopup(),
 			}}>
 			{popup && (
 				<Popup closeButton={false}>
 					{createElement(popup, {
-						latitude,
-						longitude,
-						id,
-						nameTh,
-						nameEn,
-						locationTypeId,
-						locationType,
+						...props,
 					})}
 				</Popup>
 			)}

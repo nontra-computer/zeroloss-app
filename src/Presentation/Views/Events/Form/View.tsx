@@ -9,8 +9,8 @@ import Select, { components } from 'react-select'
 import { KTSVG } from '@/_metronic/helpers'
 import LocationSelection from './LocationSelection/View'
 import { MapContainer, TileLayer } from 'react-leaflet'
-import LocationWithStatus from '@/Presentation/Components/LeafletMap/LocationWithStatus'
-import IncidentPopup from '@/Presentation/Components/LeafletMap/IncidentPopup'
+import EventWithStatus from '@/Presentation/Components/LeafletMap/EventWithStatus'
+import EventPopup from '@/Presentation/Components/LeafletMap/EventPopup'
 import ImageUploader1 from '@/Presentation/Components/Uploader/Images/ImageUploader1'
 import { ClientSideTable } from '@/Presentation/Components/Table'
 import EventMessageForm from '../MessageForm/View'
@@ -65,6 +65,7 @@ const EventFormView: React.FC = () => {
 		impactAnimalOptions,
 		onCancel,
 		onSubmit,
+		onCreateReportingMessage,
 	} = useViewModel()
 
 	return (
@@ -175,6 +176,20 @@ const EventFormView: React.FC = () => {
 										<div className="card-title text-zeroloss-primary fw-bolder">
 											{isCreate ? 'รายละเอียดเหตุการณ์' : selectedTabName}
 										</div>
+										{!isCreate && isEditReporting && (
+											<div className="card-toolbar">
+												<button
+													className="btn btn-sm btn-zeroloss-primary text-zeroloss-base-white"
+													onClick={onCreateReportingMessage}>
+													<img
+														className="me-1"
+														src="/media/icons/zeroloss/white-plus.svg"
+														alt="White Plus Icon"
+													/>
+													เพิ่มรายงานเหตุการณ์
+												</button>
+											</div>
+										)}
 									</div>
 									<div className="card-body">
 										<div className="row gy-5">
@@ -438,6 +453,7 @@ const EventFormView: React.FC = () => {
 																additionalClassName="form-control-sm"
 																value={formState.title}
 																onChange={e => onChangeFormState('title', e.target.value)}
+																limitCharacter={50}
 															/>
 														</div>
 													)}
@@ -451,7 +467,6 @@ const EventFormView: React.FC = () => {
 															additionalLabelCom={
 																<span className="ms-1 text-zeroloss-grey-500">(ไม่จำเป็น)</span>
 															}
-															limitCharacter={50}
 															value={formState.detail}
 															onChange={e => onChangeFormState('detail', e.target.value)}
 														/>
@@ -705,7 +720,7 @@ const EventFormView: React.FC = () => {
 																		url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 																	/>
 
-																	<LocationWithStatus
+																	<EventWithStatus
 																		title={formState?.title ?? ''}
 																		detail={formState?.detail ?? ''}
 																		img={
@@ -717,7 +732,7 @@ const EventFormView: React.FC = () => {
 																			lat: formState.latitude,
 																			lng: formState.longitude,
 																		}}
-																		popup={IncidentPopup}
+																		popup={EventPopup}
 																		eventType={formState?.eventType ?? undefined}
 																	/>
 																</MapContainer>

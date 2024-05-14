@@ -9,6 +9,7 @@ import { useLocationStore } from '@/Store/Location'
 import { useEventMessageStore } from '@/Store/EventMessage'
 import { EventMessageFormContext } from '../MessageForm/Context'
 import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
 import moment from 'moment'
 import 'moment-timezone'
 
@@ -31,6 +32,25 @@ const STEPPERS = [
 	},
 ]
 
+const EVENT_STATUS_OPTIONS = [
+	{
+		label: 'ไม่เป็นจริงและสิ้นสุดเหตุการณ์',
+		value: 1,
+	},
+	{
+		label: 'เป็นจริงและสิ้นสุดเหตุการณ์',
+		value: 2,
+	},
+	{
+		label: 'เป็นจริงและเหตุการณ์ต่อเนื่อง',
+		value: 3,
+	},
+	{
+		label: 'เหตุการณ์สิ้นสุด',
+		value: 4,
+	},
+]
+
 const ViewModel = () => {
 	const { eventId } = useParams()
 	const {
@@ -38,15 +58,19 @@ const ViewModel = () => {
 		setFormType,
 		setEditId,
 	} = useContext(EventMessageFormContext)
-	const { data, eventSubTypes, getOne, getMediaPath, clearState } = useEventStore(state => ({
-		data: state.selected,
-		eventSubTypes: state.subTypes,
-		getOne: state.getOne,
-		getMediaPath: state.getEventMediaPath,
-		clearState: state.clearState,
-	}))
-	const { locationData, getLocation } = useLocationStore(state => ({
+	const { data, eventSubTypes, getOne, getMediaPath, approveEvent, clearState } = useEventStore(
+		state => ({
+			data: state.selected,
+			eventSubTypes: state.subTypes,
+			getOne: state.getOne,
+			getMediaPath: state.getEventMediaPath,
+			approveEvent: state.approve,
+			clearState: state.clearState,
+		})
+	)
+	const { locationData, setLocationData, getLocation } = useLocationStore(state => ({
 		locationData: state.dataMapMarker,
+		setLocationData: state.setDataMapMarker,
 		getLocation: state.getAllMapMarker,
 	}))
 	const { eventMessageData, getAllEventMessage } = useEventMessageStore(state => ({
@@ -67,6 +91,8 @@ const ViewModel = () => {
 		return intl.formatMessage({ id: 'ZEROLOSS.HEADER.CURRENT_TIME' }) + ' ' + time
 	}, [currentTime, intl, selectedLang])
 	const { mode } = useThemeMode()
+
+	const [openChangeEventStatus, setOpenChangeEventStatus] = useState(false)
 
 	const [isOpenLightBox, setIsOpenLightBox] = useState(false)
 	const [imageIdx, setImageIdx] = useState(0)
@@ -161,6 +187,20 @@ const ViewModel = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[eventMessageData, eventMessagePage]
 	)
+	const eventStatusOptions = useMemo(() => {
+		const options = EVENT_STATUS_OPTIONS
+
+		if (data?.state !== 3) {
+			return options.filter(o => o.value !== 4)
+		} else if (data?.state === 3) {
+			return options.filter(o => o.value === 4)
+		} else if (data?.state === 4) {
+			return []
+		} else {
+			return options
+		}
+	}, [data])
+	const isHideEventChangeStatusButton = data?.state === 4
 	const isEventMessageMax = eventMessagePage * 4 >= eventMessageData.length
 
 	let themeMode = ''
@@ -168,6 +208,62 @@ const ViewModel = () => {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 	} else {
 		themeMode = mode
+	}
+
+	const onApproveEvent = (optionValue: number) => {
+		const option = EVENT_STATUS_OPTIONS.find(o => o.value === optionValue)
+		if (option) {
+			setOpenChangeEventStatus(false)
+			Swal.fire({
+				icon: 'question',
+				title: 'ยืนยันการเปลี่ยนสถานะเหตุการณ์',
+				html: `คุณต้องการเปลี่ยนสถานะเหตุการณ์เป็น <br /><b>"${option.label}"</b><br /> หรือไม่?`,
+				confirmButtonText: 'ยืนยัน',
+				cancelButtonText: 'ยกเลิก',
+				showConfirmButton: true,
+				showCancelButton: true,
+			}).then(({ isConfirmed }) => {
+				if (isConfirmed) {
+					let isTrue = false
+					let isInProgress = false
+
+					switch (optionValue) {
+						case 1: {
+							isTrue = false
+							isInProgress = false
+							break
+						}
+						case 2: {
+							isTrue = true
+							isInProgress = false
+							break
+						}
+						case 3: {
+							isTrue = true
+							isInProgress = true
+							break
+						}
+						case 4: {
+							isTrue = true
+							isInProgress = false
+							break
+						}
+					}
+
+					approveEvent(eventId ?? '', {
+						isTrue,
+						isInProgress,
+					}).then(({ success, data }) => {
+						if (success) {
+							toast.success('เปลี่ยนสถานะเหตุการณ์สำเร็จ')
+							fetchData()
+						} else {
+							toast.error(`เปลี่ยนสถานะเหตุการณ์ไม่สำเร็จ : ${data}`)
+						}
+					})
+				}
+			})
+		}
 	}
 
 	const fetchData = () => {
@@ -229,6 +325,7 @@ const ViewModel = () => {
 	useEffect(() => {
 		return () => {
 			clearState()
+			setLocationData([])
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -238,6 +335,10 @@ const ViewModel = () => {
 		isMapView,
 		timeStr,
 		themeMode,
+		isHideEventChangeStatusButton,
+		eventStatusOptions: eventStatusOptions,
+		openChangeEventStatus,
+		setOpenChangeEventStatus,
 		data: data,
 		pictureCover,
 		galleryImages,
@@ -253,6 +354,7 @@ const ViewModel = () => {
 		onChangeViewType,
 		onViewInDetail,
 		onOpenEventMessageForm,
+		onApproveEvent,
 		loadMoreEventMessage,
 	}
 }

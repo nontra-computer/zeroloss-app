@@ -4,8 +4,8 @@ export interface IncidentEventDetailPopupProps {
 	img?: string
 	title?: string
 	detail?: string
-	start?: string
-	end?: string
+	start?: string | null
+	end?: string | null
 	location?: string
 	locationName?: string
 }

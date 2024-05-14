@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../../../app/modules/auth'
-import { Languages } from './Languages'
+// import { Languages } from './Languages'
 import { toAbsoluteUrl } from '../../../helpers'
 
 const HeaderUserMenu: FC = () => {
@@ -31,7 +31,7 @@ const HeaderUserMenu: FC = () => {
 
 			<div className="separator my-2"></div>
 
-			<div className="menu-item px-5">
+			{/* <div className="menu-item px-5">
 				<Link to={'/crafted/pages/profile'} className="menu-link px-5 py-3">
 					My Profile
 				</Link>
@@ -108,11 +108,11 @@ const HeaderUserMenu: FC = () => {
 				<a href="#" className="menu-link px-5 py-3">
 					My Statements
 				</a>
-			</div>
+			</div> */}
 
-			<div className="separator my-2"></div>
+			{/* <div className="separator my-2"></div> */}
 
-			<Languages />
+			{/* <Languages /> */}
 
 			<div className="menu-item px-5 my-1">
 				<Link to="/crafted/account/settings" className="menu-link px-5 py-3">

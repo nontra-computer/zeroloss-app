@@ -324,6 +324,7 @@ const MainDashboardCalendarView: React.FC = () => {
 											return (
 												<IncidentEvent
 													{...arg}
+													eventSubTypeTitle={arg.event.extendedProps.eventSubTypeTitle}
 													type={arg.event.extendedProps.type}
 													title={arg.event.extendedProps.title}
 													detail={arg.event.extendedProps.detail}

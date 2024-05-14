@@ -1,9 +1,10 @@
 import React, { createElement, useRef, useMemo } from 'react'
 import { Icon } from 'leaflet'
 import { Marker, Popup } from 'react-leaflet'
-import { LocationWithStatusProps } from '@/Types/LocationWithStatus'
+import { EventWithStatusProps } from '@/Types/EventWithStatus'
 
-const LocationWithStatus: React.FC<LocationWithStatusProps> = ({
+const EventWithStatusPopup: React.FC<EventWithStatusProps> = ({
+	id,
 	type,
 	draggable,
 	popup,
@@ -13,7 +14,15 @@ const LocationWithStatus: React.FC<LocationWithStatusProps> = ({
 	detail,
 	eventTypeId,
 	eventType,
+	eventSubTypeTitle,
 }) => {
+	const EventTypeIdIcon = new Icon({
+		iconUrl: `/media/event-type/${eventTypeId}.svg`,
+		iconSize: [40, 40],
+		className:
+			'bg-zeroloss-base-white rounded-circle shadow-lg border-2 border-zeroloss-base-white p-2',
+	})
+
 	const SuccessIcon = new Icon({
 		iconUrl: '/media/icons/zeroloss/map/cluster/success.svg',
 		iconSize: [40, 40],
@@ -28,6 +37,7 @@ const LocationWithStatus: React.FC<LocationWithStatusProps> = ({
 	})
 	const markerRef = useRef<any>(null)
 
+	// eslint-disable-next-line
 	const icon = useMemo(() => {
 		switch (type) {
 			case 'success':
@@ -45,15 +55,19 @@ const LocationWithStatus: React.FC<LocationWithStatusProps> = ({
 	return (
 		<Marker
 			ref={markerRef}
-			icon={icon}
+			icon={EventTypeIdIcon}
 			draggable={draggable}
 			position={position}
 			eventHandlers={{
-				mouseover: event => event.target.openPopup(),
+				click: event => {
+					event.target.openPopup()
+				},
+				// mouseover: event => event.target.openPopup(),
 			}}>
 			{popup && (
 				<Popup closeButton={false}>
 					{createElement(popup, {
+						id,
 						lat: position.lat,
 						lng: position.lng,
 						title,
@@ -61,6 +75,7 @@ const LocationWithStatus: React.FC<LocationWithStatusProps> = ({
 						detail,
 						eventTypeId,
 						eventType,
+						eventSubTypeTitle,
 					})}
 				</Popup>
 			)}
@@ -68,4 +83,4 @@ const LocationWithStatus: React.FC<LocationWithStatusProps> = ({
 	)
 }
 
-export default LocationWithStatus
+export default EventWithStatusPopup

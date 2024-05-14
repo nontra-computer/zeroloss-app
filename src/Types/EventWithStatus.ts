@@ -1,4 +1,4 @@
-export interface LocationWithStatusProps {
+export interface EventWithStatusProps {
 	type: 'success' | 'error' | 'warning'
 	position: {
 		lat: number
@@ -7,6 +7,7 @@ export interface LocationWithStatusProps {
 	draggable?: boolean
 	popup?: React.FunctionComponent<any>
 	// Popup Props
+	id?: number
 	title?: string
 	detail?: string
 	img?: string
@@ -15,4 +16,5 @@ export interface LocationWithStatusProps {
 		id: number
 		name: string
 	}
+	eventSubTypeTitle?: string
 }

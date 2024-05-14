@@ -5,23 +5,19 @@ import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useIntl } from 'react-intl'
 import { useEventStore } from '@/Store/Event'
-import { useLocationStore } from '@/Store/Location'
 import { toast } from 'react-toastify'
 import moment from 'moment-timezone'
-import Alert from '../Components/Alert/View'
 
 const ViewModel = () => {
 	const location = useLocation()
 	const navigate = useNavigate()
 	const selectedLang = useLang()
 	const intl = useIntl()
-	const { summary, getSummary } = useEventStore(state => ({
+	const { summary, getEvents, getSummary } = useEventStore(state => ({
 		summary: state.summary,
+		getEvents: state.getAll,
 		getSummary: state.getSummary,
-	}))
-	const { getAllMapMarker } = useLocationStore(state => ({
-		dataMapMarker: state.dataMapMarker,
-		getAllMapMarker: state.getAllMapMarker,
+		clearStateEvent: state.clearState,
 	}))
 
 	const currentTime = useCurrentTime()
@@ -47,7 +43,7 @@ const ViewModel = () => {
 	const isShowCalendar = location.pathname === '/dashboard/overview/calendar'
 
 	const fetchData = () => {
-		getAllMapMarker()
+		getEvents({})
 		getSummary().then(({ data, success }) => {
 			if (!success) {
 				toast.error(data)
@@ -58,43 +54,6 @@ const ViewModel = () => {
 	const onClickView = (path: string) => {
 		navigate(path)
 	}
-
-	const handleShowAlertTemp = () => {
-		toast.success(toastProps => <Alert {...toastProps} />, {
-			className: 'zeroloss-toast',
-			bodyClassName: 'zeroloss-toast-body',
-			icon: false,
-			hideProgressBar: true,
-		})
-		// toast.success(toastProps => <Alert {...toastProps} />, {
-		// 	className: 'zeroloss-toast',
-		// 	bodyClassName: 'zeroloss-toast-body',
-		// 	icon: false,
-		// 	hideProgressBar: true,
-		// })
-		// toast.success(toastProps => <Alert {...toastProps} />, {
-		// 	className: 'zeroloss-toast',
-		// 	bodyClassName: 'zeroloss-toast-body',
-		// 	icon: false,
-		// 	hideProgressBar: true,
-		// })
-		// toast.success(toastProps => <Alert {...toastProps} />, {
-		// 	className: 'zeroloss-toast',
-		// 	bodyClassName: 'zeroloss-toast-body',
-		// 	icon: false,
-		// 	hideProgressBar: true,
-		// })
-		// toast.success(toastProps => <Alert {...toastProps} />, {
-		// 	className: 'zeroloss-toast',
-		// 	bodyClassName: 'zeroloss-toast-body',
-		// 	icon: false,
-		// 	hideProgressBar: true,
-		// })
-	}
-
-	useEffect(() => {
-		handleShowAlertTemp()
-	}, [])
 
 	useEffect(() => {
 		fetchData()

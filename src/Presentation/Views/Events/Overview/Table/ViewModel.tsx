@@ -9,43 +9,53 @@ import clsx from 'clsx'
 import moment from 'moment'
 import Skeleton from 'react-loading-skeleton'
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
+import DoubleLine from '@/Presentation/Components/Table/Cells/DoubleLine'
 
 const ViewModel = () => {
 	const navigate = useNavigate()
 	const { updatePagination, updateDefaultSorting, updateLoading } = useContext(TableContext)
 	const { isMobile, is4K, is8K } = useResolutionDetection()
 	const { mode } = useThemeMode()
-	const { isLoading, rawData, dataTypes } = useEventStore(state => ({
+	const { isLoading, rawData, dataTypes, getEventMediaPath } = useEventStore(state => ({
 		isLoading: state.isLoadingData,
 		rawData: state.data,
 		dataTypes: state.types,
+		getEventMediaPath: state.getEventMediaPath,
 	}))
 
 	const [searchText, setSearchText] = useState('')
 	const [selectedEventTypeId, setSelectedEventTypeId] = useState<number>(0)
 
-	const isAdmin = useMemo(() => {
-		return true
-	}, [])
-	const isApprover = useMemo(() => {
-		return true
-	}, [])
+	// const isAdmin = useMemo(() => {
+	// 	return true
+	// }, [])
+	// const isApprover = useMemo(() => {
+	// 	return true
+	// }, [])
 
 	const data = useMemo(
 		() =>
-			rawData.filter(d => {
-				if (searchText.length > 0) {
-					const search = searchText.toLowerCase()
-					const searchValues = Object.values(d).join(' ').toLowerCase()
-					if (!searchValues.includes(search)) return false
-				}
+			rawData
+				.filter(d => {
+					if (searchText.length > 0) {
+						const search = searchText.toLowerCase()
+						const searchValues = Object.values(d).join(' ').toLowerCase()
+						if (!searchValues.includes(search)) return false
+					}
 
-				if (selectedEventTypeId !== 0) {
-					return d.eventType.id === selectedEventTypeId
-				}
+					if (selectedEventTypeId !== 0) {
+						return d.eventType.id === selectedEventTypeId
+					}
 
-				return true
-			}),
+					return true
+				})
+				.map((d: any) => ({
+					...d,
+					pictureCover: d?.pictureCover
+						? getEventMediaPath(d.pictureCover)
+						: '/media/icons/zeroloss/default-placeholder.png',
+				})),
+		// eslint-disable-next-line
 		[rawData, searchText, selectedEventTypeId]
 	)
 
@@ -83,7 +93,8 @@ const ViewModel = () => {
 	}
 
 	const onViewDetail = (id: string) => {
-		navigate(`/events/detail/${id}`)
+		window.open(`/events/detail/${id}`, '_blank')
+		// navigate(`/events/detail/${id}`)
 	}
 
 	const TABLE_CONFIGS: any[] = [
@@ -93,7 +104,7 @@ const ViewModel = () => {
 			minWidth: is4K || is8K ? 450 : 300,
 			Cell: (props: any) => (
 				<DoubleLineImage
-					img={props.row.original?.img}
+					img={props.row.original?.pictureCover}
 					label={props.row.original?.eventSubTypeTitle ?? '-'}
 					description={props.row.original?.title ?? '-'}
 				/>
@@ -135,30 +146,30 @@ const ViewModel = () => {
 		},
 		{
 			Header: 'ประเภทงาน',
-			accessor: 'eventType',
+			accessor: 'eventTypeId',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: ({ value }: any) => {
+			Cell: ({ value, row }: any) => {
 				return (
 					<span
 						className={clsx('badge text-zeroloss-grey-700', {
-							'bg-zeroloss-error-300': value?.id === 1,
-							'bg-zeroloss-warning-300': value?.id === 2,
-							'bg-zeroloss-success-300': value?.id === 3,
-							'bg-zeroloss-primary-300': value?.id === 4,
-							'bg-zeroloss-purple-1': value?.id === 5,
-							'bg-zeroloss-primary-200': value?.id === 6,
+							'bg-zeroloss-error-300': value === 1,
+							'bg-zeroloss-warning-300': value === 2,
+							'bg-zeroloss-success-300': value === 3,
+							'bg-zeroloss-primary-300': value === 4,
+							'bg-zeroloss-purple-1': value === 5,
+							'bg-zeroloss-primary-200': value === 6,
 						})}>
 						<span
 							className={clsx('p-1 rounded-circle w-2px h-2px me-2 animation-blink', {
-								'bg-zeroloss-error': value?.id === 1,
-								'bg-zeroloss-warning': value?.id === 2,
-								'bg-zeroloss-success': value?.id === 3,
-								'bg-zeroloss-primary': value?.id === 4,
-								'bg-zeroloss-brand-600': value?.id === 5,
-								'bg-zeroloss-primary-400': value?.id === 6,
+								'bg-zeroloss-error': value === 1,
+								'bg-zeroloss-warning': value === 2,
+								'bg-zeroloss-success': value === 3,
+								'bg-zeroloss-primary': value === 4,
+								'bg-zeroloss-brand-600': value === 5,
+								'bg-zeroloss-primary-400': value === 6,
 							})}
 						/>{' '}
-						{value?.name}
+						{row?.original?.eventTypeTitle}
 					</span>
 				)
 			},
@@ -189,8 +200,8 @@ const ViewModel = () => {
 			minWidth: is4K || is8K ? 450 : 300,
 			Cell: (props: any) => {
 				return (
-					<DoubleLineImage
-						img={'/media/icons/zeroloss/default-placeholder.png'}
+					<DoubleLine
+						// img={'/media/icons/zeroloss/default-placeholder.png'}
 						label={props.row.original.detail ?? '-'}
 						description={props.row.original.longDescription ?? ''}
 					/>
@@ -208,11 +219,11 @@ const ViewModel = () => {
 						onClick={() => onViewDetail(row.original.id)}>
 						<img src="/media/icons/zeroloss/edit-01.svg" alt="Action Icon" />
 					</button>
-					{(isAdmin || isApprover) && (
+					{/* {(isAdmin || isApprover) && (
 						<button className="btn btn-sm btn-icon btn-muted btn-active-light">
 							<img src="/media/icons/zeroloss/trash-01.svg" alt="Action Icon" />
 						</button>
-					)}
+					)} */}
 				</div>
 			),
 		},

@@ -34,7 +34,7 @@ const ViewModel = () => {
 
 	const calendarRef = useRef<any>(null)
 	const [openDetail, setOpenDetail] = useState(false)
-	const [selected, setSelected] = useState<string | null>(null)
+	const [selected, setSelected] = useState<any>(null)
 	const [searchText, setSearchText] = useState('')
 	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
 
@@ -69,17 +69,24 @@ const ViewModel = () => {
 
 	const data = useMemo(() => {
 		return rawData
-			.map((rd: any, idx) => ({
-				id: `incident_${idx}`,
-				title: rd?.title,
-				detail: rd?.detail,
-				start: moment(rd?.start).toISOString(),
-				end: rd?.end ? moment(rd?.end).toISOString() : moment().toISOString(),
-				type: rd?.eventTypeId ?? 0,
-				img: '/media/examples/incident-1.jpg',
-				location: '',
-				locationName: rd?.locationName ?? '',
-			}))
+			.reduce((acc, rd: any) => {
+				if (rd?.start && rd?.end) {
+					acc.push({
+						id: rd.id,
+						title: rd?.title,
+						detail: rd?.detail,
+						start: rd?.start ? moment(rd?.start).toISOString() : null,
+						end: rd?.end ? moment(rd?.end).toISOString() : null,
+						type: rd?.eventTypeId ?? 0,
+						eventSubTypeTitle: rd?.eventSubTypeTitle,
+						img: '/media/examples/incident-1.jpg',
+						location: '',
+						locationName: rd?.location?.locationName ?? rd?.locationName ?? '',
+					})
+				}
+
+				return acc
+			}, [])
 			.filter((d: any) => {
 				if (filter.type.length > 0) {
 					return filter.type.includes(d.type)
@@ -96,7 +103,9 @@ const ViewModel = () => {
 	}, [rawData, filter])
 
 	const selectedIncident = useMemo(() => {
-		return data.find(incident => incident.id === selected)
+		return data.find((incident: any) => {
+			return incident.id === parseInt(selected ?? '0')
+		})
 	}, [selected, data])
 
 	const onAddFilter = (key: string, value: any) => {
@@ -138,7 +147,7 @@ const ViewModel = () => {
 		})
 	}
 
-	const onClick = (id: string) => {
+	const onClick = (id: number) => {
 		setSelected(id)
 		setOpenDetail(true)
 	}

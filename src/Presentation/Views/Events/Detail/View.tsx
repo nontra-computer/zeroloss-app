@@ -2,6 +2,7 @@ import React from 'react'
 import { PageTitle } from '@/_metronic/layout/core'
 import Lightbox from 'yet-another-react-lightbox'
 
+import Select from 'react-select'
 import FeatureNews from '@/Presentation/Components/News/FeatureNews'
 import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
 import EventMessageForm from '../MessageForm/View'
@@ -20,7 +21,11 @@ const EventDetailView: React.FC = () => {
 		isMapView,
 		timeStr,
 		themeMode,
+		isHideEventChangeStatusButton,
+		eventStatusOptions,
 		data,
+		openChangeEventStatus,
+		setOpenChangeEventStatus,
 		pictureCover,
 		galleryImages,
 		locationAddress,
@@ -35,6 +40,7 @@ const EventDetailView: React.FC = () => {
 		onChangeViewType,
 		onViewInDetail,
 		onOpenEventMessageForm,
+		onApproveEvent,
 		loadMoreEventMessage,
 	} = useViewModel()
 
@@ -77,12 +83,12 @@ const EventDetailView: React.FC = () => {
 						}
 						style={{ gap: '12px' }}>
 						{/* Background Image */}
-						<img
+						{/* <img
 							src="/media/icons/zeroloss/soft-grey-image-plus.svg"
 							className={'position-absolute pointer-events-none'}
 							style={{ left: '43%', top: '25%' }}
 							alt="Event Detail Background"
-						/>
+						/> */}
 
 						{/* Header */}
 						<div>
@@ -95,6 +101,29 @@ const EventDetailView: React.FC = () => {
 
 						{/* Call to Action */}
 						<div className="text-end mb-5">
+							{!isHideEventChangeStatusButton && (
+								<div className="d-inline-block position-relative">
+									<button
+										className="btn white-button text-zeroloss-base-black fw-bold me-4 text-start"
+										onClick={() => {
+											setOpenChangeEventStatus(prevState => !prevState)
+										}}>
+										เปลี่ยนสถานะเหตุการณ์
+									</button>
+									<div className="text-start">
+										<Select
+											menuIsOpen={openChangeEventStatus}
+											onBlur={() => setOpenChangeEventStatus(false)}
+											components={{
+												Input: () => null,
+												Control: () => null,
+											}}
+											options={eventStatusOptions}
+											onChange={option => onApproveEvent(option?.value as number)}
+										/>
+									</div>
+								</div>
+							)}
 							<button
 								className="btn btn-zeroloss-primary text-zeroloss-base-white fw-bold"
 								onClick={onViewInDetail}>

@@ -1,18 +1,32 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import clsx from 'clsx'
+import { KTSVG } from '@/_metronic/helpers'
 
 interface Props {
 	eventType: {
 		id: number
 		name: string
 	}
+	eventSubTypeTitle: string
 	eventTypeId: number
 	img: string
 	title: string
 	detail: string
+	id: number
 }
 
-const IncidentPopup: React.FC<Props> = ({ title, detail, eventType, img, eventTypeId }) => {
+const EventPopup: React.FC<Props> = ({
+	id,
+	title,
+	detail,
+	eventType,
+	eventSubTypeTitle,
+	img,
+	eventTypeId,
+}) => {
+	const navigate = useNavigate()
+
 	return (
 		<React.Fragment>
 			<div className="card bg-zeroloss-primary min-h-200px min-w-250px">
@@ -29,7 +43,7 @@ const IncidentPopup: React.FC<Props> = ({ title, detail, eventType, img, eventTy
 
 						<div
 							className={clsx(
-								'position-absolute bg-zeroloss-error-600 border-zeroloss-base-white text-zeroloss-base-white border-1px fw-bold rounded px-4 py-2',
+								'position-absolute border-zeroloss-base-white text-zeroloss-base-white border-1px fw-bold rounded px-4 py-2',
 								{
 									'bg-zeroloss-error':
 										eventTypeId === 1 || eventTypeId === undefined || eventTypeId === null,
@@ -38,15 +52,28 @@ const IncidentPopup: React.FC<Props> = ({ title, detail, eventType, img, eventTy
 									'bg-zeroloss-primary': eventTypeId === 4,
 									'bg-zeroloss-brand-600': eventTypeId === 5,
 									'bg-zeroloss-primary-400': eventTypeId === 6,
+									'bg-zeroloss-grey': eventTypeId === 7,
 								}
 							)}
 							style={{ left: '3%', bottom: '5%' }}>
 							{eventType?.name ?? 'Unknown'}
+							{eventType?.name ? ` (${eventSubTypeTitle})` : ''}
 						</div>
 					</div>
 					<div className="mt-4">
 						<h6 className="text-start text-zeroloss-base-white fw-bold fs-4">{title ?? '-'}</h6>
 						<p className="text-zeroloss-base-white fs-6 text-start">{detail ?? '-'}</p>
+					</div>
+
+					<div className="mt-4">
+						<button
+							className="btn btn-sm white-button text-zeroloss-base-black w-100"
+							onClick={() => {
+								if (id) navigate(`/events/detail/${id}`)
+							}}>
+							ดูเพิ่มเติม
+							<KTSVG path="media/icons/zeroloss/red-arrow-narrow-up-right.svg" className="ms-1" />
+						</button>
 					</div>
 				</div>
 			</div>
@@ -70,4 +97,4 @@ const IncidentPopup: React.FC<Props> = ({ title, detail, eventType, img, eventTy
 	)
 }
 
-export default IncidentPopup
+export default EventPopup
