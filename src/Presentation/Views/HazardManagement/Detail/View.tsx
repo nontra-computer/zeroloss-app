@@ -10,6 +10,8 @@ import clsx from 'clsx'
 import EventDetailMapView from './Components/MapView/View'
 import HazardDetailCard from './Components/DetailCard/HazardDetailCard'
 import WeatherCard from './Components/DetailCard/WeatherCard'
+import SourceCard from './Components/DetailCard/SourceCard'
+import EffectCard from './Components/DetailCard/EffectCard'
 
 const HazardManagementDetailView: React.FC = () => {
 	const { timeStr, themeMode } = useViewModel()
@@ -97,11 +99,15 @@ const HazardManagementDetailView: React.FC = () => {
 						</div>
 					</div>
 					<div className="row mx-5 mt-5 h-100">
-						<div className="col-4"></div>
+						<div className="col-4">
+							<SourceCard data={detailData.input} />
+						</div>
 						<div className="col-4">
 							<WeatherCard data={detailData.input} />
 						</div>
-						<div className="col-4"></div>
+						<div className="col-4">
+							<EffectCard />
+						</div>
 					</div>
 				</>
 			)}
