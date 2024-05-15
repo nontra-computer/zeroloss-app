@@ -662,7 +662,14 @@ const ViewModel = () => {
 
 		setIsSubmitting(true)
 		if (isCreate) {
-			const requiredFields = ['start', 'eventTypeId', 'eventSubTypeId', 'latitude', 'longitude']
+			const requiredFields = [
+				'start',
+				'eventTypeId',
+				'eventSubTypeId',
+				'latitude',
+				'longitude',
+				'title',
+			]
 			let hasAlertErrorField = false
 			requiredFields.forEach(field => {
 				if (field === 'start') {
@@ -686,7 +693,7 @@ const ViewModel = () => {
 				start: formState.start,
 				eventTypeId: formState.eventTypeId,
 				eventSubTypeId: formState.eventSubTypeId,
-				detail: formState.detail,
+				title: formState.title,
 				pictureCover: formState.pictureCover,
 				latitude: formState.latitude,
 				longitude: formState.longitude,
@@ -902,6 +909,13 @@ const ViewModel = () => {
 						: false
 
 				const mediaPath = getMediaPath(medias?.[0]?.picturePath)
+				const videoMediaPath = (medias ?? []).find(
+					(m: any) =>
+						m.picturePath.includes('.mp4') ||
+						m.picturePath.includes('.avi') ||
+						m.picturePath.includes('.mov') ||
+						m.picturePath.includes('.flv')
+				)?.picturePath
 
 				return (
 					<Fragment>
@@ -921,7 +935,7 @@ const ViewModel = () => {
 						{hasVideo && (
 							<span
 								className={'badge text-zeroloss-grey-700 bg-zeroloss-warning-300'}
-								onClick={() => onViewReportingMedia(mediaPath)}>
+								onClick={() => onViewReportingMedia(getMediaPath(videoMediaPath))}>
 								<span
 									className={
 										'p-1 rounded-circle w-2px h-2px me-2 animation-blink bg-zeroloss-warning'

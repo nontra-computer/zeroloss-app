@@ -70,7 +70,7 @@ const ViewModel = () => {
 	const data = useMemo(() => {
 		return rawData
 			.reduce((acc, rd: any) => {
-				if (rd?.start && rd?.end) {
+				if (rd?.start) {
 					acc.push({
 						id: rd.id,
 						title: rd?.title,

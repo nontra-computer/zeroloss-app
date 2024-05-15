@@ -162,10 +162,12 @@ const TYPE_OPTIONS = [
 const INITIAL_STATE_FILTER: {
 	type: any[]
 	search: any[]
+	locationName: string
 	locationTypeId: any
 } = {
 	type: [],
 	search: [],
+	locationName: '',
 	locationTypeId: null,
 }
 
@@ -315,7 +317,14 @@ const ViewModel = () => {
 	}
 
 	const fetchLocations = () => {
+		console.log('filter', filter)
+		if (filter.locationName.length === 0 && filter.locationTypeId === null) {
+			toast.error('กรุณาระบุตัวกรองในการค้นหาสถานที่')
+			return
+		}
+
 		getLocations({
+			name: filter.locationName,
 			locationTypeId: filter.locationTypeId,
 		}).then(({ success, data }) => {
 			if (!success) {
@@ -385,6 +394,7 @@ const ViewModel = () => {
 		setLocation([])
 		setFilter(prevState => ({
 			...prevState,
+			locationName: '',
 			locationTypeId: null,
 		}))
 	}
@@ -394,6 +404,7 @@ const ViewModel = () => {
 			setFilter(prevState => ({
 				locationTypeId: prevState.locationTypeId,
 				search: [...prevState.search, searchText],
+				locationName: prevState.locationName,
 				type: preFilterState.type,
 			}))
 			setSearchText('')
@@ -401,6 +412,7 @@ const ViewModel = () => {
 			setFilter(prevState => ({
 				locationTypeId: prevState.locationTypeId,
 				search: prevState.search,
+				locationName: prevState.locationName,
 				type: preFilterState.type,
 			}))
 		}

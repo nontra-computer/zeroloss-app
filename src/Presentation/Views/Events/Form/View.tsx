@@ -443,34 +443,33 @@ const EventFormView: React.FC = () => {
 													</div>
 
 													{/* Name */}
+
+													<div className="col-12 col-lg-8">
+														<FormGenerator
+															formKey="name"
+															inputType="plain"
+															label="เหตุการณ์เบื้องต้น"
+															additionalLabelCom={<span className="required"></span>}
+															additionalClassName="form-control-sm"
+															value={formState.title}
+															onChange={e => onChangeFormState('title', e.target.value)}
+															limitCharacter={50}
+														/>
+													</div>
+
+													{/* Description */}
 													{isEditDetail && (
 														<div className="col-12 col-lg-8">
 															<FormGenerator
-																formKey="name"
-																inputType="plain"
-																label="ชื่อเหตุการณ์"
+																formKey="detail"
+																inputType="textarea"
+																label="บรรยายเหตุการณ์"
 																additionalLabelCom={<span className="required"></span>}
-																additionalClassName="form-control-sm"
-																value={formState.title}
-																onChange={e => onChangeFormState('title', e.target.value)}
-																limitCharacter={50}
+																value={formState.detail}
+																onChange={e => onChangeFormState('detail', e.target.value)}
 															/>
 														</div>
 													)}
-
-													{/* Description */}
-													<div className="col-12 col-lg-8">
-														<FormGenerator
-															formKey="detail"
-															inputType="textarea"
-															label="บรรยายเหตุการณ์"
-															additionalLabelCom={
-																<span className="ms-1 text-zeroloss-grey-500">(ไม่จำเป็น)</span>
-															}
-															value={formState.detail}
-															onChange={e => onChangeFormState('detail', e.target.value)}
-														/>
-													</div>
 
 													<div className="col-12">
 														<hr />
@@ -733,6 +732,12 @@ const EventFormView: React.FC = () => {
 																			lng: formState.longitude,
 																		}}
 																		popup={EventPopup}
+																		eventTypeId={formState?.eventTypeId ?? undefined}
+																		eventSubTypeTitle={
+																			eventSubTypesOptions.find(
+																				option => option.value === formState.eventSubTypeId
+																			)?.label ?? ''
+																		}
 																		eventType={formState?.eventType ?? undefined}
 																	/>
 																</MapContainer>

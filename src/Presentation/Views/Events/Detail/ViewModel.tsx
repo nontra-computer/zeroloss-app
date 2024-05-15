@@ -178,6 +178,7 @@ const ViewModel = () => {
 						: eventMessageData.length
 				)
 				.map(m => ({
+					id: m.id,
 					date: m.createdAt,
 					img: (m?.medias ?? [])?.[0]?.picturePath
 						? getMediaPath((m?.medias ?? [])?.[0]?.picturePath)
@@ -292,6 +293,12 @@ const ViewModel = () => {
 		setEditId(0)
 	}
 
+	const onViewDetailEventMessageForm = (id: number) => {
+		setFormType('edit')
+		setEditId(id)
+		handleOpenEventMessageForm()
+	}
+
 	const onOpenLightBox = (imgIdx: number) => {
 		setImageIdx(imgIdx)
 		setIsOpenLightBox(true)
@@ -354,6 +361,7 @@ const ViewModel = () => {
 		onChangeViewType,
 		onViewInDetail,
 		onOpenEventMessageForm,
+		onViewDetailEventMessageForm,
 		onApproveEvent,
 		loadMoreEventMessage,
 	}

@@ -10,6 +10,7 @@ import moment from 'moment'
 import Skeleton from 'react-loading-skeleton'
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
 import DoubleLine from '@/Presentation/Components/Table/Cells/DoubleLine'
+import { EventState } from '@/Configuration/EventState'
 
 const ViewModel = () => {
 	const navigate = useNavigate()
@@ -151,7 +152,9 @@ const ViewModel = () => {
 			Cell: ({ value, row }: any) => {
 				return (
 					<span
-						className={clsx('badge text-zeroloss-grey-700', {
+						className={clsx('badge', {
+							'text-zeroloss-grey-700': value !== 5,
+							'text-zeroloss-base-white': value === 5,
 							'bg-zeroloss-error-300': value === 1,
 							'bg-zeroloss-warning-300': value === 2,
 							'bg-zeroloss-success-300': value === 3,
@@ -176,9 +179,9 @@ const ViewModel = () => {
 		},
 		{
 			Header: 'Status',
-			accessor: 'status',
+			accessor: 'state',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: () => {
+			Cell: ({ value }: any) => {
 				return (
 					<div
 						className={clsx(
@@ -186,10 +189,12 @@ const ViewModel = () => {
 						)}>
 						<span
 							className={clsx('me-2 bullet bullet-dot h-6px w-6px animation-blink', {
-								'bg-success': true,
-								// 'bg-danger': !weatherInfo.metStatus,
+								'bg-success': value !== 1 && value !== 4,
+								'bg-danger': value === 1 || value === 4,
 							})}></span>
-						ปิดงานแล้ว
+						{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+						{/* @ts-ignore */}
+						{EventState[value] ?? '-'}
 					</div>
 				)
 			},

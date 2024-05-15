@@ -5,7 +5,7 @@ export interface ICreateEvent {
 	start: string
 	eventTypeId: number
 	eventSubTypeId: number
-	detail: string
+	title: string
 	pictureCover: File | null
 	latitude: number
 	longitude: number

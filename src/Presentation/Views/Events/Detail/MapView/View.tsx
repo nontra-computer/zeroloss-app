@@ -3,7 +3,7 @@ import { KTSVG } from '@/_metronic/helpers'
 import { MapContainer, TileLayer } from 'react-leaflet'
 import Filter from '../Components/Filter'
 import PlainLocation from '@/Presentation/Components/LeafletMap/PlainLocation'
-import LocationPolygon from '@/Presentation/Components/LeafletMap/LocationPolygon'
+// import LocationPolygon from '@/Presentation/Components/LeafletMap/LocationPolygon'
 import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
 import InfoBoard from '@/Presentation/Components/InfoBoard'
 import LocationPopup from '../Components/LocationPopup'
@@ -87,7 +87,7 @@ const EventDetailMapView: React.FC = () => {
 								/>
 							))}
 
-							<LocationPolygon type={data.shapeType} position={[data.position]} radius={1500} />
+							{/* <LocationPolygon type={data.shapeType} position={[data.position]} radius={1500} /> */}
 						</MapContainer>
 					</div>
 				</div>

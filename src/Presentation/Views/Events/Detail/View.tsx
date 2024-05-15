@@ -40,9 +40,17 @@ const EventDetailView: React.FC = () => {
 		onChangeViewType,
 		onViewInDetail,
 		onOpenEventMessageForm,
+		onViewDetailEventMessageForm,
 		onApproveEvent,
 		loadMoreEventMessage,
 	} = useViewModel()
+
+	console.log(
+		galleryImages.map((p: any, idx: number) => ({
+			src: p,
+			caption: `Event Picture ${idx + 1}`,
+		}))
+	)
 
 	return (
 		<React.Fragment>
@@ -72,6 +80,11 @@ const EventDetailView: React.FC = () => {
 					src: p,
 					caption: `Event Picture ${idx + 1}`,
 				}))}
+				on={{
+					view: props => {
+						onOpenLightBox(props.index)
+					},
+				}}
 				styles={{ container: { backgroundColor: 'rgba(0, 0, 0, .6)' } }}
 			/>
 
@@ -197,7 +210,7 @@ const EventDetailView: React.FC = () => {
 											<div
 												className="h-100px rounded-3 d-flex justify-content-center align-items-center fs-3 fw-bold text-zeroloss-base-white cursor-pointer hover-filter-brightness"
 												style={{ background: 'rgba(0, 0, 0, 0.7)' }}>
-												+{data?.additionalPictures?.length - 9}
+												+{galleryImages?.length - 9}
 											</div>
 										</div>
 									)}
@@ -319,7 +332,10 @@ const EventDetailView: React.FC = () => {
 												{eventMessages.length > 0 && (
 													<React.Fragment>
 														<div style={{ width: '95%' }} className="mx-auto mb-5">
-															<FeatureNews {...eventMessages?.[0]} />
+															<FeatureNews
+																{...eventMessages?.[0]}
+																onClick={onViewDetailEventMessageForm}
+															/>
 														</div>
 
 														{eventMessages.slice(1).map((item, index) => (
@@ -329,7 +345,7 @@ const EventDetailView: React.FC = () => {
 																className={clsx('mx-auto', {
 																	'mb-5': index !== 9,
 																})}>
-																<NewsHorizontal {...item} />
+																<NewsHorizontal {...item} onClick={onViewDetailEventMessageForm} />
 															</div>
 														))}
 

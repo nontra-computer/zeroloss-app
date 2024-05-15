@@ -4,6 +4,7 @@ import { useLocationStore } from '@/Store/Location'
 import { useLocationTypeStore } from '@/Store/LocationType'
 import { useMeasurementStore } from '@/Store/Measurement'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
+import { toast } from 'react-toastify'
 
 const MOCK_DATA = {
 	id: 1,
@@ -19,12 +20,14 @@ const MOCK_DATA = {
 }
 
 const INITIAL_FILTER_STATE = {
+	name: '',
 	locationTypeId: null,
 }
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
 	const { eventTypes, getTypes } = useEventStore(state => ({
+		selected: state.selected,
 		eventTypes: state.types,
 		getTypes: state.getTypes,
 		clearState: state.clearState,
@@ -119,12 +122,12 @@ const ViewModel = () => {
 
 	const confirmFilter = () => {
 		if (
-			filter.locationTypeId !== null &&
-			filter.locationTypeId !== undefined &&
-			filter.locationTypeId !== '' &&
-			filter.locationTypeId !== 0
+			(filter.locationTypeId !== null && filter.locationTypeId !== 0) ||
+			filter.name !== ''
 		) {
 			getAllLocations(filter)
+		} else {
+			toast.error('กรุณาระบุตัวกรองในการค้นหาสถานที่')
 		}
 	}
 
