@@ -5,7 +5,6 @@ import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useEventStore } from '@/Store/Event'
-import { useLocationStore } from '@/Store/Location'
 import { useEventMessageStore } from '@/Store/EventMessage'
 import { EventMessageFormContext } from '../MessageForm/Context'
 import { toast } from 'react-toastify'
@@ -68,11 +67,6 @@ const ViewModel = () => {
 			clearState: state.clearState,
 		})
 	)
-	const { locationData, setLocationData, getLocation } = useLocationStore(state => ({
-		locationData: state.dataMapMarker,
-		setLocationData: state.setDataMapMarker,
-		getLocation: state.getAllMapMarker,
-	}))
 	const { eventMessageData, getAllEventMessage } = useEventMessageStore(state => ({
 		eventMessageData: state.data,
 		getAllEventMessage: state.getAll,
@@ -161,13 +155,12 @@ const ViewModel = () => {
 			if (data.isLocationFromDatabase) {
 				return data.location?.nameTh ?? null
 			} else {
-				const finded = locationData.find((l: any) => l.id === data.locationId)
-				return finded?.nameTh ?? null
+				return data.locationAddress + ' ' + data.locationName
 			}
 		} else {
 			return null
 		}
-	}, [data, locationData])
+	}, [data])
 	const eventMessages = useMemo(
 		() =>
 			eventMessageData
@@ -279,7 +272,6 @@ const ViewModel = () => {
 					toast.error(`ดึงข้อมูลรายงานเหตุการณ์ไม่สำเร็จ : ${data}`)
 				}
 			})
-			if (!location.pathname.includes('map')) getLocation()
 		}
 	}
 
@@ -332,7 +324,6 @@ const ViewModel = () => {
 	useEffect(() => {
 		return () => {
 			clearState()
-			setLocationData([])
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])

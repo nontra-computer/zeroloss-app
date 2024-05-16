@@ -228,13 +228,13 @@ const EventDetailView: React.FC = () => {
 									<div className="d-flex flex-row align-items-center mb-2">
 										<img src="/media/icons/zeroloss/marker-pin-01.svg" alt="Marker Pin Icon" />
 										<span className="mx-2 fs-5 fw-semibold">{locationAddress ?? '-'}</span>
-										{locationAddress && (
+										{/* {locationAddress && (
 											<img
 												className="cursor-pointer w-15px h-15px"
 												src="/media/icons/zeroloss/orange-arrow-circle-up-right.svg"
 												alt="Orange Arrow Circle Up Right Icon"
 											/>
-										)}
+										)} */}
 									</div>
 									<div className="d-flex flex-row align-items-center mb-2">
 										<img src="/media/icons/zeroloss/marker-pin-01.svg" alt="Marker Pin Icon" />
