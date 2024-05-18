@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import clsx from 'clsx'
 import moment from 'moment'
 import 'moment/locale/th'
+import { EventState } from '@/Configuration/EventState'
 
 import Skeleton from 'react-loading-skeleton'
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
@@ -194,13 +195,16 @@ const ViewModel = () => {
 			Cell: ({ value, row }: any) => {
 				return (
 					<span
-						className={clsx('badge text-zeroloss-grey-700', {
+						className={clsx('badge', {
+							'text-zeroloss-grey-700': value !== 5,
+							'text-zeroloss-base-white': value === 5,
 							'bg-zeroloss-error-300': value === 1,
 							'bg-zeroloss-warning-300': value === 2,
 							'bg-zeroloss-success-300': value === 3,
 							'bg-zeroloss-primary-300': value === 4,
 							'bg-zeroloss-purple-1': value === 5,
 							'bg-zeroloss-primary-200': value === 6,
+							'bg-zeroloss-grey-200': value === 7,
 						})}>
 						<span
 							className={clsx('p-1 rounded-circle w-2px h-2px me-2 animation-blink', {
@@ -210,6 +214,7 @@ const ViewModel = () => {
 								'bg-zeroloss-primary': value === 4,
 								'bg-zeroloss-brand-600': value === 5,
 								'bg-zeroloss-primary-400': value === 6,
+								'bg-zeroloss-grey-400': value === 7,
 							})}
 						/>{' '}
 						{row?.original?.eventTypeTitle}
@@ -219,9 +224,9 @@ const ViewModel = () => {
 		},
 		{
 			Header: 'Status',
-			accessor: 'status',
+			accessor: 'state',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: () => {
+			Cell: ({ value }: any) => {
 				return (
 					<div
 						className={clsx(
@@ -229,10 +234,12 @@ const ViewModel = () => {
 						)}>
 						<span
 							className={clsx('me-2 bullet bullet-dot h-6px w-6px animation-blink', {
-								'bg-success': true,
-								// 'bg-danger': !weatherInfo.metStatus,
+								'bg-success': value !== 1 && value !== 4,
+								'bg-danger': value === 1 || value === 4,
 							})}></span>
-						ปิดงานแล้ว
+						{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+						{/* @ts-ignore */}
+						{EventState[value] ?? '-'}
 					</div>
 				)
 			},

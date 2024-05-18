@@ -161,6 +161,7 @@ const ViewModel = () => {
 							'bg-zeroloss-primary-300': value === 4,
 							'bg-zeroloss-purple-1': value === 5,
 							'bg-zeroloss-primary-200': value === 6,
+							'bg-zeroloss-grey-200': value === 7,
 						})}>
 						<span
 							className={clsx('p-1 rounded-circle w-2px h-2px me-2 animation-blink', {
@@ -170,6 +171,7 @@ const ViewModel = () => {
 								'bg-zeroloss-primary': value === 4,
 								'bg-zeroloss-brand-600': value === 5,
 								'bg-zeroloss-primary-400': value === 6,
+								'bg-zeroloss-grey-400': value === 7,
 							})}
 						/>{' '}
 						{row?.original?.eventTypeTitle}
