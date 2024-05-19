@@ -23,7 +23,7 @@ export const ZEROLOSS_MENU = [
 			{
 				key: 'measurement',
 				icon: 'bi-mask',
-				path: 'https://emcc.zeroloss.tech/monitoring',
+				path: import.meta.env.VITE_APP_ZEROLOSS_EMCC_MONITORING,
 				label: 'ZEROLOSS.MENU.MEASUREMENT',
 				outside: true,
 			},
@@ -45,7 +45,7 @@ export const ZEROLOSS_MENU = [
 	{
 		key: 'gis',
 		icon: 'bi-map-fill',
-		path: 'https://emcc.zeroloss.tech/gis',
+		path: import.meta.env.VITE_APP_ZEROLOSS_EMCC_GIS,
 		label: 'ZEROLOSS.MENU.GIS',
 		className: 'py-3',
 		subMenu: [],
@@ -82,7 +82,7 @@ export const ZEROLOSS_MENU = [
 			{
 				key: 'measurement',
 				icon: 'bi-calendar3',
-				path: 'https://emcc.zeroloss.tech/report/data',
+				path: import.meta.env.VITE_APP_ZEROLOSS_EMCC_MEASUREMENT,
 				label: 'ZEROLOSS.MENU.REPORT_MEASUREMENT',
 				outside: true,
 			},
@@ -121,14 +121,14 @@ export const ZEROLOSS_SETTING_MENU = [
 			{
 				key: 'chemhub',
 				icon: 'bi-radioactive',
-				path: 'https://emcc.zeroloss.tech/chemical',
+				path: import.meta.env.VITE_APP_ZEROLOSS_EMCC_CHEMICAL,
 				label: 'ZEROLOSS.MENU.CHEMHUB',
 				outside: true,
 			},
 			{
 				key: 'hazard_modeling',
 				icon: 'bi-droplet-half',
-				path: 'https://emcc.zeroloss.tech/riskmanagement',
+				path: import.meta.env.VITE_APP_ZEROLOSS_EMCC_HAZARD_MODELING,
 				label: 'ZEROLOSS.MENU.HAZARD_MODELING',
 				outside: true,
 			},
@@ -141,7 +141,7 @@ export const ZEROLOSS_SETTING_MENU = [
 			{
 				key: 'measurement_setup',
 				icon: 'bi-database-fill-gear',
-				path: 'https://emcc.zeroloss.tech/measure',
+				path: import.meta.env.VITE_APP_ZEROLOSS_EMCC_MEASUREMENT_SETUP,
 				label: 'ZEROLOSS.MENU.MEASUREMENT_SETUP',
 				outside: true,
 			},

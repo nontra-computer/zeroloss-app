@@ -47,6 +47,7 @@ const useZerolossSocket = () => {
 		return () => {
 			socketRef.current?.close()
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return {}

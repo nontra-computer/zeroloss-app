@@ -110,6 +110,10 @@ const ViewModel = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selected])
 
+	const canViewSimulation = useMemo(() => {
+		return (selected?.riskModelOutputs ?? [])?.[0]?.id !== undefined
+	}, [selected])
+
 	let themeMode = ''
 	if (mode === 'system') {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -122,6 +126,11 @@ const ViewModel = () => {
 		getTypes()
 		getAllLocationTypes()
 		getSubTypes()
+	}
+
+	const onViewSimulation = () => {
+		const riskModelId = (selected?.riskModelOutputs ?? [])?.[0]?.id
+		window.open(`${import.meta.env.VITE_APP_ZEROLOSS_SIMULATION_URL.replace(':id', riskModelId)}`)
 	}
 
 	const onChangeFilter = (key: string, value: any) => {
@@ -165,6 +174,7 @@ const ViewModel = () => {
 			...selected,
 			eventPictureCover: eventPictureCover,
 		},
+		canViewSimulation,
 		locationData,
 		locationOptions,
 		eventTypesOptions,
@@ -174,6 +184,7 @@ const ViewModel = () => {
 		onNavigateToEvent,
 		onChangeFilter,
 		confirmFilter,
+		onViewSimulation,
 		clearFilter,
 	}
 }

@@ -267,7 +267,7 @@ const MainDashboardMapView: React.FC = () => {
 												</React.Fragment>
 											)} */}
 
-											{type === 'measurement' && (
+											{['all', 'measurement'].includes(type) && (
 												<React.Fragment>
 													{showMeasurementTable && (
 														<MeasurementTable

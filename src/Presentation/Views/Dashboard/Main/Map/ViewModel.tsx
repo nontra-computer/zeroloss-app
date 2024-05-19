@@ -247,25 +247,19 @@ const ViewModel = () => {
 		getTypes()
 		getAllLocationTypes()
 		getMeasurementTypes()
-		getData({}).then(({ data: dataFetch, success }) => {
+		getEvents({})
+	}
+
+	const fetchDataDashboardWithMeasurementFilter = () => {
+		getData({
+			measurementType: filter.measurementType,
+			measurementIsOverStd: filter.measurementIsOverStd,
+			measurementStatus: filter.measurementStatus,
+		}).then(({ data: dataFetch, success }) => {
 			if (!success) {
 				toast.error(dataFetch)
 			}
 		})
-	}
-
-	const fetchDataDashboardWithMeasurementFilter = () => {
-		if (filter.measurementType || filter.measurementIsOverStd || filter.measurementStatus) {
-			getData({
-				measurementType: filter.measurementType,
-				measurementIsOverStd: filter.measurementIsOverStd,
-				measurementStatus: filter.measurementStatus,
-			}).then(({ data: dataFetch, success }) => {
-				if (!success) {
-					toast.error(dataFetch)
-				}
-			})
-		}
 	}
 
 	const data = useMemo(() => {
@@ -359,8 +353,6 @@ const ViewModel = () => {
 	}
 
 	const onAddFilter = (key: string, value: any) => {
-		console.log('key', key)
-		console.log('value', value)
 		setPreFilterState((prev: any) => ({
 			...prev,
 			[key]: value,

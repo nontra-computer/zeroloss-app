@@ -19,6 +19,7 @@ const EventDetailMapView: React.FC = () => {
 		themeMode,
 		data,
 		locationData,
+		canViewSimulation,
 		eventTypesOptions,
 		locationOptions,
 		distanceOptions,
@@ -26,6 +27,7 @@ const EventDetailMapView: React.FC = () => {
 		filter,
 		onNavigateToEvent,
 		onChangeFilter,
+		onViewSimulation,
 		confirmFilter,
 		clearFilter,
 	} = useViewModel()
@@ -48,6 +50,15 @@ const EventDetailMapView: React.FC = () => {
 							{/* <div className="d-none d-lg-block">ตัวกรอง:</div> */}
 						</div>
 						<div className="card-toolbar">
+							{canViewSimulation && (
+								<button
+									type="button"
+									className="btn btn-sm w-100 w-lg-auto white-button me-4"
+									onClick={onViewSimulation}
+									style={{ height: 44 }}>
+									แบบจำลองการแพร่ของมลพิษ
+								</button>
+							)}
 							<button
 								type="button"
 								className="btn btn-sm w-100 w-lg-auto white-button me-4"

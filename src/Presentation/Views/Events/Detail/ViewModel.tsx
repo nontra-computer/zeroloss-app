@@ -340,7 +340,7 @@ const ViewModel = () => {
 						}),
 						new Paragraph({}),
 						new Paragraph({
-							alignment: AlignmentType.CENTER,
+							alignment: AlignmentType.LEFT,
 							children: [
 								new TextRun({
 									text: 'ประเภทเหตุการณ์หลัก: ',
@@ -354,7 +354,7 @@ const ViewModel = () => {
 						}),
 						new Paragraph({}),
 						new Paragraph({
-							alignment: AlignmentType.CENTER,
+							alignment: AlignmentType.LEFT,
 							children: [
 								new TextRun({
 									text: 'ประเภทเหตุการณ์ย่อย: ',
@@ -368,7 +368,7 @@ const ViewModel = () => {
 						}),
 						new Paragraph({}),
 						new Paragraph({
-							alignment: AlignmentType.CENTER,
+							alignment: AlignmentType.LEFT,
 							children: [
 								new TextRun({
 									text: 'เหตุการณ์เบื้องต้น: ',
@@ -382,7 +382,7 @@ const ViewModel = () => {
 						}),
 						new Paragraph({}),
 						new Paragraph({
-							alignment: AlignmentType.CENTER,
+							alignment: AlignmentType.LEFT,
 							children: [
 								new TextRun({
 									text: 'บรรยายเหตุการณ์: ',
@@ -396,7 +396,7 @@ const ViewModel = () => {
 						}),
 						new Paragraph({}),
 						new Paragraph({
-							alignment: AlignmentType.CENTER,
+							alignment: AlignmentType.LEFT,
 							children: [
 								new TextRun({
 									text: 'ระดับความรุนแรง: ',
@@ -412,7 +412,7 @@ const ViewModel = () => {
 						}),
 						new Paragraph({}),
 						new Paragraph({
-							alignment: AlignmentType.CENTER,
+							alignment: AlignmentType.LEFT,
 							children: [
 								new TextRun({
 									text: 'มลพิษ: ',
@@ -426,7 +426,7 @@ const ViewModel = () => {
 						}),
 						new Paragraph({}),
 						new Paragraph({
-							alignment: AlignmentType.CENTER,
+							alignment: AlignmentType.LEFT,
 							children: [
 								new TextRun({
 									text: 'สารเคมีที่เกี่ยวข้อง: ',
@@ -442,7 +442,7 @@ const ViewModel = () => {
 						}),
 						new Paragraph({}),
 						new Paragraph({
-							alignment: AlignmentType.CENTER,
+							alignment: AlignmentType.LEFT,
 							children: [
 								new TextRun({
 									text: 'คำแนะนำในการปฎิบัติ: ',
@@ -456,7 +456,7 @@ const ViewModel = () => {
 						}),
 						new Paragraph({}),
 						new Paragraph({
-							alignment: AlignmentType.CENTER,
+							alignment: AlignmentType.LEFT,
 							children: [
 								new TextRun({
 									text: 'สถานที่เกิดเหตุ: ',
@@ -470,7 +470,7 @@ const ViewModel = () => {
 						}),
 						new Paragraph({}),
 						new Paragraph({
-							alignment: AlignmentType.CENTER,
+							alignment: AlignmentType.LEFT,
 							children: [
 								new TextRun({
 									text: 'ที่ตั้ง: ',

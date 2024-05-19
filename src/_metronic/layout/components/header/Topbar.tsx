@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import clsx from 'clsx'
 import { KTIcon } from '../../../helpers'
 import {
@@ -16,6 +16,10 @@ import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModePr
 import ZerolossNotificationView from '@/Presentation/Views/Notification/View'
 import { isMobileDevice } from '@/_metronic/assets/ts/_utils'
 import { useEventNotificationStore } from '@/Store/EventNotification'
+// eslint-disable-next-line
+// @ts-ignore
+import useSound from 'use-sound'
+import SoundEffect1 from '@/Assets/SoundEffect/sound-effect-1.mp3'
 
 const itemClass = 'ms-1 ms-lg-3',
 	// btnClass =
@@ -34,6 +38,7 @@ const Topbar: FC = () => {
 			getUnreadMessages: state.getUnreadMessages,
 		})
 	)
+	const [playSound, { stop }] = useSound(SoundEffect1)
 	// const location = useLocation()
 	// const isDashboard = location.pathname.includes('/dashboard')
 
@@ -49,6 +54,21 @@ const Topbar: FC = () => {
 			readAllEvents()
 		})
 	}
+
+	useEffect(() => {
+		if (isThereAnyUnreadMessage === true) {
+			setInterval(() => {
+				playSound()
+			}, 2000)
+		} else {
+			stop()
+		}
+
+		return () => {
+			stop()
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isThereAnyUnreadMessage])
 
 	return (
 		<div className="d-flex align-items-stretch justify-self-end flex-shrink-0">
