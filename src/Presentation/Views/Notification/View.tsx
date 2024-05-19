@@ -1,8 +1,11 @@
 import React from 'react'
-import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
+import NewsNotification from '@/Presentation/Components/News/NewsNotification'
 import clsx from 'clsx'
+import useViewModel from './ViewModel'
 
 const ZerolossNotificationView: React.FC = () => {
+	const { unreadMessages, getMediaPath, onClick } = useViewModel()
+
 	return (
 		<div
 			className="menu menu-sub menu-sub-dropdown menu-column w-400px w-lg-375px min-h-500px"
@@ -15,16 +18,23 @@ const ZerolossNotificationView: React.FC = () => {
 							ข่าวสารจากหน่วยข่าวกรอง
 						</div>
 
-						<div className='h-400px overflow-y-scroll'>
-							{[...Array(10)].map((_, i) => (
+						<div className="h-400px overflow-y-scroll">
+							{unreadMessages.map((e, i) => (
 								<div
-									key={i}
+									key={`unread-message-${i}`}
 									className={clsx('mx-auto', {
 										'mb-5': i !== 9,
 									})}>
-									<NewsHorizontal {..._} />
+									<NewsNotification
+										{...e}
+										img={e?.pictureCover ? getMediaPath(e.pictureCover) : null}
+										onClick={() => onClick(e.id)}
+									/>
 								</div>
 							))}
+							{unreadMessages.length === 0 && (
+								<div className="text-center text-muted my-10">ไม่มีเหตุการณ์ใหม่</div>
+							)}
 						</div>
 					</div>
 				</div>

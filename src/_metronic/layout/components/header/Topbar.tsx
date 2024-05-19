@@ -15,6 +15,7 @@ import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModePr
 
 import ZerolossNotificationView from '@/Presentation/Views/Notification/View'
 import { isMobileDevice } from '@/_metronic/assets/ts/_utils'
+import { useEventNotificationStore } from '@/Store/EventNotification'
 
 const itemClass = 'ms-1 ms-lg-3',
 	// btnClass =
@@ -26,6 +27,13 @@ const Topbar: FC = () => {
 	const { config } = useLayout()
 	const intl = useIntl()
 	const { mode } = useThemeMode()
+	const { isThereAnyUnreadMessage, readAllEvents, getUnreadMessages } = useEventNotificationStore(
+		state => ({
+			isThereAnyUnreadMessage: state.isThereAnyUnreadMessage,
+			readAllEvents: state.readAllMessages,
+			getUnreadMessages: state.getUnreadMessages,
+		})
+	)
 	// const location = useLocation()
 	// const isDashboard = location.pathname.includes('/dashboard')
 
@@ -34,6 +42,12 @@ const Topbar: FC = () => {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 	} else {
 		themeMode = mode
+	}
+
+	const onViewNotification = () => {
+		getUnreadMessages().then(() => {
+			readAllEvents()
+		})
 	}
 
 	return (
@@ -77,10 +91,13 @@ const Topbar: FC = () => {
 					})}
 					data-kt-menu-trigger="click"
 					data-kt-menu-attach="parent"
-					data-kt-menu-placement="bottom-end">
+					data-kt-menu-placement="bottom-end"
+					onClick={onViewNotification}>
 					<KTIcon iconName="notification-on" className={btnIconClass} />
 
-					<span className="bullet bullet-dot bg-danger h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+					{isThereAnyUnreadMessage === true && (
+						<span className="bullet bullet-dot bg-danger h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+					)}
 				</div>
 				<ZerolossNotificationView />
 				{/* <HeaderNotificationsMenu /> */}

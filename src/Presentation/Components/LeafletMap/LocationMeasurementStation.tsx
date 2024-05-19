@@ -10,8 +10,10 @@ const LocationMeasurementStation: React.FC<LocationMeasurementStationProps> = ({
 	...props
 }) => {
 	const StationIcon = new Icon({
-		iconUrl: '/media/icons/zeroloss/map/measurement/station-1.svg',
-		iconSize: [60, 60],
+		iconUrl: `/media/measurement-type/${props.measurementTypeId ?? 1}.svg`,
+		iconSize: [40, 40],
+		className:
+			'bg-zeroloss-base-white rounded-circle shadow-lg border-2 border-zeroloss-base-white p-2',
 	})
 	const markerRef = useRef<any>(null)
 

@@ -53,9 +53,9 @@ const FeatureNews: React.FC<FeatureNewsProps> = ({ date, detail, img, id, onClic
 						{isVideo && (
 							<video
 								controls={false}
-								autoPlay
-								muted
-								loop
+								autoPlay={false}
+								muted={true}
+								loop={true}
 								src={img ?? ''}
 								className="w-100 h-100 object-fit-contain">
 								Your browser does not support the video tag.

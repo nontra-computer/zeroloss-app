@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react'
 import { TableContext } from '@/Context/Table'
 import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
@@ -98,6 +98,14 @@ const ViewModel = () => {
 		// navigate(`/events/detail/${id}`)
 	}
 
+	const onViewReportingMedia = (path: string) => {
+		const a = document.createElement('a')
+		a.href = path
+		a.target = '_blank'
+		a.rel = 'noopener noreferrer'
+		a.click()
+	}
+
 	const TABLE_CONFIGS: any[] = [
 		{
 			Header: 'รายชื่อเหตุการณ์',
@@ -164,7 +172,7 @@ const ViewModel = () => {
 							'bg-zeroloss-grey-200': value === 7,
 						})}>
 						<span
-							className={clsx('p-1 rounded-circle w-2px h-2px me-2 animation-blink', {
+							className={clsx('p-1 rounded-circle w-2px h-2px me-2', {
 								'bg-zeroloss-error': value === 1,
 								'bg-zeroloss-warning': value === 2,
 								'bg-zeroloss-success': value === 3,
@@ -189,11 +197,13 @@ const ViewModel = () => {
 						className={clsx(
 							'border-radius-6px badge text-zeroloss-grey-900 bg-zeroloss-base-white border border-zeroloss-grey-200'
 						)}>
-						<span
-							className={clsx('me-2 bullet bullet-dot h-6px w-6px animation-blink', {
-								'bg-success': value !== 1 && value !== 4,
-								'bg-danger': value === 1 || value === 4,
-							})}></span>
+						{[1, 3, 4].includes(value) && (
+							<span
+								className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
+									'bg-success': value === 4,
+									'bg-danger animation-blink': value === 1 || value === 3,
+								})}></span>
+						)}
 						{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 						{/* @ts-ignore */}
 						{EventState[value] ?? '-'}
@@ -202,15 +212,84 @@ const ViewModel = () => {
 			},
 		},
 		{
-			Header: 'About',
+			Header: 'News',
 			accessor: 'about',
 			minWidth: is4K || is8K ? 450 : 300,
 			Cell: (props: any) => {
+				const eventMessage = props.row.original.lastUpdate
+				const medias = eventMessage?.eventMedias ?? []
+				const hasImage =
+					medias.length > 0
+						? medias.find(
+								(m: any) =>
+									m.picturePath.includes('.png') ||
+									m.picturePath.includes('.jpg') ||
+									m.picturePath.includes('.jpeg')
+							)
+						: false
+
+				const hasVideo =
+					medias.length > 0
+						? medias.find(
+								(m: any) =>
+									m.picturePath.includes('.mp4') ||
+									m.picturePath.includes('.avi') ||
+									m.picturePath.includes('.mov') ||
+									m.picturePath.includes('.flv')
+							)
+						: false
+
+				const mediaPath = getEventMediaPath(medias?.[0]?.picturePath)
+				const videoMediaPath = (medias ?? []).find(
+					(m: any) =>
+						m.picturePath.includes('.mp4') ||
+						m.picturePath.includes('.avi') ||
+						m.picturePath.includes('.mov') ||
+						m.picturePath.includes('.flv')
+				)?.picturePath
+
 				return (
 					<DoubleLine
 						// img={'/media/icons/zeroloss/default-placeholder.png'}
-						label={props.row.original.detail ?? '-'}
-						description={props.row.original.longDescription ?? ''}
+						label={''}
+						description={
+							<Fragment>
+								{/* <span>{props.row.original.detail ?? ''}</span> */}
+								{!eventMessage && <span>ไม่มีข้อมูล</span>}
+
+								{eventMessage && (
+									<div className="d-block mt-3">
+										รายงานเหตุการณ์ล่าสุด: {eventMessage?.detail ?? '-'}
+										<div className="d-block mt-3">
+											{hasImage && (
+												<span
+													className={'badge text-zeroloss-grey-700 bg-zeroloss-success-300 me-3'}
+													onClick={() => onViewReportingMedia(mediaPath)}>
+													<span
+														className={
+															'p-1 rounded-circle w-2px h-2px me-2 animation-blink bg-zeroloss-success'
+														}
+													/>{' '}
+													รูปภาพ
+												</span>
+											)}
+											{hasVideo && (
+												<span
+													className={'badge text-zeroloss-grey-700 bg-zeroloss-warning-300'}
+													onClick={() => onViewReportingMedia(getEventMediaPath(videoMediaPath))}>
+													<span
+														className={
+															'p-1 rounded-circle w-2px h-2px me-2 animation-blink bg-zeroloss-warning'
+														}
+													/>{' '}
+													วีดีโอ
+												</span>
+											)}
+										</div>
+									</div>
+								)}
+							</Fragment>
+						}
 					/>
 				)
 			},

@@ -8,6 +8,9 @@ import clsx from 'clsx'
 
 interface Props {
 	eventTypeOptions: any[]
+	measurementTypeOptions: any[]
+	measurementIsOverStdOptions: any[]
+	measurementStatusOptions: any[]
 	filter: any
 	searchText: string
 	setSearchText: (value: string) => void
@@ -21,9 +24,12 @@ const Filter: React.FC<Props> = ({
 	setSearchText,
 	filter,
 	onChangeFilter,
-	eventTypeOptions,
 	confirmFilter,
 	clearFilter,
+	eventTypeOptions,
+	measurementTypeOptions,
+	measurementIsOverStdOptions,
+	measurementStatusOptions,
 }) => {
 	const { mode } = useThemeMode()
 	let themeMode = ''
@@ -171,6 +177,141 @@ const Filter: React.FC<Props> = ({
 								/>
 							</div>
 							{/* END:: Event Type */}
+
+							{/* BEGIN:: Measurement Type */}
+							<div className="col-12">
+								<label className="form-label">ประเภทตรวจวัด</label>
+								<Select
+									isMulti={false}
+									placeholder="เลือกประเภทตรวจวัด"
+									noOptionsMessage={() => 'ไม่พบข้อมูล'}
+									className="shadow-sm w-100"
+									styles={{
+										container: styles => ({
+											...styles,
+											height: '44px',
+										}),
+										control: styles => ({
+											...styles,
+											height: '44px',
+											borderColor: themeMode === 'dark' ? '#363843' : '#dbdfe9',
+											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+										}),
+										menu: styles => ({
+											...styles,
+											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+											zIndex: 1000,
+										}),
+										input: styles => ({
+											...styles,
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+										}),
+									}}
+									options={measurementTypeOptions}
+									value={
+										measurementTypeOptions.filter(
+											option => option.value === filter.measurementType
+										) ?? null
+									}
+									onChange={option => onChangeFilter('measurementType', option.value)}
+									components={{
+										IndicatorSeparator: () => null,
+									}}
+								/>
+							</div>
+							{/* END:: Measurement Type */}
+
+							{/* BEGIN:: Measurement Is Over Standard */}
+							<div className="col-12">
+								<label className="form-label">ระบบตรวจวัดที่มีค่าเกินมาตรฐาน</label>
+								<Select
+									isMulti={false}
+									placeholder="เลือกระบบตรวจวัดที่มีค่าเกินมาตรฐาน"
+									noOptionsMessage={() => 'ไม่พบข้อมูล'}
+									className="shadow-sm w-100"
+									styles={{
+										container: styles => ({
+											...styles,
+											height: '44px',
+										}),
+										control: styles => ({
+											...styles,
+											height: '44px',
+											borderColor: themeMode === 'dark' ? '#363843' : '#dbdfe9',
+											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+										}),
+										menu: styles => ({
+											...styles,
+											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+											zIndex: 1000,
+										}),
+										input: styles => ({
+											...styles,
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+										}),
+									}}
+									options={measurementIsOverStdOptions}
+									value={
+										measurementIsOverStdOptions.filter(
+											option => option.value === filter.measurementIsOverStd
+										) ?? null
+									}
+									onChange={option => onChangeFilter('measurementIsOverStd', option.value)}
+									components={{
+										IndicatorSeparator: () => null,
+									}}
+								/>
+							</div>
+							{/* END:: Measurement Is Over Standard */}
+
+							{/* BEGIN:: Measurement Status */}
+							<div className="col-12">
+								<label className="form-label">การเชื่อมโยงข้อมูลของระบบตรวจวัด</label>
+								<Select
+									isMulti={false}
+									placeholder="เลือกการเชื่อมโยงข้อมูลของระบบตรวจวัด"
+									noOptionsMessage={() => 'ไม่พบข้อมูล'}
+									className="shadow-sm w-100"
+									styles={{
+										container: styles => ({
+											...styles,
+											height: '44px',
+										}),
+										control: styles => ({
+											...styles,
+											height: '44px',
+											borderColor: themeMode === 'dark' ? '#363843' : '#dbdfe9',
+											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+										}),
+										menu: styles => ({
+											...styles,
+											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+											zIndex: 1000,
+										}),
+										input: styles => ({
+											...styles,
+											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+										}),
+									}}
+									options={measurementStatusOptions}
+									value={
+										measurementStatusOptions.filter(
+											option => option.value === filter.measurementStatus
+										) ?? null
+									}
+									onChange={option => onChangeFilter('measurementStatus', option.value)}
+									components={{
+										IndicatorSeparator: () => null,
+									}}
+								/>
+							</div>
+							{/* END:: Measurement Status */}
 
 							{/* BEGIN:: Call to Action */}
 							<div className="col-12 d-flex flex-row">

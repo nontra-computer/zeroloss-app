@@ -81,6 +81,7 @@ const FormGenerator: React.FC<Prop> = ({
 	mark,
 	markChar,
 	onPressEnter,
+	customHelpText,
 }) => {
 	switch (inputType) {
 		case 'plain':
@@ -258,6 +259,7 @@ const FormGenerator: React.FC<Prop> = ({
 					additionalLabelCom={additionalLabelCom}
 					containerClassName={containerClassName}
 					onFileUpload={onFileUpload}
+					customHelpText={customHelpText}
 				/>
 			)
 		default:

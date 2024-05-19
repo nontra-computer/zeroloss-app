@@ -3,21 +3,9 @@ import { useEventStore } from '@/Store/Event'
 import { useLocationStore } from '@/Store/Location'
 import { useLocationTypeStore } from '@/Store/LocationType'
 import { useMeasurementStore } from '@/Store/Measurement'
+import { useGoogleMap } from '@/Hooks/useGoogleMap'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { toast } from 'react-toastify'
-
-const MOCK_DATA = {
-	id: 1,
-	type: 'success',
-	draggable: false,
-	shapeType: 'circle' as 'polygon' | 'circle',
-	popup: null,
-	position: {
-		lat: 13.7473729,
-		lng: 100.5137062,
-	},
-	degree: 0,
-}
 
 const INITIAL_FILTER_STATE = {
 	name: '',
@@ -26,12 +14,16 @@ const INITIAL_FILTER_STATE = {
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
-	const { eventTypes, getTypes } = useEventStore(state => ({
-		selected: state.selected,
-		eventTypes: state.types,
-		getTypes: state.getTypes,
-		clearState: state.clearState,
-	}))
+	const { selected, eventTypes, eventSubTypes, getTypes, getSubTypes, getMediaPath } =
+		useEventStore(state => ({
+			selected: state.selected,
+			eventTypes: state.types,
+			eventSubTypes: state.subTypes,
+			getTypes: state.getTypes,
+			getSubTypes: state.getSubTypes,
+			getMediaPath: state.getEventMediaPath,
+			clearState: state.clearState,
+		}))
 	const { locations, setLocations, getAllLocations } = useLocationStore(state => ({
 		locations: state.dataMapMarker,
 		setLocations: state.setDataMapMarker,
@@ -45,6 +37,7 @@ const ViewModel = () => {
 		measurements: state.data,
 		getAllMeasurements: state.getAll,
 	}))
+	const { onNavigate } = useGoogleMap()
 	const [filter, setFilter] = useState(INITIAL_FILTER_STATE)
 
 	const eventTypesOptions: {
@@ -100,6 +93,23 @@ const ViewModel = () => {
 		[locations, locationTypes]
 	)
 
+	const eventSubTypesOptions = useMemo(() => {
+		return eventSubTypes
+			.filter((d: any) => d.eventTypeId === selected?.eventTypeId)
+			.map((d: any) => ({
+				label: d.name,
+				value: d.id,
+			}))
+	}, [selected, eventSubTypes])
+
+	const eventPictureCover = useMemo(() => {
+		const galleries = selected?.galleries || []
+		const finded = galleries.find((g: any) => g.isPictureCover === true)
+
+		return finded ? getMediaPath(finded.picturePath) : null
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [selected])
+
 	let themeMode = ''
 	if (mode === 'system') {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -111,6 +121,7 @@ const ViewModel = () => {
 		getAllMeasurements()
 		getTypes()
 		getAllLocationTypes()
+		getSubTypes()
 	}
 
 	const onChangeFilter = (key: string, value: any) => {
@@ -121,10 +132,7 @@ const ViewModel = () => {
 	}
 
 	const confirmFilter = () => {
-		if (
-			(filter.locationTypeId !== null && filter.locationTypeId !== 0) ||
-			filter.name !== ''
-		) {
+		if ((filter.locationTypeId !== null && filter.locationTypeId !== 0) || filter.name !== '') {
 			getAllLocations(filter)
 		} else {
 			toast.error('กรุณาระบุตัวกรองในการค้นหาสถานที่')
@@ -134,6 +142,10 @@ const ViewModel = () => {
 	const clearFilter = () => {
 		setLocations([])
 		setFilter(INITIAL_FILTER_STATE)
+	}
+
+	const onNavigateToEvent = () => {
+		onNavigate(selected?.latitude, selected?.longitude)
 	}
 
 	useEffect(() => {
@@ -149,12 +161,17 @@ const ViewModel = () => {
 
 	return {
 		themeMode,
-		data: MOCK_DATA,
+		data: {
+			...selected,
+			eventPictureCover: eventPictureCover,
+		},
 		locationData,
 		locationOptions,
 		eventTypesOptions,
 		distanceOptions,
+		eventSubTypesOptions,
 		filter,
+		onNavigateToEvent,
 		onChangeFilter,
 		confirmFilter,
 		clearFilter,

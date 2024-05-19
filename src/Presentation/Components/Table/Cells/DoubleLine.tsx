@@ -3,7 +3,7 @@ import clsx from 'clsx'
 
 interface Props {
 	label: string
-	description: string
+	description: string | JSX.Element
 }
 
 const DoubleLine: React.FC<Props> = ({ label, description }) => {

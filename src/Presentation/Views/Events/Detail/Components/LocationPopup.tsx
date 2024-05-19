@@ -20,7 +20,7 @@ const LocationPopup: React.FC<Props> = ({
 			<div className="card min-h-100px min-w-250px bg-zeroloss-primary">
 				<div className="card-body p-5">
 					<div className="text-zeroloss-base-white fw-bold fs-4">{nameTh}</div>
-					<div className="text-zeroloss-base-white fs-6">{locationType}</div>
+					<div className="text-zeroloss-base-white fs-6">({locationType})</div>
 
 					<div className="text-zeroloss-base-white fs-7 mt-4 text-start">ที่อยู่</div>
 					<p className="text-zeroloss-base-white text-start">{fullAddress}</p>

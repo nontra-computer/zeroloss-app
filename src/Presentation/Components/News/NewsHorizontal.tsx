@@ -1,6 +1,6 @@
 import React from 'react'
 import { NewsHorizontalProps } from '@/Types/NewsHorizontal'
-import { KTSVG } from '@/_metronic/helpers'
+// import { KTSVG } from '@/_metronic/helpers'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import clsx from 'clsx'
 import moment from 'moment'
@@ -57,9 +57,9 @@ const NewsHorizontal: React.FC<NewsHorizontalProps> = ({ date, img, detail, id, 
 							{isVideo && (
 								<video
 									controls={false}
-									autoPlay
-									muted
-									loop
+									autoPlay={false}
+									muted={true}
+									loop={true}
 									src={img ?? ''}
 									className="object-fit-contain mx-auto"
 									style={{ maxWidth: '100%', height: '150px' }}>
@@ -68,7 +68,7 @@ const NewsHorizontal: React.FC<NewsHorizontalProps> = ({ date, img, detail, id, 
 							)}
 						</div>
 						<div className="col-8">
-							<div className="p-4 pt-1">
+							<div className="p-4 pt-4">
 								<div className="d-flex flex-row align-items-center justify-content-between">
 									<div
 										className={clsx('', {
@@ -77,9 +77,9 @@ const NewsHorizontal: React.FC<NewsHorizontalProps> = ({ date, img, detail, id, 
 										})}>
 										{moment(date).tz('Asia/Bangkok').format('DD/MM/YYYY HH:mm')}
 									</div>
-									<button className="btn btn-sm btn-icon btn-active-light">
+									{/* <button className="btn btn-sm btn-icon btn-active-light">
 										<KTSVG path="media/icons/zeroloss/x-close.svg" />
-									</button>
+									</button> */}
 								</div>
 								{/* <h6
 									className={clsx('new-title mt-2 fw-bold fs-4', {

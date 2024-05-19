@@ -2,6 +2,8 @@ import React, { Fragment } from 'react'
 
 import { createPortal } from 'react-dom'
 import { Modal } from 'react-bootstrap'
+import LocationSelection from '../../LocationSelection/View'
+import LocationSelectionComponent from '@/Presentation/Components/Map/Leaflet/LocationSelection'
 import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
 import { KTSVG } from '@/_metronic/helpers'
 
@@ -9,13 +11,13 @@ import useViewModel from './ViewModel'
 
 const EventMessageForm: React.FC = () => {
 	const {
+		isSubmitting,
 		formType,
 		open,
 		onClose,
 		formState,
 		onChangeFormState,
 		onRemovePicture,
-		isSubmitting,
 		onSubmit,
 		uploadProgress,
 	} = useViewModel()
@@ -24,7 +26,7 @@ const EventMessageForm: React.FC = () => {
 	return createPortal(
 		<Modal
 			size="sm"
-			id="kt_modal_supplier_location_selection_modal"
+			id="kt_modal_event_message_form_modal"
 			tabIndex={-1}
 			aria-hidden="true"
 			dialogClassName="modal-fullscreen-lg-down modal-lg modal-dialog modal-dialog-centered"
@@ -32,6 +34,8 @@ const EventMessageForm: React.FC = () => {
 			onHide={onClose}
 			backdrop={isSubmitting ? 'static' : true}
 			style={{ zIndex: 9999 }}>
+			<LocationSelection />
+
 			<div className="modal-content">
 				<div className="modal-body py-lg-10 px-lg-10 min-h-300px">
 					<h1 className="text-zeroloss-grey-900">
@@ -42,6 +46,38 @@ const EventMessageForm: React.FC = () => {
                         </div> */}
 
 					<div className="w-100 min-h-300px pt-5">
+						<div className="mb-5">
+							<label
+								className={`form-label d-flex flex-row`}
+								data-testid="form-input-label-component">
+								<div className="d-flex flex-column">
+									<span>
+										เลือกพิกัดเหตุการณ์ <span className="required"></span>
+									</span>
+								</div>
+							</label>
+
+							<div className="w-100 h-300px">
+								<LocationSelectionComponent
+									position={{ lat: formState.latitude, lng: formState.longitude }}
+									setPosition={({ lat, lng }) => {
+										onChangeFormState('coordinate', { lat, lng })
+									}}
+								/>
+							</div>
+						</div>
+
+						<FormGenerator
+							formKey="locationName"
+							label="ชื่อสถานที่"
+							inputType="plain"
+							disabled={isSubmitting}
+							additionalLabelCom={<span className="required" />}
+							additionalClassName="mb-5"
+							value={formState.locationName}
+							onChange={e => onChangeFormState('locationName', e.target.value)}
+						/>
+
 						<FormGenerator
 							formKey="detail"
 							label="บรรยายเหตุการณ์"
@@ -228,8 +264,14 @@ const EventMessageForm: React.FC = () => {
 						containerClassName="mt-5"
 						multiple={false}
 						disabled={isSubmitting}
-						accept="image/*, video/*"
+						accept="image/jpg, image/jpeg, image/png, video/mp4, video/mov"
 						onFileUpload={coverFiles => onChangeFormState('pictures', coverFiles[0])}
+						customHelpText={
+							<React.Fragment>
+								<span>or drag and drop</span>
+								<p>Allowed: JPG, JPEG, PNG, MP4, MOV</p>
+							</React.Fragment>
+						}
 					/>
 				</div>
 
@@ -281,7 +323,8 @@ const EventMessageForm: React.FC = () => {
 			</div>
 
 			<style>{`
-                #kt_body > div.fade.modal-backdrop.show {
+				#kt_body > div.fade.modal-backdrop.show, 
+				#kt_body > div.fade.modal.show > #kt_modal_event_message_form_modal {
                     z-index: 9999 !important;
                 }
 			`}</style>

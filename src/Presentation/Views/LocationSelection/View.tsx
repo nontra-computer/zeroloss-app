@@ -13,7 +13,7 @@ const LocationSelection: React.FC = () => {
 	return createPortal(
 		<Modal
 			size="sm"
-			id="kt_modal_supplier_location_selection_modal"
+			id="kt_modal_location_selection_modal"
 			tabIndex={-1}
 			aria-hidden="true"
 			dialogClassName="modal-fullscreen-lg-down modal-xl modal-dialog modal-dialog-centered"
@@ -53,6 +53,10 @@ const LocationSelection: React.FC = () => {
 				.leaflet-container {
 					height: 100%;
 				}
+
+				#kt_body > #kt_modal_location_selection_modal {
+                    z-index: 10000 !important;
+                }
 			`}</style>
 		</Modal>,
 		modalsRoot

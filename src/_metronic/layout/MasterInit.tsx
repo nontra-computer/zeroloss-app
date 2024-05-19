@@ -12,7 +12,7 @@ import {
 import { ThemeModeComponent } from '../assets/ts/layout'
 
 import { useLayout } from './core'
-import useEventNotification from '@/Hooks/useEventNotification'
+import useZerolossSocket from '@/Hooks/useZerolossSocket'
 
 export function MasterInit() {
 	const { config } = useLayout()
@@ -41,7 +41,7 @@ export function MasterInit() {
 		}
 	}, [config, initialized])
 
-	useEventNotification()
+	useZerolossSocket()
 
 	return <></>
 }

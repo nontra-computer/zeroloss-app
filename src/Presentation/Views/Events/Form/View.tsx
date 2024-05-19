@@ -7,13 +7,14 @@ import ReactDatePicker from 'react-datepicker'
 import EventStepper from '../Components/Stepper'
 import Select, { components } from 'react-select'
 import { KTSVG } from '@/_metronic/helpers'
-import LocationSelection from './LocationSelection/View'
+import LocationSelection from '../../LocationSelection/View'
 import { MapContainer, TileLayer } from 'react-leaflet'
 import EventWithStatus from '@/Presentation/Components/LeafletMap/EventWithStatus'
 import EventPopup from '@/Presentation/Components/LeafletMap/EventPopup'
 import ImageUploader1 from '@/Presentation/Components/Uploader/Images/ImageUploader1'
 import { ClientSideTable } from '@/Presentation/Components/Table'
 import EventMessageForm from '../MessageForm/View'
+import EventNotificationScheduleForm from '../NotificationSchedule/View'
 
 import Lightbox from 'yet-another-react-lightbox'
 
@@ -35,6 +36,7 @@ const EventFormView: React.FC = () => {
 		isEditInformer,
 		isEditReporting,
 		isEditImpact,
+		isEditNotification,
 		timeStr,
 		themeMode,
 		title,
@@ -43,14 +45,17 @@ const EventFormView: React.FC = () => {
 		eventTypesOptions,
 		eventSubTypesOptions,
 		eventDangerLevelOptions,
+		chemicalOptions,
 		eventPictureCover,
-		eventPictures,
+		eventMedias,
 		steppers,
 		formState,
 		messages,
+		notiSchedules,
 		pollutionState,
 		pollutionOptions,
 		REPORTING_TABLE_CONFIGS,
+		NOTI_SCHEDULE_TABLE_CONFIGS,
 		onChangeFormState,
 		onChangePollutionState,
 		onOpenLocationSelection,
@@ -66,6 +71,7 @@ const EventFormView: React.FC = () => {
 		onCancel,
 		onSubmit,
 		onCreateReportingMessage,
+		onAddNotificationSchedule,
 	} = useViewModel()
 
 	return (
@@ -88,6 +94,7 @@ const EventFormView: React.FC = () => {
 
 			<LocationSelection />
 			<EventMessageForm />
+			<EventNotificationScheduleForm />
 
 			<div className="row">
 				<div className="col-12 px-0">
@@ -187,6 +194,20 @@ const EventFormView: React.FC = () => {
 														alt="White Plus Icon"
 													/>
 													เพิ่มรายงานเหตุการณ์
+												</button>
+											</div>
+										)}
+										{!isCreate && isEditNotification && (
+											<div className="card-toolbar">
+												<button
+													className="btn btn-sm btn-zeroloss-primary text-zeroloss-base-white"
+													onClick={onAddNotificationSchedule}>
+													<img
+														className="me-1"
+														src="/media/icons/zeroloss/white-plus.svg"
+														alt="White Plus Icon"
+													/>
+													เพิ่มกำหนดการแจ้งเตือน
 												</button>
 											</div>
 										)}
@@ -559,7 +580,7 @@ const EventFormView: React.FC = () => {
 																isMulti
 																isClearable
 																isSearchable
-																placeholder="เลือกระดับความรุนแรง"
+																placeholder="เลือกมลพิษ"
 																noOptionsMessage={() => 'ไม่พบข้อมูล'}
 																className="w-100 shadow-sm"
 																value={pollutionState}
@@ -596,7 +617,7 @@ const EventFormView: React.FC = () => {
 																		<components.Placeholder
 																			{...props}
 																			className="cursor-pointer fs-7 fw-normal">
-																			เลือกระดับความรุนแรง
+																			เลือกมลพิษ
 																		</components.Placeholder>
 																	),
 																	NoOptionsMessage: props => (
@@ -607,6 +628,94 @@ const EventFormView: React.FC = () => {
 																		</components.NoOptionsMessage>
 																	),
 																}}
+															/>
+														</div>
+													)}
+
+													{isEditDetail && (
+														<div className="col-12 col-lg-8">
+															<label
+																className={`form-label d-flex flex-row`}
+																data-testid="form-input-label-component">
+																<div className="d-flex flex-column">
+																	<span>
+																		สารเคมีที่เกี่ยวข้อง
+																		<span className="required" />
+																	</span>
+																</div>
+															</label>
+															<Select
+																isMulti={false}
+																isClearable
+																isSearchable
+																placeholder="เลือกสารเคมีที่เกี่ยวข้อง"
+																noOptionsMessage={() => 'ไม่พบข้อมูล'}
+																className="w-100 shadow-sm"
+																value={
+																	chemicalOptions.find(
+																		(option: any) => option.value === formState.chemicalId
+																	) ?? null
+																}
+																options={chemicalOptions}
+																// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+																// @ts-ignore
+																onChange={val => onChangeFormState('chemicalId', val?.value)}
+																styles={{
+																	container: styles => ({
+																		...styles,
+																		// height: '44px',
+																		marginTop: '-2px',
+																	}),
+																	control: styles => ({
+																		...styles,
+																		// height: '44px',
+																		borderColor: themeMode === 'dark' ? '#363843' : '#dbdfe9',
+																		backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+																		color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+																	}),
+																	menu: styles => ({
+																		...styles,
+																		backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
+																		color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+																	}),
+																	input: styles => ({
+																		...styles,
+																		color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+																	}),
+																}}
+																components={{
+																	IndicatorSeparator: () => null,
+																	Placeholder: props => (
+																		<components.Placeholder
+																			{...props}
+																			className="cursor-pointer fs-7 fw-normal">
+																			เลือกสารเคมีที่เกี่ยวข้อง
+																		</components.Placeholder>
+																	),
+																	NoOptionsMessage: props => (
+																		<components.NoOptionsMessage
+																			{...props}
+																			className="cursor-pointer fs-7 fw-normal">
+																			ไม่พบข้อมูล
+																		</components.NoOptionsMessage>
+																	),
+																}}
+															/>
+														</div>
+													)}
+
+													{isEditDetail && (
+														<div className="col-12 col-lg-8">
+															<FormGenerator
+																formKey="emergencyResponse"
+																inputType="textarea"
+																label="คำแนะนำในการปฎิบัติ"
+																additionalClassName="form-control-sm"
+																additionalLabelCom={<span className="required" />}
+																value={formState.emergencyResponse}
+																onChange={e =>
+																	onChangeFormState('emergencyResponse', e.target.value)
+																}
 															/>
 														</div>
 													)}
@@ -662,9 +771,15 @@ const EventFormView: React.FC = () => {
 																	<span className="ms-1 text-zeroloss-grey-500">(ไม่จำเป็น)</span>
 																}
 																multiple={false}
-																accept="image/*"
+																accept="image/jpg, image/jpeg, image/png"
 																onFileUpload={coverFiles =>
 																	onChangeFormState('pictureCover', coverFiles[0])
+																}
+																customHelpText={
+																	<React.Fragment>
+																		<span>or drag and drop</span>
+																		<p>Allowed: JPG, JPEG, PNG</p>
+																	</React.Fragment>
 																}
 															/>
 														</div>
@@ -708,39 +823,41 @@ const EventFormView: React.FC = () => {
 													<div className="col-12">
 														<div className="card h-500px overflow-hidden">
 															<div className="card-body p-0">
-																<MapContainer
-																	center={{
-																		lat: formState.latitude,
-																		lng: formState.longitude,
-																	}}
-																	zoom={13}>
-																	<TileLayer
-																		attribution="@Copyright 2024 Zeroloss"
-																		url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-																	/>
-
-																	<EventWithStatus
-																		title={formState?.title ?? ''}
-																		detail={formState?.detail ?? ''}
-																		img={
-																			eventPictureCover ??
-																			'/media/icons/zeroloss/default-placeholder.png'
-																		}
-																		type="error"
-																		position={{
+																{formState.latitude && formState.longitude && (
+																	<MapContainer
+																		center={{
 																			lat: formState.latitude,
 																			lng: formState.longitude,
 																		}}
-																		popup={EventPopup}
-																		eventTypeId={formState?.eventTypeId ?? undefined}
-																		eventSubTypeTitle={
-																			eventSubTypesOptions.find(
-																				option => option.value === formState.eventSubTypeId
-																			)?.label ?? ''
-																		}
-																		eventType={formState?.eventType ?? undefined}
-																	/>
-																</MapContainer>
+																		zoom={13}>
+																		<TileLayer
+																			attribution="@Copyright 2024 Zeroloss"
+																			url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+																		/>
+
+																		<EventWithStatus
+																			title={formState?.title ?? ''}
+																			detail={formState?.detail ?? ''}
+																			img={
+																				eventPictureCover ??
+																				'/media/icons/zeroloss/default-placeholder.png'
+																			}
+																			type="error"
+																			position={{
+																				lat: formState.latitude,
+																				lng: formState.longitude,
+																			}}
+																			popup={EventPopup}
+																			eventTypeId={formState?.eventTypeId ?? undefined}
+																			eventSubTypeTitle={
+																				eventSubTypesOptions.find(
+																					option => option.value === formState.eventSubTypeId
+																				)?.label ?? ''
+																			}
+																			eventType={formState?.eventType ?? undefined}
+																		/>
+																	</MapContainer>
+																)}
 															</div>
 														</div>
 													</div>
@@ -799,7 +916,7 @@ const EventFormView: React.FC = () => {
 														index={imageIdx}
 														open={isOpenLightBox}
 														close={onCloseLightBox}
-														slides={eventPictures.map((p: any, idx: number) => ({
+														slides={eventMedias.map((p: any, idx: number) => ({
 															src: p.picturePath,
 															caption: `Event Picture ${idx + 1}`,
 														}))}
@@ -840,21 +957,34 @@ const EventFormView: React.FC = () => {
 															</div>
 														</label>
 														<div className="row g-10 mb-10">
-															{eventPictures.length === 0 && (
+															{eventMedias.length === 0 && (
 																<div className="col-12 text-center fw-bold text-zeroloss-grey-700 my-10">
 																	ไม่มีรูปภาพ
 																</div>
 															)}
 
-															{eventPictures.map((image: any, index: number) => (
+															{eventMedias.map((media: any, index: number) => (
 																<div key={index} className="col-6 col-md-4">
 																	<div className="position-relative h-300px cursor-pointer shadow-lg">
-																		<img
-																			src={image.picturePath}
-																			className="w-100 rounded object-fit-cover h-100 hover-filter-brightness transition-300"
-																			alt="Additional Picture"
-																			onClick={() => onOpenLightBox(index)}
-																		/>
+																		{media.isImage && (
+																			<img
+																				src={media.picturePath}
+																				className="w-100 rounded object-fit-cover h-100 hover-filter-brightness transition-300"
+																				alt="Additional Picture"
+																				onClick={() => onOpenLightBox(index)}
+																			/>
+																		)}
+																		{media.isVideo && (
+																			<video
+																				controls
+																				muted
+																				loop
+																				className="w-100 rounded object-fit-cover h-100 hover-filter-brightness transition-300"
+																				onClick={() => onOpenLightBox(index)}>
+																				<source src={media.picturePath} type="video/mp4" />
+																				Your browser does not support the video tag.
+																			</video>
+																		)}
 																		<button
 																			className="btn btn-sm btn-icon btn-primary btn-active-light-primary position-absolute"
 																			style={{ top: -10, right: 30 }}
@@ -874,10 +1004,10 @@ const EventFormView: React.FC = () => {
 																			/>
 																		</button>
 																	</div>
-																	{image.createdAt && (
+																	{media.createdAt && (
 																		<div className="mt-3 text-zeroloss-grey-500 fw-bold text-center">
 																			วันและเวลาที่อัพโหลด:{' '}
-																			{moment(image.createdAt)
+																			{moment(media.createdAt)
 																				.tz('Asia/Bangkok')
 																				.format('DD/MM/YYYY HH:mm')}
 																		</div>
@@ -890,8 +1020,14 @@ const EventFormView: React.FC = () => {
 															formKey="galleries"
 															inputType="drag-and-drop"
 															multiple={false}
-															accept="image/*"
+															accept="image/jpeg, image/png, image/jpg, video/mp4, video/mov"
 															onFileUpload={coverFiles => onAddAdditionalPicture(coverFiles[0])}
+															customHelpText={
+																<React.Fragment>
+																	<span>or drag and drop</span>
+																	<p>Allowed: JPG, JPEG, PNG, MP4, MOV</p>
+																</React.Fragment>
+															}
 														/>
 													</div>
 												</React.Fragment>
@@ -911,6 +1047,23 @@ const EventFormView: React.FC = () => {
 													</div>
 												</React.Fragment>
 											)}
+											{isCreate
+												? false
+												: isEditNotification && (
+														<React.Fragment>
+															<div className="col-12">
+																<div className="card">
+																	<div className="card-body pt-0 px-0">
+																		<ClientSideTable
+																			data={notiSchedules}
+																			columns={NOTI_SCHEDULE_TABLE_CONFIGS}
+																			items_per_page={10}
+																		/>
+																	</div>
+																</div>
+															</div>
+														</React.Fragment>
+													)}
 										</div>
 									</div>
 								</div>

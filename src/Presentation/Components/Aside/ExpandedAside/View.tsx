@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { isMobileDevice } from '@/_metronic/assets/ts/_utils'
 
 const ExpandedAside: React.FC = () => {
-	const { intl, isAsideExpanded, onClickLinkAside, subMenu, themeMode } = useViewModel()
+	const { asideRef, intl, isAsideExpanded, onClickLinkAside, subMenu, themeMode } = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -19,6 +19,7 @@ const ExpandedAside: React.FC = () => {
 			</div> */}
 
 			<div
+				ref={asideRef}
 				className={clsx('position-fixed h-100 transition-300 overflow-hidden text-nowrap', {
 					'w-100 w-lg-300px border-1px border-l-0 border-t-0 border-b-0': isAsideExpanded,
 					'w-0': !isAsideExpanded,

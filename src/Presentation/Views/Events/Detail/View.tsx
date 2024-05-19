@@ -10,13 +10,16 @@ import EventStepper from '../Components/Stepper'
 
 import EventDetailDefaultView from './DefaultView/View'
 import EventDetailMapView from './MapView/View'
-import EventListItem from './Components/EventListItem'
 
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
 
 const EventDetailView: React.FC = () => {
 	const {
+		downloadComponentRef,
+		isPrinting,
+		isOpenExportType,
+		setIsOpenExportType,
 		isDefaultView,
 		isMapView,
 		timeStr,
@@ -43,14 +46,8 @@ const EventDetailView: React.FC = () => {
 		onViewDetailEventMessageForm,
 		onApproveEvent,
 		loadMoreEventMessage,
+		onExportPrint,
 	} = useViewModel()
-
-	console.log(
-		galleryImages.map((p: any, idx: number) => ({
-			src: p,
-			caption: `Event Picture ${idx + 1}`,
-		}))
-	)
 
 	return (
 		<React.Fragment>
@@ -88,12 +85,15 @@ const EventDetailView: React.FC = () => {
 				styles={{ container: { backgroundColor: 'rgba(0, 0, 0, .6)' } }}
 			/>
 
-			<div className="row">
+			{isPrinting && <div id="event-detail-printing" className="fade modal-backdrop show"></div>}
+
+			<div className="row" ref={downloadComponentRef}>
 				<div className="col-12 px-0">
 					<div
-						className={
-							'px-10 d-flex flex-column flex-lg-row justify-content-between align-items-end position-relative create-event-header-bg h-300px'
-						}
+						className={clsx('px-10 d-flex flex-column flex-lg-row position-relative', {
+							'create-event-header-bg h-300px justify-content-between align-items-end':
+								isPrinting === false,
+						})}
 						style={{ gap: '12px' }}>
 						{/* Background Image */}
 						{/* <img
@@ -105,19 +105,33 @@ const EventDetailView: React.FC = () => {
 
 						{/* Header */}
 						<div>
-							<div className="fs-2x text-zeroloss-base-white fw-bold">{data?.title ?? '-'}</div>
-							<p className="text-zeroloss-grey-25 fs-3">
+							<div
+								className={clsx('fs-2x fw-bold', {
+									'text-zeroloss-grey-300': isPrinting === false,
+									'text-zeroloss-base-black': isPrinting === true,
+								})}>
+								{data?.title ?? '-'}
+							</div>
+							<p
+								className={clsx('fs-3', {
+									'text-zeroloss-grey-300': isPrinting === false,
+									'text-zeroloss-base-black': isPrinting === true,
+								})}>
 								{data?.eventTypeTitle} (
 								{eventSubTypes.find(item => item.id === data?.eventSubTypeId)?.name})
 							</p>
 						</div>
 
 						{/* Call to Action */}
-						<div className="text-end mb-5">
+						<div
+							className={clsx('text-end no-print', {
+								'mb-5': isPrinting === false,
+							})}>
 							{!isHideEventChangeStatusButton && (
-								<div className="d-inline-block position-relative">
+								<div className="d-inline-block position-relative no-print">
 									<button
-										className="btn white-button text-zeroloss-base-black fw-bold me-4 text-start"
+										type="button"
+										className="btn white-button text-zeroloss-base-black fw-bold me-4 text-start no-print"
 										onClick={() => {
 											setOpenChangeEventStatus(prevState => !prevState)
 										}}>
@@ -137,8 +151,40 @@ const EventDetailView: React.FC = () => {
 									</div>
 								</div>
 							)}
+							<div className="d-inline-block position-relative no-print">
+								<button
+									type="button"
+									className="btn btn-zeroloss-brand-600 text-zeroloss-grey-200 fw-bold me-4"
+									onClick={() => {
+										setIsOpenExportType(prevState => !prevState)
+									}}>
+									<span>นำออกเอกสาร</span>
+								</button>
+								<div className="text-start">
+									<Select
+										menuIsOpen={isOpenExportType}
+										onBlur={() => setIsOpenExportType(false)}
+										components={{
+											Input: () => null,
+											Control: () => null,
+										}}
+										options={[
+											{
+												label: 'PDF',
+												value: 'pdf',
+											},
+											{
+												label: 'Word',
+												value: 'docx',
+											},
+										]}
+										onChange={option => onExportPrint((option?.value ?? 'pdf') as 'pdf' | 'docx')}
+									/>
+								</div>
+							</div>
 							<button
-								className="btn btn-zeroloss-primary text-zeroloss-base-white fw-bold"
+								type="button"
+								className="btn btn-zeroloss-primary text-zeroloss-base-white fw-bold no-print"
 								onClick={onViewInDetail}>
 								{/* <img
 									className="me-1"
@@ -181,7 +227,10 @@ const EventDetailView: React.FC = () => {
 									{galleryImages.slice(0, 9).map((item: any, index: number) => (
 										<div
 											key={`event-additional-picture-${index}`}
-											className="col-4"
+											className={clsx('', {
+												'col-4': isPrinting === false,
+												'col-6': isPrinting === true,
+											})}
 											onClick={() => {
 												onOpenLightBox(index)
 											}}>
@@ -237,12 +286,35 @@ const EventDetailView: React.FC = () => {
 										)} */}
 									</div>
 									<div className="d-flex flex-row align-items-center mb-2">
-										<img src="/media/icons/zeroloss/marker-pin-01.svg" alt="Marker Pin Icon" />
+										<img
+											src="/media/icons/zeroloss/detail.svg"
+											alt="Marker Pin Icon"
+											className="w-15px h-15px"
+										/>
 										<span className="ms-2 fs-5 fw-semibold">{data?.detail}</span>
 									</div>
 									<div className="d-flex flex-row align-items-center mb-2">
-										<div className="w-20px h-20px"></div>
-										<EventListItem data={data?.events ?? []} />
+										<img
+											src="/media/icons/zeroloss/chemical-drop.svg"
+											alt="Marker Pin Icon"
+											className="w-15px h-15px"
+										/>
+										<span className="ms-2 fs-5 fw-semibold">
+											สารเคมีที่เกี่ยวข้อง:{' '}
+											{data?.chemical?.nameTh && data?.chemical?.nameEn
+												? `${data?.chemical?.nameTh ? `${data?.chemical?.nameTh} - ` : ''}${data?.chemical?.nameEn}`
+												: '-'}
+										</span>
+									</div>
+									<div className="d-flex flex-row align-items-center mb-2">
+										<img
+											src="/media/icons/zeroloss/instruction-support-information.svg"
+											alt="Marker Pin Icon"
+											className="w-15px h-15px"
+										/>
+										<span className="ms-2 fs-5 fw-semibold">
+											คำแนะนำในการปฎิบัติ: {data?.emergencyResponse ?? '-'}
+										</span>
 									</div>
 
 									<div className="d-flex flex-row align-items-center mb-2">
@@ -278,7 +350,7 @@ const EventDetailView: React.FC = () => {
 									</div>
 
 									<div className="card-toolbar">
-										<div className="zeroloss-button-group w-fit-content shadow mx-auto mx-lg-0">
+										<div className="zeroloss-button-group w-fit-content shadow mx-auto mx-lg-0 no-print">
 											<button
 												className={clsx('btn btn-sm left cursor-pointer', {
 													'white-button': themeMode === 'light',
@@ -307,8 +379,11 @@ const EventDetailView: React.FC = () => {
 									</div>
 								</div>
 								<div className="card-body">
-									<div className="row">
-										<div className="d-none d-lg-block col-12 col-lg-3">
+									<div
+										className={clsx('row', {
+											'g-0': isPrinting === true,
+										})}>
+										<div className="d-none d-lg-block col-12 col-lg-3 no-print">
 											<div className="mb-10">
 												<div className="fs-4 fw-bold text-zeroloss-grey-900">ลำดับเหตุการณ์</div>
 											</div>
@@ -318,7 +393,7 @@ const EventDetailView: React.FC = () => {
 
 										<div className="col-12 col-lg-3">
 											<div
-												className="mx-auto fs-4 fw-bold text-zeroloss-grey-900 mb-5"
+												className="mx-auto fs-4 fw-bold text-zeroloss-grey-900 mb-lg-5"
 												style={{ width: '95%' }}>
 												รายงานเหตุการณ์ (เรื่องเล่า รูปภาพ)
 											</div>

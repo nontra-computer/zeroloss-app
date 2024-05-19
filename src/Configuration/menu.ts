@@ -100,14 +100,14 @@ export const ZEROLOSS_MENU = [
 			// },
 		],
 	},
-	{
-		key: 'user_account',
-		icon: 'bi-people-fill',
-		path: '/user-account',
-		label: 'ZEROLOSS.MENU.USER',
-		className: 'py-3',
-		subMenu: [],
-	},
+	// {
+	// 	key: 'user_account',
+	// 	icon: 'bi-people-fill',
+	// 	path: '/user-account',
+	// 	label: 'ZEROLOSS.MENU.USER',
+	// 	className: 'py-3',
+	// 	subMenu: [],
+	// },
 ]
 
 export const ZEROLOSS_SETTING_MENU = [
@@ -154,14 +154,14 @@ export const ZEROLOSS_SETTING_MENU = [
 			// },
 		],
 	},
-	{
-		key: 'setup',
-		icon: 'bi-gear-fill',
-		path: '/setup',
-		label: 'ZEROLOSS.MENU.SYSTEM_SETUP',
-		className: 'py-3',
-		subMenu: [],
-	},
+	// {
+	// 	key: 'setup',
+	// 	icon: 'bi-gear-fill',
+	// 	path: '/setup',
+	// 	label: 'ZEROLOSS.MENU.SYSTEM_SETUP',
+	// 	className: 'py-3',
+	// 	subMenu: [],
+	// },
 	// {
 	// 	key: 'profile',
 	// 	icon: 'bi-person-circle',

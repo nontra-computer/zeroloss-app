@@ -7,9 +7,12 @@ import PlainLocation from '@/Presentation/Components/LeafletMap/PlainLocation'
 import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
 import InfoBoard from '@/Presentation/Components/InfoBoard'
 import LocationPopup from '../Components/LocationPopup'
+import EventWithStatus from '@/Presentation/Components/LeafletMap/EventWithStatus'
+import EventPopup from '@/Presentation/Components/LeafletMap/EventPopup'
 
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
+import { Bangkok } from '@/Configuration/​MapCoordinates'
 
 const EventDetailMapView: React.FC = () => {
 	const {
@@ -19,7 +22,9 @@ const EventDetailMapView: React.FC = () => {
 		eventTypesOptions,
 		locationOptions,
 		distanceOptions,
+		eventSubTypesOptions,
 		filter,
+		onNavigateToEvent,
 		onChangeFilter,
 		confirmFilter,
 		clearFilter,
@@ -44,6 +49,22 @@ const EventDetailMapView: React.FC = () => {
 						</div>
 						<div className="card-toolbar">
 							<button
+								type="button"
+								className="btn btn-sm w-100 w-lg-auto white-button me-4"
+								onClick={onNavigateToEvent}
+								style={{ height: 44 }}>
+								<KTSVG
+									className="svg-icon-3 me-1"
+									path={
+										themeMode === 'light'
+											? 'media/icons/zeroloss/arrow-right.svg'
+											: 'media/icons/zeroloss/white-arrow-right.svg'
+									}
+								/>
+								นำทาง
+							</button>
+							<button
+								type="button"
 								id="kt_event_detail_filter_toggle"
 								className={clsx('btn btn-sm w-100 w-lg-auto', {
 									'white-button': themeMode === 'light',
@@ -66,29 +87,50 @@ const EventDetailMapView: React.FC = () => {
 					<div className="card-body p-0 position-relative event-detail-map-container">
 						<InfoBoard data={eventTypesOptions} />
 
-						<MapContainer
-							center={{
-								lat: data.position.lat,
-								lng: data.position.lng,
-							}}
-							zoom={14}>
-							<TileLayer
-								attribution="@Copyright 2024 Zeroloss"
-								url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-							/>
-
-							{locationData.map((l, idx) => (
-								<PlainLocation
-									key={`location-${idx}`}
-									{...l}
-									latitude={l?.latitude ?? 0}
-									longitude={l?.longitude ?? 0}
-									popup={LocationPopup}
+						{data?.latitude && data?.longitude && (
+							<MapContainer
+								center={{
+									lat: data?.latitude ?? Bangkok.lat,
+									lng: data?.longitude ?? Bangkok.lng,
+								}}
+								zoom={14}>
+								<TileLayer
+									attribution="@Copyright 2024 Zeroloss"
+									url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 								/>
-							))}
 
-							{/* <LocationPolygon type={data.shapeType} position={[data.position]} radius={1500} /> */}
-						</MapContainer>
+								<EventWithStatus
+									title={data?.title ?? ''}
+									detail={data?.detail ?? ''}
+									img={data?.eventPictureCover}
+									type="error"
+									position={{
+										lat: data.latitude,
+										lng: data.longitude,
+									}}
+									popup={EventPopup}
+									eventTypeId={data?.eventTypeId ?? ''}
+									eventSubTypeTitle={
+										eventSubTypesOptions.find(d => d.value === data?.eventSubTypeId)?.label ?? ''
+									}
+									eventType={data?.eventType ?? ''}
+									hideViewMore
+									showNavigate
+								/>
+
+								{locationData.map((l, idx) => (
+									<PlainLocation
+										key={`location-${idx}`}
+										{...l}
+										latitude={l?.latitude ?? 0}
+										longitude={l?.longitude ?? 0}
+										popup={LocationPopup}
+									/>
+								))}
+
+								{/* <LocationPolygon type={data.shapeType} position={[data.position]} radius={1500} /> */}
+							</MapContainer>
+						)}
 					</div>
 				</div>
 			</div>

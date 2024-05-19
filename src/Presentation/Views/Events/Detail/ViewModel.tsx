@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useContext } from 'react'
+import { useEffect, useMemo, useState, useContext, useRef } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
@@ -8,9 +8,13 @@ import { useEventStore } from '@/Store/Event'
 import { useEventMessageStore } from '@/Store/EventMessage'
 import { EventMessageFormContext } from '../MessageForm/Context'
 import { toast } from 'react-toastify'
+import { useReactToPrint } from 'react-to-print'
 import Swal from 'sweetalert2'
+import { Packer, Document, Paragraph, TextRun, AlignmentType } from 'docx'
+import { saveAs } from 'file-saver'
 import moment from 'moment'
 import 'moment-timezone'
+import { EventDangerLevelOptions } from '@/Configuration/EventDangerLevel'
 
 const STEPPERS = [
 	{
@@ -51,22 +55,32 @@ const EVENT_STATUS_OPTIONS = [
 ]
 
 const ViewModel = () => {
+	const downloadComponentRef = useRef<any>(null)
 	const { eventId } = useParams()
 	const {
 		onOpen: handleOpenEventMessageForm,
 		setFormType,
 		setEditId,
 	} = useContext(EventMessageFormContext)
-	const { data, eventSubTypes, getOne, getMediaPath, approveEvent, clearState } = useEventStore(
-		state => ({
-			data: state.selected,
-			eventSubTypes: state.subTypes,
-			getOne: state.getOne,
-			getMediaPath: state.getEventMediaPath,
-			approveEvent: state.approve,
-			clearState: state.clearState,
-		})
-	)
+	const {
+		data,
+		eventSubTypes,
+		getOne,
+		getMediaPath,
+		pollutionTypes,
+		getPollution,
+		approveEvent,
+		clearState,
+	} = useEventStore(state => ({
+		data: state.selected,
+		eventSubTypes: state.subTypes,
+		getOne: state.getOne,
+		getMediaPath: state.getEventMediaPath,
+		pollutionTypes: state.pollutions,
+		getPollution: state.getPollution,
+		approveEvent: state.approve,
+		clearState: state.clearState,
+	}))
 	const { eventMessageData, getAllEventMessage } = useEventMessageStore(state => ({
 		eventMessageData: state.data,
 		getAllEventMessage: state.getAll,
@@ -197,11 +211,303 @@ const ViewModel = () => {
 	const isHideEventChangeStatusButton = data?.state === 4
 	const isEventMessageMax = eventMessagePage * 4 >= eventMessageData.length
 
+	const [isPrinting, setIsPrinting] = useState(false)
+	const [isOpenExportType, setIsOpenExportType] = useState(false)
+
 	let themeMode = ''
 	if (mode === 'system') {
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 	} else {
 		themeMode = mode
+	}
+
+	const pollution = useMemo(() => {
+		let pollutionData: {
+			[key: string]: {
+				label: string
+				value: any
+			}
+		} = {}
+
+		if (Object.keys(pollutionTypes).length !== 0) {
+			pollutionData = Object.keys(pollutionTypes).reduce(
+				(
+					acc: {
+						[key: string]: {
+							label: string
+							value: any
+						}
+					},
+					curr
+				) => {
+					if (data[curr] !== undefined && (data[curr] === 1 || data[curr] === true)) {
+						acc[curr] = {
+							label: pollutionTypes[curr],
+							value: data[curr],
+						}
+					}
+
+					return acc
+				},
+				{}
+			)
+		}
+
+		return Object.entries(pollutionData).map(([, value]) => value)
+	}, [data, pollutionTypes])
+
+	const handlePrint = useReactToPrint({
+		content: () => downloadComponentRef.current,
+		documentTitle: `Event_${eventId}`,
+		onBeforePrint: () => {
+			setIsPrinting(true)
+
+			// Mute the video before printing
+			const videoElement = document.querySelector('video')
+			if (videoElement) {
+				videoElement.muted = true
+				videoElement.volume = 0
+				videoElement.pause()
+			}
+
+			const fadeElement = document.querySelector('#event-detail-printing') as HTMLElement
+			if (fadeElement) {
+				fadeElement.style.zIndex = '9999'
+				fadeElement.style.opacity = '0.8'
+			}
+		},
+		onAfterPrint: () => {
+			setIsPrinting(false)
+		},
+		pageStyle: ` 
+		  @media print {
+			.no-print {
+			  display: none !important;
+			}
+		  }
+		`,
+	})
+
+	const handleDocxExport = () => {
+		const doc = new Document({
+			sections: [
+				{
+					children: [
+						new Paragraph({
+							alignment: AlignmentType.LEFT,
+							children: [
+								new TextRun({
+									text: 'วันที่แจ้งเหตุ: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: moment(data?.calledTime).tz('Asia/Bangkok').format('DD/MM/YYYY HH:mm'),
+									size: 16,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.LEFT,
+							children: [
+								new TextRun({
+									text: 'วันที่เกิดเหตุ: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: data?.start
+										? moment(data?.start).tz('Asia/Bangkok').format('DD/MM/YYYY HH:mm')
+										: '-',
+									size: 16,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.LEFT,
+							children: [
+								new TextRun({
+									text: 'วันที่สิ้นสุด: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: data?.start
+										? moment(data?.start).tz('Asia/Bangkok').format('DD/MM/YYYY HH:mm')
+										: '-',
+									size: 16,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.CENTER,
+							children: [
+								new TextRun({
+									text: 'ประเภทเหตุการณ์หลัก: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: data?.eventType?.name ?? '',
+									size: 18,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.CENTER,
+							children: [
+								new TextRun({
+									text: 'ประเภทเหตุการณ์ย่อย: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: eventSubTypes.find(item => item.id === data?.eventSubTypeId)?.name ?? '',
+									size: 18,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.CENTER,
+							children: [
+								new TextRun({
+									text: 'เหตุการณ์เบื้องต้น: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: data?.title ?? '',
+									size: 18,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.CENTER,
+							children: [
+								new TextRun({
+									text: 'บรรยายเหตุการณ์: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: data?.detail ?? '',
+									size: 18,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.CENTER,
+							children: [
+								new TextRun({
+									text: 'ระดับความรุนแรง: ',
+									size: 16,
+								}),
+								new TextRun({
+									text:
+										EventDangerLevelOptions.find(option => option.value === data?.dangerLevel)
+											?.label ?? '',
+									size: 18,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.CENTER,
+							children: [
+								new TextRun({
+									text: 'มลพิษ: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: pollution.map(p => p.label).join(', ') ?? '',
+									size: 18,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.CENTER,
+							children: [
+								new TextRun({
+									text: 'สารเคมีที่เกี่ยวข้อง: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: data?.chemical
+										? `${data?.chemical?.nameTh ? data?.chemical?.nameTh + ' - ' : ''} (${data?.chemical?.nameEn ? data?.chemical?.nameEn : ''})`
+										: '',
+									size: 18,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.CENTER,
+							children: [
+								new TextRun({
+									text: 'คำแนะนำในการปฎิบัติ: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: data?.emergencyResponse ?? '',
+									size: 18,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.CENTER,
+							children: [
+								new TextRun({
+									text: 'สถานที่เกิดเหตุ: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: locationAddress ?? '',
+									size: 18,
+								}),
+							],
+						}),
+						new Paragraph({}),
+						new Paragraph({
+							alignment: AlignmentType.CENTER,
+							children: [
+								new TextRun({
+									text: 'ที่ตั้ง: ',
+									size: 16,
+								}),
+								new TextRun({
+									text: data?.locationAddress ?? '',
+									size: 18,
+								}),
+							],
+						}),
+					],
+				},
+			],
+		})
+
+		Packer.toBlob(doc).then(blob => {
+			saveAs(blob, `Event_${eventId}.docx`)
+			setIsPrinting(false)
+		})
+	}
+
+	const onExportPrint = (input?: 'pdf' | 'docx') => {
+		const type = input ?? 'pdf'
+
+		toast.info('กำลังจัดเตรียมเอกสาร...')
+		setIsPrinting(true)
+
+		setTimeout(() => {
+			if (type === 'pdf') {
+				handlePrint()
+				setIsOpenExportType(false)
+			} else if (type === 'docx') {
+				handleDocxExport()
+				setIsOpenExportType(false)
+			}
+		}, 100)
 	}
 
 	const onApproveEvent = (optionValue: number) => {
@@ -261,6 +567,8 @@ const ViewModel = () => {
 	}
 
 	const fetchData = () => {
+		getPollution()
+
 		if (eventId) {
 			getOne(eventId).then(({ success, data }) => {
 				if (!success) {
@@ -329,6 +637,9 @@ const ViewModel = () => {
 	}, [])
 
 	return {
+		downloadComponentRef,
+		isPrinting,
+		isOpenExportType,
 		isDefaultView,
 		isMapView,
 		timeStr,
@@ -337,6 +648,7 @@ const ViewModel = () => {
 		eventStatusOptions: eventStatusOptions,
 		openChangeEventStatus,
 		setOpenChangeEventStatus,
+		setIsOpenExportType,
 		data: data,
 		pictureCover,
 		galleryImages,
@@ -355,6 +667,7 @@ const ViewModel = () => {
 		onViewDetailEventMessageForm,
 		onApproveEvent,
 		loadMoreEventMessage,
+		onExportPrint,
 	}
 }
 

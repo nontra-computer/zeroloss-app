@@ -7,10 +7,13 @@ import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModePr
 import { useEventStore, ICreateEvent } from '@/Store/Event'
 import { useEventMediaStore } from '@/Store/EventMedia'
 import { useEventMessageStore } from '@/Store/EventMessage'
+import { useChemicalStore } from '@/Store/Chemical'
+import { useNotificationScheduleStore } from '@/Store/NotificationSchedule'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { TableContext } from '@/Context/Table'
-import { LocationSelectionContext } from './LocationSelection/Context'
+import { LocationSelectionContext } from '../../LocationSelection/Context'
 import { EventMessageFormContext } from '../MessageForm/Context'
+import { EventNotificationScheduleContext } from '../NotificationSchedule/Context'
 import moment from 'moment-timezone'
 import 'moment-timezone'
 import { TAB_HEADER_ITEMS } from './Config'
@@ -63,6 +66,8 @@ const INITIAL_STATE = {
 	impactOther: '',
 	locationName: '',
 	locationAddress: '',
+	chemicalId: 0,
+	emergencyResponse: '',
 }
 
 const STEPPERS = [
@@ -136,6 +141,18 @@ const ViewModel = () => {
 		getAllMessages: state.getAll,
 		removeMessage: state.remove,
 	}))
+	const { chemicals, getChemicals } = useChemicalStore(state => ({
+		chemicals: state.data,
+		getChemicals: state.getAll,
+	}))
+	const { notiSchedules, getNotiSchedules, removeNotiSchedule } = useNotificationScheduleStore(
+		state => ({
+			notiSchedules: state.data,
+			getNotiSchedules: state.getAll,
+			createNotiSchedule: state.create,
+			removeNotiSchedule: state.remove,
+		})
+	)
 	const {
 		setOpen: setOpenSelectLocation,
 		changeConfirm,
@@ -143,6 +160,7 @@ const ViewModel = () => {
 		position,
 		setPosition,
 	} = useContext(LocationSelectionContext)
+	const { onOpen: onOpenNotificationSchedule } = useContext(EventNotificationScheduleContext)
 	const { updateLoading, updatePagination, updateSorting, updateError } = useContext(TableContext)
 	const {
 		onOpen: onOpenEventMessageForm,
@@ -216,6 +234,13 @@ const ViewModel = () => {
 			return location.pathname === `/events/edit/${eventId}/impact`
 		}
 	}, [isCreate, location.pathname, eventId])
+	const isEditNotification = useMemo(() => {
+		if (isCreate) {
+			return false
+		} else {
+			return location.pathname === `/events/edit/${eventId}/notification`
+		}
+	}, [isCreate, location.pathname, eventId])
 	const currentActiveTabIdx = useMemo(() => {
 		if (isEditDetail) {
 			return 0
@@ -229,10 +254,20 @@ const ViewModel = () => {
 			return 4
 		} else if (isEditImpact) {
 			return 5
+		} else if (isEditNotification) {
+			return 6
 		} else {
 			return 0
 		}
-	}, [isEditDetail, isEditLocation, isEditInformer, isEditImages, isEditReporting, isEditImpact])
+	}, [
+		isEditDetail,
+		isEditLocation,
+		isEditInformer,
+		isEditImages,
+		isEditReporting,
+		isEditImpact,
+		isEditNotification,
+	])
 
 	const eventTypesOptions: {
 		label: string
@@ -322,6 +357,14 @@ const ViewModel = () => {
 			},
 		]
 	}, [])
+	const chemicalOptions = useMemo(
+		() =>
+			chemicals.map((d: any) => ({
+				label: `${d.nameTh ? `${d.nameTh} - ` : ''}${d.nameEn}`,
+				value: d.id,
+			})),
+		[chemicals]
+	)
 
 	const steppers = useMemo(() => {
 		if (isCreate) {
@@ -397,14 +440,22 @@ const ViewModel = () => {
 		return finded ? getMediaPath(finded.picturePath) : null
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selected])
-	const eventPictures = useMemo(() => {
+	const eventMedias = useMemo(() => {
 		const galleries = selected?.galleries || []
 
 		return galleries
 			.filter((g: any) => g.isPictureCover !== true)
 			.map((g: any) => {
+				const isImage =
+					g.picturePath.includes('.png') ||
+					g.picturePath.includes('.jpg') ||
+					g.picturePath.includes('.jpeg')
+				const isVideo = g.picturePath.includes('.mp4') || g.picturePath.includes('.mov')
+
 				return {
 					...g,
+					isImage,
+					isVideo,
 					picturePath: getMediaPath(g.picturePath),
 				}
 			})
@@ -443,6 +494,10 @@ const ViewModel = () => {
 				navigate(`/events/edit/${eventId}/impact`)
 				return
 			}
+			case 6: {
+				navigate(`/events/edit/${eventId}/notification`)
+				return
+			}
 			default: {
 				navigate(`/events/edit/${eventId}`)
 				return
@@ -458,6 +513,7 @@ const ViewModel = () => {
 	const fetchData = () => {
 		getTypes()
 		getSubTypes()
+		getChemicals()
 		getPollution().then(({ data: dataPollution }) => {
 			if (eventId !== undefined && location.pathname.includes('edit')) {
 				getOne(eventId).then(({ success, data }) => {
@@ -511,20 +567,26 @@ const ViewModel = () => {
 							const pollutionDataOptions = Object.entries(pollutionData).map(([, value]) => value)
 
 							setPollutionState(pollutionDataOptions)
-						}
-					}
-				})
 
-				updateLoading(true)
-				updateError(false)
-				getAllMessages(eventId).then(({ success: successMessage, data: dataMessage }) => {
-					if (!successMessage) {
-						toast.error(`เกิดข้อผิดพลาดในการดึงข้อมูล : ${dataMessage}`)
-						updateLoading(false)
-						updateError(true)
-					} else {
-						updateLoading(false)
-						updateError(false)
+							updateLoading(true)
+							updateError(false)
+							getAllMessages(eventId).then(({ success: successMessage, data: dataMessage }) => {
+								if (!successMessage) {
+									toast.error(`เกิดข้อผิดพลาดในการดึงข้อมูล : ${dataMessage}`)
+									updateLoading(false)
+									updateError(true)
+								} else {
+									updateLoading(false)
+									updateError(false)
+								}
+							})
+
+							getNotiSchedules({ eventId }).then(({ success, data }) => {
+								if (!success) {
+									toast.error(`เกิดข้อผิดพลาดในการดึงข้อมูล : ${data}`)
+								}
+							})
+						}
 					}
 				})
 			}
@@ -579,16 +641,16 @@ const ViewModel = () => {
 			pictureCovers: file,
 		}).then(({ success, data }) => {
 			if (!success) {
-				toast.error(`เกิดข้อผิดพลาดในการเพิ่มรูปภาพ : ${data}`)
+				toast.error(`เกิดข้อผิดพลาดในการเพิ่มไฟล์ : ${data}`)
 			} else {
-				toast.success('เพิ่มรูปภาพสำเร็จ')
+				toast.success('เพิ่มไฟล์สำเร็จ')
 				fetchData()
 			}
 		})
 	}
 
 	const onRemoveAdditionalPicture = (index: number) => {
-		removeEventMedia(eventId ?? '', eventPictures[index].id).then(({ success, data }) => {
+		removeEventMedia(eventId ?? '', eventMedias[index].id).then(({ success, data }) => {
 			if (!success) {
 				toast.error(`เกิดข้อผิดพลาดในการลบรูปภาพ : ${data}`)
 			} else {
@@ -607,25 +669,12 @@ const ViewModel = () => {
 	}
 
 	const onDownloadAdditionalPicture = (index: number) => {
-		const isFileTypeIncludedImage = (formState.galleries[index]?.picturePath?.type ?? '').includes(
-			'image'
-		)
-
-		const url = isFileTypeIncludedImage
-			? URL.createObjectURL(formState.galleries[index]?.picturePath)
-			: formState.galleries[index]?.picturePath
-		let fileType = ''
-		if (isFileTypeIncludedImage) {
-			fileType = formState.galleries[index]?.type.split('/')[1]
-		} else {
-			fileType = formState.galleries[index]?.picturePath?.split('.')[1]
-		}
+		const url = eventMedias[index].picturePath
 
 		const a = document.createElement('a')
 		a.href = url
 		a.target = '_blank'
 		a.rel = 'noopener noreferrer'
-		a.download = `download.${fileType}`
 		a.click()
 	}
 
@@ -700,11 +749,11 @@ const ViewModel = () => {
 			}
 
 			Swal.fire({
-				title: 'คุณต้องการสร้างเหตุการณ์ใช่หรือไม่',
+				title: 'คุณต้องการสร้างเหตุการณ์หรือไม่',
 				icon: 'question',
 				showCancelButton: true,
-				confirmButtonText: 'ใช่',
-				cancelButtonText: 'ไม่ใช่',
+				confirmButtonText: 'ยืนยัน',
+				cancelButtonText: 'ยกเลิก',
 			}).then(result => {
 				if (result.isConfirmed) {
 					createEvent(body).then(({ success, data }) => {
@@ -732,6 +781,8 @@ const ViewModel = () => {
 				'eventSubTypeId',
 				'detail',
 				'dangerLevel',
+				'chemicalId',
+				'emergencyResponse',
 				'locationName',
 				'locationAddress',
 				'latitude',
@@ -795,11 +846,11 @@ const ViewModel = () => {
 			})
 
 			Swal.fire({
-				title: 'คุณต้องการที่จะแก้ไขเหตุการณ์นี้ใช่หรือไม่',
+				title: 'คุณต้องการที่จะแก้ไขเหตุการณ์นี้หรือไม่',
 				icon: 'question',
 				showCancelButton: true,
-				confirmButtonText: 'ใช่',
-				cancelButtonText: 'ไม่ใช่',
+				confirmButtonText: 'ยืนยัน',
+				cancelButtonText: 'ยกเลิก',
 			}).then(result => {
 				if (result.isConfirmed) {
 					editEvent(eventId, body).then(({ success, data }) => {
@@ -832,11 +883,11 @@ const ViewModel = () => {
 
 	const onRemoveReportingMessage = (id: string) => {
 		Swal.fire({
-			title: 'คุณต้องการที่จะลบรายงานเหตุการณ์นี้ใช่หรือไม่',
+			title: 'คุณต้องการที่จะลบรายงานเหตุการณ์นี้หรือไม่',
 			icon: 'question',
 			showCancelButton: true,
-			confirmButtonText: 'ใช่',
-			cancelButtonText: 'ไม่ใช่',
+			confirmButtonText: 'ยืนยัน',
+			cancelButtonText: 'ยกเลิก',
 		}).then(result => {
 			if (result.isConfirmed) {
 				removeMessage(eventId ?? '', id).then(({ success, data }) => {
@@ -857,6 +908,31 @@ const ViewModel = () => {
 		a.target = '_blank'
 		a.rel = 'noopener noreferrer'
 		a.click()
+	}
+
+	const onAddNotificationSchedule = () => {
+		onOpenNotificationSchedule()
+	}
+
+	const onRemoveNotificationSchedule = (id: number) => {
+		Swal.fire({
+			title: 'คุณต้องการที่จะลบการแจ้งเตือนนี้หรือไม่',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonText: 'ยืนยัน',
+			cancelButtonText: 'ยกเลิก',
+		}).then(result => {
+			if (result.isConfirmed) {
+				removeNotiSchedule(id).then(({ success, data }) => {
+					if (!success) {
+						toast.error(`ลบการแจ้งเตือนไม่สำเร็จ : ${data}`)
+					} else {
+						toast.success('ลบการแจ้งเตือนสำเร็จ')
+						fetchData()
+					}
+				})
+			}
+		})
 	}
 
 	const REPORTING_TABLE_CONFIGS: any[] = [
@@ -975,6 +1051,64 @@ const ViewModel = () => {
 		},
 	]
 
+	const NOTI_SCHEDULE_TABLE_CONFIGS: any[] = [
+		{
+			Header: 'เวลาแจ้งเตือน',
+			accessor: 'actionAt',
+			minWidth: is4K || is8K ? 150 : 100,
+			Cell: (props: any) => {
+				return moment(props.row.original?.actionAt).format('DD/MM/YYYY HH:mm')
+			},
+		},
+		{
+			Header: 'ข้อความแจ้งเตือน',
+			accessor: 'message',
+			minWidth: is4K || is8K ? 300 : 200,
+		},
+		{
+			Header: 'แจ้งเตือนล่วงหน้า',
+			accessor: 'earlyMinuteAlarm',
+			minWidth: is4K || is8K ? 150 : 100,
+			Cell: (props: any) => {
+				if (props.row.original?.earlyMinuteAlarm === 0) {
+					return 'ทันที'
+				} else if (props.row.original?.earlyMinuteAlarm > 60) {
+					return `${Math.round(props.row.original?.earlyMinuteAlarm ?? 0) / 60} ชั่วโมง`
+				} else {
+					return `${props.row.original?.earlyMinuteAlarm} นาที`
+				}
+			},
+		},
+		{
+			Header: 'สร้างวันที่',
+			accessor: 'createdAt',
+			minWidth: is4K || is8K ? 150 : 100,
+			Cell: (props: any) => {
+				return moment(props.row.original?.createdAt).format('DD/MM/YYYY HH:mm')
+			},
+		},
+		{
+			Header: '',
+			accessor: 'action',
+			minWidth: is4K || is8K ? 60 : 40,
+			Cell: ({ row }: any) => (
+				<Fragment>
+					{(isAdmin || isApprover) && (
+						<div className="d-flex flex-row justify-content-center align-items-center">
+							<button
+								className="btn btn-sm btn-icon btn-muted btn-active-light"
+								onClick={() => {
+									onRemoveNotificationSchedule(row.original.id)
+								}}>
+								<img src="/media/icons/zeroloss/trash-01.svg" alt="Action Icon" />
+							</button>
+						</div>
+					)}
+				</Fragment>
+			),
+		},
+	]
+
 	useEffect(() => {
 		setupTable()
 		fetchData()
@@ -1003,6 +1137,7 @@ const ViewModel = () => {
 		isEditImages,
 		isEditReporting,
 		isEditImpact,
+		isEditNotification,
 		availableTabs: TAB_HEADER_ITEMS.map(d => d.tabName),
 		selectedTabName: TAB_HEADER_ITEMS[currentActiveTabIdx].tabName,
 		isCreate,
@@ -1015,10 +1150,12 @@ const ViewModel = () => {
 		eventTypesOptions,
 		eventSubTypesOptions,
 		eventDangerLevelOptions: EventDangerLevelOptions,
+		chemicalOptions,
 		eventCoordinators,
 		steppers,
 		formState,
 		messages,
+		notiSchedules,
 		pollutionOptions,
 		pollutionState,
 		onChangeFormState,
@@ -1031,14 +1168,16 @@ const ViewModel = () => {
 		onOpenLightBox,
 		onCloseLightBox,
 		REPORTING_TABLE_CONFIGS,
+		NOTI_SCHEDULE_TABLE_CONFIGS,
 		impactWaterResourceOptions,
 		impactGroundResourceOptions,
 		impactAnimalOptions,
 		onCancel,
 		onSubmit,
 		onCreateReportingMessage,
+		onAddNotificationSchedule,
 		eventPictureCover,
-		eventPictures,
+		eventMedias,
 	}
 }
 

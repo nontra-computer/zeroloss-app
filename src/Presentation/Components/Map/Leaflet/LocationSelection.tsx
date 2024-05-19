@@ -1,8 +1,9 @@
 import React from 'react'
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet'
 import { KTSVG } from '@/_metronic/helpers'
-import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
+import { Bangkok } from '@/Configuration/​MapCoordinates'
+import Swal from 'sweetalert2'
 
 import DraggableMarker from './Components/DragableMarker'
 
@@ -65,7 +66,7 @@ const FunctionalComponent: React.FC<Props> = ({ setPosition }) => {
 }
 
 const LocationSelection: React.FC<Props> = ({
-	position: { lat = 13.7563, lng = 100.5018 },
+	position: { lat = Bangkok.lat, lng = Bangkok.lng },
 	setPosition,
 }) => {
 	return (

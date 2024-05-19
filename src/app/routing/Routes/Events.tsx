@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import EventOverviewView from '@/Presentation/Views/Events/Overview/View'
 import EventFormView from '@/Presentation/Views/Events/Form/View'
 import EventDetailView from '@/Presentation/Views/Events/Detail/View'
-import { LocationSelectionContextProvider } from '@/Presentation/Views/Events/Form/LocationSelection/Context'
 
 const EventsRoutes = () => (
 	<Routes>
@@ -15,68 +14,21 @@ const EventsRoutes = () => (
 			<Route path="*" element={<Navigate to="/events/overview/table" />} />
 		</Route>
 
-		<Route
-			path="new"
-			element={
-				<LocationSelectionContextProvider>
-					<EventFormView />
-				</LocationSelectionContextProvider>
-			}
-		/>
+		<Route path="new" element={<EventFormView />} />
 		<Route path="edit/:eventId">
-			<Route
-				index
-				element={
-					<LocationSelectionContextProvider>
-						<EventFormView />
-					</LocationSelectionContextProvider>
-				}
-			/>
+			<Route index element={<EventFormView />} />
 
-			<Route
-				path="location"
-				element={
-					<LocationSelectionContextProvider>
-						<EventFormView />
-					</LocationSelectionContextProvider>
-				}
-			/>
+			<Route path="location" element={<EventFormView />} />
 
-			<Route
-				path="informer"
-				element={
-					<LocationSelectionContextProvider>
-						<EventFormView />
-					</LocationSelectionContextProvider>
-				}
-			/>
+			<Route path="informer" element={<EventFormView />} />
 
-			<Route
-				path="images"
-				element={
-					<LocationSelectionContextProvider>
-						<EventFormView />
-					</LocationSelectionContextProvider>
-				}
-			/>
+			<Route path="images" element={<EventFormView />} />
 
-			<Route
-				path="reporting"
-				element={
-					<LocationSelectionContextProvider>
-						<EventFormView />
-					</LocationSelectionContextProvider>
-				}
-			/>
+			<Route path="reporting" element={<EventFormView />} />
 
-			<Route
-				path="impact"
-				element={
-					<LocationSelectionContextProvider>
-						<EventFormView />
-					</LocationSelectionContextProvider>
-				}
-			/>
+			<Route path="impact" element={<EventFormView />} />
+
+			<Route path="notification" element={<EventFormView />} />
 
 			<Route path="*" element={<Navigate to="." replace />} />
 		</Route>

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import axios from 'axios'
+import { cleanParamsFilter } from '@/Utils/cleanParamsFilter'
 
 export interface ICreateEvent {
 	start: string
@@ -31,7 +32,7 @@ interface EventStore {
 	getSummary: () => Promise<{ data: any; success: boolean }>
 	getAll: (filter: any) => Promise<{ data: any; success: boolean }>
 	getOne: (id: string) => Promise<{ data: any; success: boolean }>
-	getDashboardData: () => Promise<{ data: any; success: boolean }>
+	getDashboardData: (filter: any) => Promise<{ data: any; success: boolean }>
 	getTypes: () => Promise<{ data: any; success: boolean }>
 	getSubTypes: () => Promise<{ data: any; success: boolean }>
 	getPollution: () => Promise<{ data: any; success: boolean }>
@@ -131,9 +132,11 @@ export const useEventStore = create<EventStore>(set => ({
 				}
 			})
 	},
-	getDashboardData: async () => {
+	getDashboardData: async filter => {
 		return axios
-			.get(`${API_SLUG}/dashboard-map`)
+			.get(`${API_SLUG}/dashboard-map`, {
+				params: cleanParamsFilter(filter),
+			})
 			.then(response => {
 				set({ dashboardData: response.data })
 				return { data: response.data, success: true }
