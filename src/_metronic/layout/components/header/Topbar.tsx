@@ -16,10 +16,12 @@ import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModePr
 import ZerolossNotificationView from '@/Presentation/Views/Notification/View'
 import { isMobileDevice } from '@/_metronic/assets/ts/_utils'
 import { useEventNotificationStore } from '@/Store/EventNotification'
+import { useAppStore } from '@/Store/App'
 // eslint-disable-next-line
 // @ts-ignore
 import useSound from 'use-sound'
 import SoundEffect1 from '@/Assets/SoundEffect/sound-effect-1.mp3'
+import { toast } from 'react-toastify'
 
 const itemClass = 'ms-1 ms-lg-3',
 	// btnClass =
@@ -38,6 +40,7 @@ const Topbar: FC = () => {
 			getUnreadMessages: state.getUnreadMessages,
 		})
 	)
+	const isPlaySoundEffect = useAppStore(state => state.isPlaySoundEffect)
 	const [playSound, { stop }] = useSound(SoundEffect1)
 	// const location = useLocation()
 	// const isDashboard = location.pathname.includes('/dashboard')
@@ -50,25 +53,29 @@ const Topbar: FC = () => {
 	}
 
 	const onViewNotification = () => {
-		getUnreadMessages().then(() => {
-			readAllEvents()
+		getUnreadMessages().then(({ success }) => {
+			stop()
+
+			if (!success) {
+				toast.error('ดึงข้อมูลที่ยังไม่ได้อ่านไม่สำเร็จ')
+			} else {
+				readAllEvents()
+			}
 		})
 	}
 
 	useEffect(() => {
-		if (isThereAnyUnreadMessage === true) {
+		if (isPlaySoundEffect === true) {
 			setInterval(() => {
 				playSound()
 			}, 2000)
-		} else {
-			stop()
 		}
 
 		return () => {
 			stop()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isThereAnyUnreadMessage])
+	}, [isPlaySoundEffect])
 
 	return (
 		<div className="d-flex align-items-stretch justify-self-end flex-shrink-0">

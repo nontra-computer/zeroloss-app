@@ -1,5 +1,6 @@
 import EventAlert from '@/Presentation/Components/Alert/EventAlert'
 import { useEffect, useRef } from 'react'
+import { useAppStore } from '@/Store/App'
 import { useEventNotificationStore } from '@/Store/EventNotification'
 import { toast } from 'react-toastify'
 
@@ -10,6 +11,7 @@ const useZerolossSocket = () => {
 	const { setIsThereAnyUnreadMessage } = useEventNotificationStore(state => ({
 		setIsThereAnyUnreadMessage: state.setIsThereAnyUnreadMessage,
 	}))
+	const setIsPlaySoundEffect = useAppStore(state => state.setIsPlaySoundEffect)
 
 	useEffect(() => {
 		socketRef.current = new WebSocket(SOCKET_SERVER)
@@ -40,6 +42,8 @@ const useZerolossSocket = () => {
 						icon: false,
 						hideProgressBar: true,
 					})
+
+					setIsPlaySoundEffect(true)
 				}
 			}
 		}
