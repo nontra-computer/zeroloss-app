@@ -32,7 +32,7 @@ const FormHeader = ({ pagetitle }) => {
 						</div>
 						<div className="row">
 							<div className="col-12">
-								<div className="form-group col-6">
+								{/* <div className="form-group col-6">
 									<label htmlFor="Industries">นิคมอุตสาหกรรม</label>
 									<Field as="select" id="Industries" name="Industries" className="form-control">
 										<option value="">Select an option</option>
@@ -50,11 +50,10 @@ const FormHeader = ({ pagetitle }) => {
 										<option value="Default">โปรดเลือก</option>
 										<option value="option2">นอกเขตนิคมอุตสาหกรรม</option>
 										<option value="option3">นิคมอุตสาหกรรมมาบตาพุด</option>
-										{/* Add more options */}
 									</Field>
 									<ErrorMessage name="Company" component="div" className="error-message" />
 								</div>
-								<br />
+								<br /> */}
 
 								<div className="form-group col-6">
 									<label htmlFor="IndicatorStation">สถานีตรวจวัด</label>
@@ -75,7 +74,6 @@ const FormHeader = ({ pagetitle }) => {
 									<div className="form-group col-6">
 										<label htmlFor="Activity">เลือกช่วงเวลากิจกรรม</label>
 										<Field as="select" id="Activity" name="Activity" className="form-control">
-											<option value="">Select an option</option>
 											<option value="Daily">รายวัน</option>
 											<option value="Weekly">รายสัปดาห์</option>
 											<option value="Monthly">รายเดือน</option>
