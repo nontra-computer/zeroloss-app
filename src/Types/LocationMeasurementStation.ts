@@ -9,4 +9,7 @@ export interface LocationMeasurementStationProps {
 	id?: number
 	measurementTypeId?: number
 	title?: string
+	state?: number
+	status?: boolean
+	dataStatus?: any
 }
