@@ -26,6 +26,7 @@ export interface FormInputProp {
 	markInput?: boolean
 	mark?: string
 	markChar?: string | null
+	limitCharacter?: number
 	onPressEnter?: () => void
 }
 
@@ -170,6 +171,7 @@ export interface FormDragAndDropFileProp {
 	multiple?: boolean
 	files?: File[]
 	onFileUpload?: (files: FileList) => void
+	customHelpText?: string | JSX.Element
 }
 
 /////////////////////////

@@ -23,6 +23,7 @@ export function AsideMenuMain() {
 						fontIcon={menu.icon}
 						bsTitle={intl.formatMessage({ id: menu.label })}
 						className={menu.className}
+						outside={menu?.outside}
 					/>
 				</React.Fragment>
 			))}

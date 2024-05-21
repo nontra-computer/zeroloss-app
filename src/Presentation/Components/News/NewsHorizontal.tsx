@@ -1,12 +1,12 @@
 import React from 'react'
 import { NewsHorizontalProps } from '@/Types/NewsHorizontal'
-import { KTSVG } from '@/_metronic/helpers'
+// import { KTSVG } from '@/_metronic/helpers'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import clsx from 'clsx'
 import moment from 'moment'
 import 'moment/locale/th'
 
-const NewsHorizontal: React.FC<NewsHorizontalProps> = () => {
+const NewsHorizontal: React.FC<NewsHorizontalProps> = ({ date, img, detail, id, onClick }) => {
 	const { mode } = useThemeMode()
 	let themeMode = ''
 	if (mode === 'system') {
@@ -15,51 +15,88 @@ const NewsHorizontal: React.FC<NewsHorizontalProps> = () => {
 		themeMode = mode
 	}
 
+	const isImage =
+		(img ?? '').includes('.png') || (img ?? '').includes('.jpg') || (img ?? '').includes('.jpeg')
+
+	const isVideo =
+		(img ?? '').includes('.mp4') ||
+		(img ?? '').includes('.avi') ||
+		(img ?? '').includes('.mov') ||
+		(img ?? '').includes('.flv')
+
 	return (
 		<React.Fragment>
 			<div
-				className={clsx('news-horizontal-card card overflow-hidden h-100px w-100 shadow', {
-					'bg-zeroloss-base-white border-0': themeMode === 'light',
-					'bg-zeroloss-grey-true-800 border-zeroloss-base-white border-1px': themeMode === 'dark',
-				})}>
+				onClick={() => {
+					if (id && onClick) {
+						onClick(id)
+					}
+				}}
+				className={clsx(
+					'transition-150 hover-opacity news-horizontal-card card overflow-hidden h-150px w-100',
+					{
+						'bg-zeroloss-base-white border-zeroloss-grey-300 border-1px': themeMode === 'light',
+						'bg-zeroloss-grey-true-800 border-zeroloss-base-white border-1px': themeMode === 'dark',
+					}
+				)}>
 				<div className="card-body p-0">
-					<div className="row h-100px w-100 gx-0">
+					<div className="row h-150px w-100 gx-0">
 						<div className="col-4">
-							<img
-								src="/media/examples/incident-1.jpg"
-								alt="Incident 1"
-								className="w-100 h-100 object-fit-cover"
-							/>
+							{isImage && (
+								<img
+									src={img ?? '/media/icons/zeroloss/default-placeholder.png'}
+									onError={e => {
+										e.currentTarget.src = '/media/icons/zeroloss/default-placeholder.png'
+										e.currentTarget.onerror = null
+									}}
+									alt="Incident 1"
+									className="object-fit-contain"
+									style={{ maxWidth: '100%' }}
+								/>
+							)}
+							{isVideo && (
+								<video
+									controls={false}
+									autoPlay={false}
+									muted={true}
+									loop={true}
+									src={img ?? ''}
+									className="object-fit-contain mx-auto"
+									style={{ maxWidth: '100%', height: '150px' }}>
+									Your browser does not support the video tag.
+								</video>
+							)}
 						</div>
 						<div className="col-8">
-							<div className="p-4 pt-1">
+							<div className="p-4 pt-4">
 								<div className="d-flex flex-row align-items-center justify-content-between">
 									<div
 										className={clsx('', {
 											'text-zeroloss-base-white': themeMode === 'dark',
 											'text-zeroloss-grey-500': themeMode === 'light',
 										})}>
-										{moment().format('DD/MM/YYYY HH:mm')}
+										{moment(date).tz('Asia/Bangkok').format('DD/MM/YYYY HH:mm')}
 									</div>
-									<button className="btn btn-sm btn-icon btn-active-light">
+									{/* <button className="btn btn-sm btn-icon btn-active-light">
 										<KTSVG path="media/icons/zeroloss/x-close.svg" />
-									</button>
+									</button> */}
 								</div>
-								<h6
+								{/* <h6
 									className={clsx('new-title mt-2 fw-bold fs-4', {
 										'text-zeroloss-base-white': themeMode === 'dark',
 										'text-zeroloss-grey-900': themeMode === 'light',
 									})}>
 									ด่วน! เหตุเพลิงไหม้โรงงานพลาสติก จังหวัดนครปฐม
-								</h6>
+								</h6> */}
 								<p
 									className={clsx('new-description ', {
 										'text-zeroloss-base-white': themeMode === 'dark',
 										'text-zeroloss-grey-900': themeMode === 'light',
 									})}>
-									ระทึก 'ไฟไหม้' โรงงานผลิตกล่องโฟม ภายในนิคมอุต สาหกรรมโรจนะ ขณะนี้ยังไม่สามารถคุม
-									<span className="ms-1 text-underline cursor-pointer">เพิ่มเติม</span>
+									{detail}
 								</p>
+
+								<span className="ms-1 text-underline cursor-pointer d-block">เพิ่มเติม</span>
 							</div>
 						</div>
 					</div>

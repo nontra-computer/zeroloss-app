@@ -2,12 +2,15 @@
 
 @import './Components/button';
 @import './Components/form';
+@import './Components/input';
+@import './Components/tabs-button-group';
 
 @import './Overwrite/header';
 @import './Overwrite/page-title';
 @import './Overwrite/theme-mode-switcher';
 @import './Overwrite/react-leaftlet';
 @import './Overwrite/react-toastify';
+@import './Overwrite/sweetalert2';
 
 @import './Utilities/animation';
 @import './Utilities/dimension';

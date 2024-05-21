@@ -52,8 +52,13 @@ const AsideDefault: FC = () => {
 				{/* begin::Menu */}
 
 				{ZEROLOSS_SETTING_MENU.map((menu, index) => (
-					<div key={`setting-icon-${index}`} className={'mb-5'} onClick={() => onClick(menu.key)}>
+					<div
+						key={`setting-icon-${index}`}
+						id="setting-menu"
+						className={'mb-5'}
+						onClick={() => onClick(menu.key)}>
 						<button
+							id="setting-menu"
 							type="button"
 							className={clsx('btn btm-sm btn-icon btn-color-white btn-active-light', {})}
 							data-kt-menu-trigger="click"
@@ -63,7 +68,7 @@ const AsideDefault: FC = () => {
 							data-bs-placement="right"
 							data-bs-dismiss="click"
 							title="Quick actions">
-							<i className={clsx('bi', menu.icon, 'fs-2')}></i>
+							<i id="setting-menu" className={clsx('bi', menu.icon, 'fs-2')}></i>
 						</button>
 					</div>
 				))}

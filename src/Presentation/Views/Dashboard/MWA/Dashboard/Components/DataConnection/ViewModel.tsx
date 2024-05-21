@@ -5,15 +5,21 @@ import { useMWAStore } from '@/Store/MWA'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { toast } from 'react-toastify'
 import { vhToPixels } from '@/Utils/vhToPixels'
+import moment from 'moment'
+import 'moment-timezone'
 
 const ViewModel = () => {
 	const intl = useIntl()
 	const { mode } = useThemeMode()
-	const { dashboardSensors, getDashboardSensors } = useMWAStore(state => ({
-		dashboardSensors: state.dashboardSensors,
-		getDashboardSensors: state.getDashboardSensors,
-	}))
+	const { last24Connection, dashboardSensors, getDashboardSensors, getLast24Connection } =
+		useMWAStore(state => ({
+			dashboardSensors: state.dashboardSensors,
+			last24Connection: state.last24Connection,
+			getDashboardSensors: state.getDashboardSensors,
+			getLast24Connection: state.getLast24Connection,
+		}))
 	const [isLoading, setIsLoading] = useState(false)
+	const [isDataChanged, setIsDataChanged] = useState(false)
 	const data = useMemo(() => {
 		if (!dashboardSensors) return {}
 
@@ -35,6 +41,23 @@ const ViewModel = () => {
 			offlinePercentage,
 		}
 	}, [dashboardSensors])
+	const last24ConnectionData = useMemo(() => {
+		const categories: any[] = []
+		const offline: any = []
+		const online: any[] = []
+
+		last24Connection.forEach((item: any) => {
+			categories.push(moment(item.dateTime).locale('en').tz('Asia/Bangkok').format('HH:mm A'))
+			offline.push(item.offline)
+			online.push(item.online)
+		})
+
+		return {
+			categories,
+			offline,
+			online,
+		}
+	}, [last24Connection])
 	const { isMobile, isLargeMobile, isLaptop, isFullHD, is4K, is8K } = useResolutionDetection()
 	const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -70,8 +93,41 @@ const ViewModel = () => {
 	}
 
 	const fetchData = () => {
+		const currentOnlinePercentage = data?.onlinePercentage ?? 0
+		const currentOfflinePercentage = data?.offlinePercentage ?? 0
+
 		setIsLoading(true)
 		getDashboardSensors().then(({ data, success }) => {
+			if (!success) {
+				toast.error(data)
+				return
+			} else {
+				let offlinePercentage = 0
+
+				if (
+					data?.totalOnline !== undefined &&
+					data?.totalOffline !== undefined &&
+					data?.onlinePercentage !== undefined
+				) {
+					offlinePercentage = Math.round(
+						(data?.onlinePercentage * data?.totalOffline) / data?.totalOnline
+					)
+				}
+
+				if (
+					currentOnlinePercentage !== data.onlinePercentage ||
+					currentOfflinePercentage !== offlinePercentage
+				) {
+					setIsDataChanged(true)
+
+					setTimeout(() => {
+						setIsDataChanged(false)
+					}, 1000)
+				}
+			}
+		})
+
+		getLast24Connection().then(({ data, success }) => {
 			if (!success) {
 				toast.error(data)
 				return
@@ -110,7 +166,9 @@ const ViewModel = () => {
 		themeMode,
 		mode,
 		isLoading,
+		isDataChanged,
 		data,
+		last24ConnectionData,
 	}
 }
 

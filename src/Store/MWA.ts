@@ -6,6 +6,7 @@ interface MWAStore {
 	dashboardSensors: any
 	selected: any
 	selectedSensors: any[]
+	last24Connection: any[]
 	setStations: (stations: any[]) => void
 	setDashboardSensors: (dashboardSensors: any) => void
 	setSelected: (selected: any) => void
@@ -16,6 +17,7 @@ interface MWAStore {
 	getStationMeasurementDetailSensor: (
 		buildingId: number
 	) => Promise<{ data: any; success: boolean }>
+	getLast24Connection: () => Promise<{ data: any; success: boolean }>
 	clearState: () => void
 }
 
@@ -24,6 +26,7 @@ export const useMWAStore = create<MWAStore>(set => ({
 	dashboardSensors: {},
 	selected: {},
 	selectedSensors: [],
+	last24Connection: [],
 	setStations: (stations: any[]) => set({ stations }),
 	setDashboardSensors: (dashboardSensors: any) => set({ dashboardSensors }),
 	setSelected: (selected: any) => set({ selected }),
@@ -66,6 +69,17 @@ export const useMWAStore = create<MWAStore>(set => ({
 			.get(`/sensor?dashboardId=${buildingId}`)
 			.then(response => {
 				set({ selectedSensors: response.data })
+				return { data: response.data, success: true }
+			})
+			.catch(error => {
+				return { data: error.response.data.message?.toString(), success: false }
+			})
+	},
+	getLast24Connection: async () => {
+		return axios
+			.get('/dashboard/last24connection')
+			.then(response => {
+				set({ last24Connection: response.data })
 				return { data: response.data, success: true }
 			})
 			.catch(error => {

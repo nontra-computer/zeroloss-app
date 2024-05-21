@@ -135,14 +135,14 @@ const MainDashboardTableView: React.FC = () => {
 					<div className="card">
 						<div className="card-header">
 							<div className="card-title fw-bold w-100 w-lg-auto flex-column flex-lg-row align-items-lg-center">
-								<div className="d-none d-lg-block">Current Filter:</div>
+								<div className="d-none d-lg-block">ตัวกรอง:</div>
 								{(displayFilter?.search ?? []).length + (displayFilter?.type ?? []).length === 0 ? (
 									<span
 										className={clsx('fw-normal', {
 											'ms-3': !isMobile,
 											'mt-3': isMobile,
 										})}>
-										<span className="d-inine-block d-lg-none">Current Filter: </span> None
+										<span className="d-inine-block d-lg-none">ตัวกรอง: </span> ไม่มีตัวกรอง
 									</span>
 								) : (
 									<React.Fragment>

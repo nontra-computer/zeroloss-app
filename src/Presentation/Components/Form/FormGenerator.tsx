@@ -81,6 +81,7 @@ const FormGenerator: React.FC<Prop> = ({
 	mark,
 	markChar,
 	onPressEnter,
+	customHelpText,
 }) => {
 	switch (inputType) {
 		case 'plain':
@@ -107,6 +108,7 @@ const FormGenerator: React.FC<Prop> = ({
 					mark={mark}
 					markChar={markChar}
 					onPressEnter={onPressEnter}
+					limitCharacter={limitCharacter}
 				/>
 			)
 		case 'prefix':
@@ -252,7 +254,12 @@ const FormGenerator: React.FC<Prop> = ({
 					files={files}
 					disabled={disabled}
 					multiple={multiple}
+					label={label}
+					additionalLabel={additionalLabel}
+					additionalLabelCom={additionalLabelCom}
+					containerClassName={containerClassName}
 					onFileUpload={onFileUpload}
+					customHelpText={customHelpText}
 				/>
 			)
 		default:

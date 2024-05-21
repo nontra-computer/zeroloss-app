@@ -8,10 +8,14 @@ $zeroloss-primary: #07217f;
 $zeroloss-brand-600: #667dcf;
 $zeroloss-success: #17b26a;
 $zeroloss-warning: #f79009;
+$zeroloss-soft-warning-1: #fb8981;
+$zeroloss-soft-warning-2: #fff8f8;
+$zeroloss-soft-warning-3: #ffece5;
 $zeroloss-error: #de5348;
 $zeroloss-grey: #667085;
 $zeroloss-grey-true-200: #e5e5e5;
 $zeroloss-grey-true-800: #292929;
+$zeroloss-soft-blue: #e6e9fa;
 
 $zeroloss-primary-900: #003c68;
 $zeroloss-primary-800: #006b97;
@@ -97,10 +101,14 @@ $zeroloss-theme-colors: (
 	'zeroloss-brand-600': $zeroloss-brand-600,
 	'zeroloss-success': $zeroloss-success,
 	'zeroloss-warning': $zeroloss-warning,
+	'zeroloss-soft-warning-1': $zeroloss-soft-warning-1,
+	'zeroloss-soft-warning-2': $zeroloss-soft-warning-2,
+	'zeroloss-soft-warning-3': $zeroloss-soft-warning-3,
 	'zeroloss-error': $zeroloss-error,
 	'zeroloss-grey': $zeroloss-grey,
 	'zeroloss-grey-true-200': $zeroloss-grey-true-200,
 	'zeroloss-grey-true-800': $zeroloss-grey-true-800,
+	'zeroloss-soft-blue': $zeroloss-soft-blue,
 	'zeroloss-primary-900': $zeroloss-primary-900,
 	'zeroloss-primary-800': $zeroloss-primary-800,
 	'zeroloss-primary-700': $zeroloss-primary-700,
@@ -262,6 +270,22 @@ $zeroloss-theme-colors: (
 	// Base color
 	.border-#{$name} {
 		border-color: $color !important;
+	}
+
+	.border-left-#{$name} {
+		border-left-color: $color !important;
+	}
+
+	.border-right-#{$name} {
+		border-right-color: $color !important;
+	}
+
+	.border-top-#{$name} {
+		border-top-color: $color !important;
+	}
+
+	.border-bottom-#{$name} {
+		border-bottom-color: $color !important;
 	}
 }
 

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useMWAStore } from '@/Store/MWA'
@@ -173,8 +173,15 @@ const ViewModel = () => {
 			accessor: 'ppm',
 			minWidth: is4K || is8K ? 200 : 100,
 			Cell: (props: any) => {
-				if (props.row.original.valueStatus !== 1) {
-					return <span>-</span>
+				if (props.row.original.valueStatus !== 1 && props.row.original.value === null) {
+					return (
+						<React.Fragment>
+							<span>-</span>
+							<span className="text-zeroloss-grey-600 fw-bold">
+								({props.row.original.valueStatusDetail ?? ''})
+							</span>
+						</React.Fragment>
+					)
 				}
 
 				const { arrow, direction, minus, type, valueColor } = calculateArrow(props.row.original)
@@ -183,15 +190,22 @@ const ViewModel = () => {
 				if (change > 100) change = 100
 
 				return (
-					<DynamicChangePPM
-						value={props.row.original.value}
-						arrow={arrow}
-						minus={minus}
-						direction={direction}
-						type={type}
-						change={isNaN(change) ? 0 : change}
-						valueColor={valueColor as 'black' | 'success' | 'warning' | 'danger'}
-					/>
+					<React.Fragment>
+						<DynamicChangePPM
+							value={props.row.original.value}
+							arrow={arrow}
+							minus={minus}
+							direction={direction}
+							type={type}
+							change={isNaN(change) ? 0 : change}
+							valueColor={valueColor as 'black' | 'success' | 'warning' | 'danger'}
+						/>
+						{props.row.original.valueStatus !== 1 && (
+							<span className="text-zeroloss-grey-600 fw-bold">
+								({props.row.original.valueStatusDetail ?? ''})
+							</span>
+						)}
+					</React.Fragment>
 				)
 			},
 		},

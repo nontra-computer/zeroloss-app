@@ -8,6 +8,8 @@ import useViewModel from './ViewModel'
 const Measurement: React.FC = () => {
 	const { isMobile, isLargeMobile, data, intl, themeMode } = useViewModel()
 
+	console.log('isLargeMobile', isLargeMobile)
+
 	return (
 		<div className="row gy-5">
 			<div className="col-12">
@@ -37,9 +39,9 @@ const Measurement: React.FC = () => {
 						'bg-zeroloss-base-white border-zeroloss-grey-200': themeMode === 'light',
 						'bg-zeroloss-grey-true-800 border-zeroloss-base-white': themeMode === 'dark',
 					})}>
-					<div className="card-body px-6 min-h-200px">
+					<div className="card-body min-h-200px px-0">
 						<p
-							className={clsx('fs-3 fw-bolder my-0', {
+							className={clsx('fs-3 fw-bolder my-0 px-6', {
 								'text-zeroloss-grey-900': themeMode === 'light',
 								'text-zeroloss-base-white': themeMode === 'dark',
 							})}>
@@ -52,7 +54,7 @@ const Measurement: React.FC = () => {
 						<Chart
 							type="donut"
 							width={isLargeMobile ? '50%' : '100%'}
-							height={isMobile || isLargeMobile ? undefined : '160px'}
+							height={isMobile || isLargeMobile ? 'undefined' : '160px'}
 							series={[
 								data?.totalDanger ?? 0,
 								data?.totalWarning ?? 0,
@@ -65,11 +67,11 @@ const Measurement: React.FC = () => {
 									redrawOnWindowResize: true,
 									redrawOnParentResize: true,
 									offsetY: -10,
-									offsetX: isMobile ? 0 : isLargeMobile ? 180 : 50,
+									offsetX: isMobile ? 10 : isLargeMobile ? 180 : 30,
 								},
 								plotOptions: {
 									pie: {
-										customScale: 0.8,
+										offsetX: 40,
 										donut: {
 											labels: {
 												show: false,
@@ -119,7 +121,7 @@ const Measurement: React.FC = () => {
 									show: true,
 									position: 'left',
 									// offsetY: isMobile || isLargeMobile ? 70 : 5,
-									offsetX: !isMobile && !isLargeMobile ? -30 : undefined,
+									offsetX: !isMobile && !isLargeMobile ? -35 : 0,
 									floating: true,
 									labels: {
 										colors: themeMode === 'dark' ? '#ffffff' : '#666666',

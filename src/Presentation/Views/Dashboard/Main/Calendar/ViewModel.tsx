@@ -4,7 +4,7 @@ import { useEventStore } from '@/Store/Event'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { toast } from 'react-toastify'
 import moment from 'moment'
-import 'moment/locale/th'
+import 'moment/dist/locale/th'
 
 const INITIAL_STATE_FILTER: {
 	type: any[]
@@ -16,11 +16,12 @@ const INITIAL_STATE_FILTER: {
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
-	const { rawData, dataTypes, getAll, getTypes, clearState } = useEventStore(state => ({
+	const { rawData, dataTypes, getAll, getTypes, getMedia, clearState } = useEventStore(state => ({
 		rawData: state.data,
 		dataTypes: state.types,
 		getAll: state.getAll,
 		getTypes: state.getTypes,
+		getMedia: state.getEventMediaPath,
 		clearState: state.clearState,
 	}))
 	const { isMobile } = useResolutionDetection()
@@ -34,11 +35,13 @@ const ViewModel = () => {
 
 	const calendarRef = useRef<any>(null)
 	const [openDetail, setOpenDetail] = useState(false)
-	const [selected, setSelected] = useState<string | null>(null)
+	const [selected, setSelected] = useState<any>(null)
 	const [searchText, setSearchText] = useState('')
 	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
 
-	const currentMonth = moment(calendarRef.current?.getApi().getDate()).format('MMMM YYYY')
+	const currentMonth = moment(calendarRef.current?.getApi().getDate())
+		.locale('th')
+		.format('MMM YYYY')
 
 	const displayFilter = useMemo(() => {
 		const results: any = {}
@@ -67,17 +70,26 @@ const ViewModel = () => {
 
 	const data = useMemo(() => {
 		return rawData
-			.map((rd: any, idx) => ({
-				id: `incident_${idx}`,
-				title: rd?.title,
-				detail: rd?.detail,
-				start: moment(rd?.start).toISOString(),
-				end: rd?.end ? moment(rd?.end).toISOString() : moment().toISOString(),
-				type: rd?.idEventType ?? 0,
-				img: '/media/examples/incident-1.jpg',
-				location: '',
-				locationName: rd?.locationName ?? '',
-			}))
+			.reduce((acc, rd: any) => {
+				if (rd?.start) {
+					acc.push({
+						id: rd.id,
+						title: rd?.title,
+						detail: rd?.detail,
+						start: rd?.start ? moment(rd?.start).toISOString() : null,
+						end: rd?.end ? moment(rd?.end).toISOString() : null,
+						type: rd?.eventTypeId ?? 0,
+						eventSubTypeTitle: rd?.eventSubTypeTitle,
+						img: rd?.pictureCover
+							? getMedia(rd?.pictureCover)
+							: '/media/icons/zeroloss/default-placeholder.png',
+						location: '',
+						locationName: rd?.location?.locationName ?? rd?.locationName ?? '',
+					})
+				}
+
+				return acc
+			}, [])
 			.filter((d: any) => {
 				if (filter.type.length > 0) {
 					return filter.type.includes(d.type)
@@ -91,10 +103,13 @@ const ViewModel = () => {
 
 				return true
 			})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rawData, filter])
 
 	const selectedIncident = useMemo(() => {
-		return data.find(incident => incident.id === selected)
+		return data.find((incident: any) => {
+			return incident.id === parseInt(selected ?? '0')
+		})
 	}, [selected, data])
 
 	const onAddFilter = (key: string, value: any) => {
@@ -136,7 +151,7 @@ const ViewModel = () => {
 		})
 	}
 
-	const onClick = (id: string) => {
+	const onClick = (id: number) => {
 		setSelected(id)
 		setOpenDetail(true)
 	}

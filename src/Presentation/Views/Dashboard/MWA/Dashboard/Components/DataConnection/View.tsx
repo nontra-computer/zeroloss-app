@@ -3,14 +3,13 @@ import Chart from 'react-apexcharts'
 import clsx from 'clsx'
 
 import useViewModel from './ViewModel'
-import { formatNumberCommas } from '@/Utils/formatNumberCommas'
+// import { formatNumberCommas } from '@/Utils/formatNumberCommas'
 import { vhToPixels } from '@/Utils/vhToPixels'
 
 interface Props {}
 
 const DataConnection: React.FC<Props> = () => {
 	const {
-		isLoading,
 		isLargeMobile,
 		is4K,
 		is8K,
@@ -21,6 +20,7 @@ const DataConnection: React.FC<Props> = () => {
 		intl,
 		themeMode,
 		data,
+		last24ConnectionData,
 	} = useViewModel()
 
 	return (
@@ -80,105 +80,104 @@ const DataConnection: React.FC<Props> = () => {
 									{/* start:: Content */}
 									<div className="col-12 col-xxl-6">
 										{/* begin::Chart */}
-										{!isLoading && (
-											<Chart
-												type="donut"
-												width={is4K || is8K || isLargeMobile ? '500px' : '300px'}
-												height={is4K || is8K ? Math.round(vhToPixels(25)) : 200}
-												series={chartData}
-												options={{
-													labels: ['Sensors', 'Offline Sensors'],
-													chart: {
-														offsetY: 30,
-														offsetX: chartOffsetX,
-														redrawOnParentResize: true,
-														redrawOnWindowResize: true,
-													},
-													plotOptions: {
-														pie: {
-															startAngle: -90,
-															endAngle: 90,
-															offsetX:
-																is4K || is8K || isLargeMobile || isFullHD || isLaptop ? -40 : 0,
-															donut: {
-																labels: {
+										{/* {!isDataChanged && ( */}
+										<Chart
+											type="donut"
+											width={is4K || is8K || isLargeMobile ? '500px' : '300px'}
+											height={is4K || is8K ? Math.round(vhToPixels(25)) : 200}
+											series={chartData}
+											options={{
+												labels: ['Sensors', 'Offline Sensors'],
+												chart: {
+													offsetY: 30,
+													offsetX: chartOffsetX,
+													redrawOnParentResize: true,
+													redrawOnWindowResize: true,
+												},
+												plotOptions: {
+													pie: {
+														startAngle: -90,
+														endAngle: 90,
+														offsetX:
+															is4K || is8K || isLargeMobile || isFullHD || isLaptop ? -40 : 0,
+														donut: {
+															labels: {
+																show: true,
+																name: {
 																	show: true,
-																	name: {
-																		show: true,
-																		offsetY: -20,
-																		fontFamily: 'Noto Sans Thai, sans-serif',
-																		fontWeight: 'bolder',
-																		fontSize: '14px',
-																		formatter: function (val: any) {
-																			return val
-																		},
+																	offsetY: -20,
+																	fontFamily: 'Noto Sans Thai, sans-serif',
+																	fontWeight: 'bolder',
+																	fontSize: '14px',
+																	formatter: function (val: any) {
+																		return val
 																	},
-																	value: {
-																		show: true,
-																		offsetY: -20,
-																		fontFamily: 'Noto Sans Thai, sans-serif',
-																		fontWeight: 'bolder',
-																		fontSize: '14px',
-																		color: themeMode === 'dark' ? '#ffffff' : '#666666',
-																		formatter: function (val: any) {
-																			return val + ' %'
-																		},
+																},
+																value: {
+																	show: true,
+																	offsetY: -20,
+																	fontFamily: 'Noto Sans Thai, sans-serif',
+																	fontWeight: 'bolder',
+																	fontSize: '14px',
+																	color: themeMode === 'dark' ? '#ffffff' : '#666666',
+																	formatter: function (val: any) {
+																		return val + ' %'
 																	},
 																},
 															},
 														},
 													},
-													colors: ['#F79009', '#667085'],
-													grid: {
-														padding: {
-															top: 0,
-															bottom: is4K || is8K ? -200 : -50,
-														},
+												},
+												colors: ['#F79009', '#667085'],
+												grid: {
+													padding: {
+														top: 0,
+														bottom: is4K || is8K ? -200 : -50,
 													},
-													dataLabels: {
-														enabled: false,
-													},
-													responsive: [
-														{
-															breakpoint: 480,
-															options: {
-																chart: {
-																	width: 250,
-																	height: 250,
-																},
-																legend: {
-																	position: 'bottom',
-																},
+												},
+												dataLabels: {
+													enabled: false,
+												},
+												responsive: [
+													{
+														breakpoint: 480,
+														options: {
+															chart: {
+																width: 250,
+																height: 250,
+															},
+															legend: {
+																position: 'bottom',
 															},
 														},
-														{
-															breakpoint: 481,
-															options: {
-																chart: {
-																	width: 350,
-																	height: 250,
-																},
-																legend: {
-																	position: 'bottom',
-																},
+													},
+													{
+														breakpoint: 481,
+														options: {
+															chart: {
+																width: 350,
+																height: 250,
+															},
+															legend: {
+																position: 'bottom',
 															},
 														},
-													],
-													legend: {
-														show: false,
-														position: 'bottom',
-														floating: true,
-														labels: {
-															colors: themeMode === 'dark' ? '#ffffff' : '#666666',
-														},
 													},
-												}}
-											/>
-										)}
+												],
+												legend: {
+													show: false,
+													position: 'bottom',
+													floating: true,
+													labels: {
+														colors: themeMode === 'dark' ? '#ffffff' : '#666666',
+													},
+												},
+											}}
+										/>
 									</div>
 									<div className="col-12 col-xxl-6 mt-5 mt-lg-0">
 										<div className="d-flex flex-column align-items-end justify-content-center h-100">
-											<div className="fs-6 mb-3 w-100">
+											{/* <div className="fs-6 mb-3 w-100">
 												<div className="row align-items-center">
 													<div
 														className={clsx(
@@ -223,7 +222,7 @@ const DataConnection: React.FC<Props> = () => {
 														</span>
 													</div>
 												</div>
-											</div>
+											</div> */}
 											<div className="fs-6 mb-3 w-100">
 												<div className="row align-items-center">
 													<div
@@ -311,11 +310,11 @@ const DataConnection: React.FC<Props> = () => {
 											series={[
 												{
 													name: 'Offline Sensor',
-													data: [30, 60, 70, 20, 90, 32, 12],
+													data: last24ConnectionData.offline,
 												},
 												{
 													name: 'Online Sensor',
-													data: [10, 41, 35, 51, 49, 62, 69],
+													data: last24ConnectionData.online,
 												},
 											]}
 											options={{
@@ -342,6 +341,7 @@ const DataConnection: React.FC<Props> = () => {
 														// opacity: 0.5,
 													},
 												},
+
 												legend: {
 													position: 'top',
 													labels: {
@@ -355,6 +355,7 @@ const DataConnection: React.FC<Props> = () => {
 															fontFamily: 'Noto Sans Thai, sans-serif',
 														},
 													},
+													categories: last24ConnectionData.categories,
 												},
 												yaxis: {
 													labels: {

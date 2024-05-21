@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { useIntl } from 'react-intl'
@@ -8,7 +7,6 @@ import { toast } from 'react-toastify'
 
 const ViewModel = () => {
 	const intl = useIntl()
-	const navigate = useNavigate()
 	const [stageDimensions, setStageDimensions] = useState({ width: 0, height: 0 })
 	const [expanded, setExpanded] = useState(false)
 	const { mode } = useThemeMode()
@@ -27,15 +25,16 @@ const ViewModel = () => {
 	const buildingOne = stations.find((b: any) => b.id === 1)
 	const buildingTwo = stations.find((b: any) => b.id === 2)
 	const buildingThree = stations.find((b: any) => b.id === 3)
+	const meteorologocalStation = stations.find((b: any) => b.id === 9999)
 	const weatherInfo = useMemo(() => {
-		if (buildingOne) {
+		if (meteorologocalStation) {
 			return {
-				metStatus: buildingOne.metStatus === 1,
-				wdText: buildingOne.wdText,
-				ws: buildingOne.ws,
-				temp: buildingOne.temp,
-				rh: buildingOne.rh,
-				bp: buildingOne.bp,
+				metStatus: meteorologocalStation.metStatus === 1,
+				wdText: meteorologocalStation.wdText,
+				ws: meteorologocalStation.ws,
+				temp: meteorologocalStation.temp,
+				rh: meteorologocalStation.rh,
+				bp: meteorologocalStation.bp,
 			}
 		} else {
 			return {
@@ -47,12 +46,14 @@ const ViewModel = () => {
 				bp: 0,
 			}
 		}
-	}, [buildingOne])
+	}, [meteorologocalStation])
 
-	const stationDropdownOptions = stations.map((b: any) => ({
-		label: b.building,
-		value: b.id,
-	}))
+	const stationDropdownOptions = stations
+		.map((b: any) => ({
+			label: b.building,
+			value: b.id,
+		}))
+		.filter((b: any) => b.value !== 9999)
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -80,24 +81,42 @@ const ViewModel = () => {
 	const generateIcon = (buildingId: number) => {
 		const building = stations.find((b: any) => b.id === buildingId)
 		if (building) {
-			// Sensor มีสถานะ Online ทั้งหมด และมีผลการตรวจวัดที่เกินมาตรฐาน || แต่หากมี Sensor บางตัวที่ยัง Online และอ่านค่าได้เกินมาตรฐาน ก็ให้แสดงเป็นสีแดงแทน
-			if (building.sumSensor > 0 && building.valueOverStd > 0) {
-				return 'red'
-			}
-			// Sensor มีสถานะ Online ทั้งหมด และมีผลการตรวจวัดที่ใกล้เกินมาตรฐาน
-			else if (building.sumSensor === building.sensorOnline && building.valueNearStd > 0) {
-				return 'orange'
-			}
-			// มี Sensor ที่ Online ทั้งหมดและผลการตรวจวัดอยู่ในเกณฑ์ปกติ
-			else if (
-				building.sumSensor === building.sensorOnline &&
-				building.sensorOnline === building.valueNormal
-			) {
-				return 'green'
-			}
-			// มี Sensor บางตัวที่ Offline
-			else if (building.sensorOffline > 0) {
+			/**
+			 * Old Rules
+			 */
+			// // Sensor มีสถานะ Online ทั้งหมด และมีผลการตรวจวัดที่เกินมาตรฐาน || แต่หากมี Sensor บางตัวที่ยัง Online และอ่านค่าได้เกินมาตรฐาน ก็ให้แสดงเป็นสีแดงแทน
+			// if (building.sumSensor > 0 && building.valueOverStd > 0) {
+			// 	return 'red'
+			// }
+			// // Sensor มีสถานะ Online ทั้งหมด และมีผลการตรวจวัดที่ใกล้เกินมาตรฐาน
+			// else if (building.sumSensor === building.sensorOnline && building.valueNearStd > 0) {
+			// 	return 'orange'
+			// }
+			// // มี Sensor ที่ Online ทั้งหมดและผลการตรวจวัดอยู่ในเกณฑ์ปกติ
+			// else if (
+			// 	building.sumSensor === building.sensorOnline &&
+			// 	building.sensorOnline === building.valueNormal
+			// ) {
+			// 	return 'green'
+			// }
+			// // มี Sensor บางตัวที่ Offline
+			// else if (building.sensorOffline > 0) {
+			// 	return 'grey'
+			// } else {
+			// 	return null
+			// }
+
+			/**
+			 * New Rules (April 18, 2024)
+			 */
+			if (building?.status === 0) {
 				return 'grey'
+			} else if (building?.status === 1) {
+				return 'green'
+			} else if (building?.status === 2) {
+				return 'orange'
+			} else if (building?.status === 3) {
+				return 'red'
 			} else {
 				return null
 			}
@@ -115,15 +134,15 @@ const ViewModel = () => {
 	}
 
 	const onClickBuildingOne = () => {
-		navigate(`/dashboard/mwa/building/${buildingOne?.id}`)
+		window.open(`/dashboard/mwa/building/${buildingOne?.id}`, '_blank')
 	}
 
 	const onClickBuildingTwo = () => {
-		navigate(`/dashboard/mwa/building/${buildingTwo?.id}`)
+		window.open(`/dashboard/mwa/building/${buildingTwo?.id}`, '_blank')
 	}
 
 	const onClickBuildingThree = () => {
-		navigate(`/dashboard/mwa/building/${buildingThree?.id}`)
+		window.open(`/dashboard/mwa/building/${buildingThree?.id}`, '_blank')
 	}
 
 	useEffect(() => {
@@ -151,9 +170,9 @@ const ViewModel = () => {
 	}, [])
 
 	useEffect(() => {
-		const buildingOneGroup = document.querySelector('#first-building-group')
-		const buildingTwoGroup = document.querySelector('#second-building-group')
-		const buildingThreeGroup = document.querySelector('#third-building-group')
+		const buildingOneGroup = document.querySelector('#chlorine-station-1')
+		const buildingTwoGroup = document.querySelector('#chlorine-station-2')
+		const buildingThreeGroup = document.querySelector('#chlorine-station-3')
 
 		if (buildingOneGroup) {
 			buildingOneGroup.addEventListener('click', onClickBuildingOne)

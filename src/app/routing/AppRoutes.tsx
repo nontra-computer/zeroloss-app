@@ -5,7 +5,7 @@
  * components (e.g: `src/app/modules/Auth/pages/AuthPage`, `src/app/BasePage`).
  */
 
-import { FC } from 'react'
+import React, { FC } from 'react'
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 import { PrivateRoutes } from './PrivateRoutes'
 // import {ErrorsPage} from '../modules/errors/ErrorsPage'
@@ -29,15 +29,15 @@ const AppRoutes: FC = () => {
 					{/* <Route path='error/*' element={<ErrorsPage />} /> */}
 					<Route path="logout" element={<Logout />} />
 					{currentUser ? (
-						<>
+						<React.Fragment>
 							<Route path="/*" element={<PrivateRoutes />} />
 							<Route index element={<Navigate to="/dashboard" />} />
-						</>
+						</React.Fragment>
 					) : (
-						<>
+						<React.Fragment>
 							<Route path="auth/*" element={<AuthPage />} />
 							<Route path="*" element={<Navigate to="/auth" />} />
-						</>
+						</React.Fragment>
 					)}
 				</Route>
 			</Routes>

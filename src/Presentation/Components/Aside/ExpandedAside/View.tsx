@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { isMobileDevice } from '@/_metronic/assets/ts/_utils'
 
 const ExpandedAside: React.FC = () => {
-	const { intl, isAsideExpanded, onClickLinkAside, subMenu, themeMode } = useViewModel()
+	const { asideRef, intl, isAsideExpanded, onClickLinkAside, subMenu, themeMode } = useViewModel()
 
 	return (
 		<React.Fragment>
@@ -19,6 +19,7 @@ const ExpandedAside: React.FC = () => {
 			</div> */}
 
 			<div
+				ref={asideRef}
 				className={clsx('position-fixed h-100 transition-300 overflow-hidden text-nowrap', {
 					'w-100 w-lg-300px border-1px border-l-0 border-t-0 border-b-0': isAsideExpanded,
 					'w-0': !isAsideExpanded,
@@ -43,7 +44,7 @@ const ExpandedAside: React.FC = () => {
 									})}
 									data-bs-toggle="tab"
 									href="#my_details_tab_panel">
-									My Details
+									Menu
 								</a>
 							</li>
 							<li className="nav-item">
@@ -54,7 +55,7 @@ const ExpandedAside: React.FC = () => {
 									})}
 									data-bs-toggle="tab"
 									href="#profile_tab_panel">
-									Profile
+									Others
 								</a>
 							</li>
 						</ul>
@@ -63,8 +64,10 @@ const ExpandedAside: React.FC = () => {
 								{/* Menu */}
 								{subMenu.map((menu, index) => (
 									<React.Fragment key={`submenu-${index}`}>
-										<Link to={menu.path} onClick={onClickLinkAside}>
-											<div
+										{menu?.outside === true && (
+											<a
+												href={menu.path}
+												target="_blank"
 												className={clsx(
 													'd-flex flex-row p-4 cursor-pointer hover-enabled transition-300 rounded',
 													{
@@ -84,8 +87,34 @@ const ExpandedAside: React.FC = () => {
 														{intl.formatMessage({ id: menu.label })}
 													</span>
 												</div>
-											</div>
-										</Link>
+											</a>
+										)}
+
+										{(menu?.outside === false || menu?.outside === undefined) && (
+											<Link to={menu.path} onClick={onClickLinkAside}>
+												<div
+													className={clsx(
+														'd-flex flex-row p-4 cursor-pointer hover-enabled transition-300 rounded',
+														{
+															'bg-zeroloss-base-white': themeMode === 'light',
+															'bg-zeroloss-base-grey-carbon': themeMode === 'dark',
+														}
+													)}>
+													<div className="d-flex flex-column justify-content-center me-4">
+														<i className={clsx('bi', menu.icon, 'fs-2')}></i>
+													</div>
+													<div className="d-flex flex-column justify-content-center">
+														<span
+															className={clsx('fw-bold', {
+																'text-zeroloss-grey-25': themeMode === 'dark',
+																'text-zeroloss-grey-700': themeMode === 'light',
+															})}>
+															{intl.formatMessage({ id: menu.label })}
+														</span>
+													</div>
+												</div>
+											</Link>
+										)}
 									</React.Fragment>
 								))}
 							</div>

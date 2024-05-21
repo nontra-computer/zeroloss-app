@@ -26,6 +26,7 @@ const FormInput: React.FC<FormInputProp> = ({
 	mark = '',
 	markChar,
 	onPressEnter,
+	limitCharacter,
 }) => {
 	const validClassName: string = isValidClassName(isShowValid, false, disabled)
 	const { mode } = useThemeMode()
@@ -35,6 +36,16 @@ const FormInput: React.FC<FormInputProp> = ({
 		themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 	} else {
 		themeMode = mode
+	}
+
+	const findCharacterLeft = () => {
+		if (limitCharacter && value) {
+			return limitCharacter - value.toString().length
+		} else if (limitCharacter) {
+			return limitCharacter
+		} else {
+			return 0
+		}
 	}
 
 	return (
@@ -50,7 +61,12 @@ const FormInput: React.FC<FormInputProp> = ({
 						data-testid="form-input-label-component">
 						<div className="d-flex flex-column">
 							<span>{label}</span>
-							<span className="text-kumopack-grey-600 fs-8 w-75">{additionalLabel}</span>
+							<span
+								className={clsx('text-kumopack-grey-600 fs-8', {
+									'w-75': isHorizontal,
+								})}>
+								{additionalLabel}
+							</span>
 						</div>
 
 						{additionalLabelCom}
@@ -63,7 +79,13 @@ const FormInput: React.FC<FormInputProp> = ({
 							mask={mark}
 							type={type}
 							value={value}
-							onChange={onChange}
+							onChange={e => {
+								if (onChange) {
+									if (limitCharacter && e.target.value.length > limitCharacter) return
+
+									onChange(e)
+								}
+							}}
 							placeholder={placeholder}
 							disabled={disabled}
 							className={clsx('form-control', {
@@ -86,7 +108,13 @@ const FormInput: React.FC<FormInputProp> = ({
 							})}
 							type={type}
 							value={value}
-							onChange={onChange}
+							onChange={e => {
+								if (onChange) {
+									if (limitCharacter && e.target.value.length > limitCharacter) return
+
+									onChange(e)
+								}
+							}}
 							placeholder={placeholder}
 							disabled={disabled}
 							aria-label="form-input-component"
@@ -123,6 +151,10 @@ const FormInput: React.FC<FormInputProp> = ({
 					)}
 
 					{messageUnderBox && <div className="fs-8 mt-2 ml-2 w-100">{messageUnderBox}</div>}
+
+					{limitCharacter && (
+						<div className="text-kumopack-grey-600 mt-2">{findCharacterLeft()} characters left</div>
+					)}
 				</div>
 			</div>
 

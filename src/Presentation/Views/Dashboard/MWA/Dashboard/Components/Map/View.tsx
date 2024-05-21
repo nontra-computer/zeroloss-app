@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-import PlantStation from '@/Presentation/Components/PlantStation/View'
+import BangKhenPlantStation from '@/Presentation/Components/BangKhenPlantStation/View'
 import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import { Tooltip } from 'react-tooltip'
@@ -160,12 +160,13 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 							</div>
 						)}
 
+						{/* Tooltip */}
 						{buildingOne && (
 							<Tooltip
-								place="top"
-								anchorSelect="#first-building-group"
-								className="fs-3 fw-bold"
-								style={{ zIndex: 10 }}
+								place="left"
+								anchorSelect="#chlorine-station-1"
+								className="fs-7 fw-bold"
+								style={{ zIndex: 20 }}
 								isOpen={isShowHover}>
 								<div className="position-relative">
 									<img
@@ -175,17 +176,18 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 										className="position-absolute"
 										style={{ left: -70, top: -5 }}
 									/>{' '}
-									{buildingOne?.building}
+									{/* {buildingOne?.building} */}
+									โรงจ่ายคลอรีน 1
 								</div>
 							</Tooltip>
 						)}
 
 						{buildingTwo && (
 							<Tooltip
-								place="top"
-								anchorSelect="#second-building-group"
-								className="fs-3 fw-bold"
-								style={{ zIndex: 10 }}
+								place="left"
+								anchorSelect="#chlorine-station-2"
+								className="fs-7 fw-bold"
+								style={{ zIndex: 20 }}
 								isOpen={isShowHover}>
 								<div className="position-relative">
 									<img
@@ -195,17 +197,18 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 										className="position-absolute"
 										style={{ left: -70, top: -5 }}
 									/>{' '}
-									{buildingTwo?.building}
+									{/* {buildingTwo?.building} */}
+									โรงจ่ายคลอรีน 2
 								</div>
 							</Tooltip>
 						)}
 
 						{buildingThree && (
 							<Tooltip
-								place="top"
-								anchorSelect="#third-building-group"
-								className="fs-3 fw-bold"
-								style={{ zIndex: 10 }}
+								place="bottom"
+								anchorSelect="#chlorine-station-3"
+								className="fs-7 fw-bold"
+								style={{ zIndex: 20 }}
 								isOpen={isShowHover}>
 								<div className="position-relative">
 									<img
@@ -215,10 +218,147 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 										className="position-absolute"
 										style={{ left: -70, top: -5 }}
 									/>{' '}
-									{buildingThree?.building}
+									{/* {buildingThree?.building} */}
+									โรงจ่ายคลอรีน 3
 								</div>
 							</Tooltip>
 						)}
+
+						<Tooltip
+							place="left"
+							anchorSelect="#activated-charcoal-station"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							โรงจ่ายถ่านกัมมันต์
+						</Tooltip>
+
+						<Tooltip
+							place="top"
+							anchorSelect="#water-pumping-station-1"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							โรงสูบน้ำดิบ 1
+						</Tooltip>
+
+						<Tooltip
+							place="top"
+							anchorSelect="#water-pumping-station-2"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							โรงสูบน้ำดิบ 2
+						</Tooltip>
+
+						<Tooltip
+							place="left"
+							anchorSelect="#cement-station-1"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							โรงจ่ายปูนขาว 1
+						</Tooltip>
+
+						<Tooltip
+							place="top"
+							anchorSelect="#cement-station-2"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							โรงจ่ายปูนขาว 2
+						</Tooltip>
+
+						<Tooltip
+							place="top"
+							anchorSelect="#chemical-dispensary-station"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							สถานีจ่ายสารเคมี
+						</Tooltip>
+
+						<Tooltip
+							place="top"
+							anchorSelect="#alum-dispensary-station-1"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							โรงจ่ายสารส้ม 1
+						</Tooltip>
+
+						<Tooltip
+							place="top"
+							anchorSelect="#alum-dispensary-station-2"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							โรงจ่ายสารส้ม 2
+						</Tooltip>
+
+						{/* <Tooltip
+							place="top"
+							anchorSelect="#service-center-building"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10, backgroundColor: '#233FA1' }}
+							isOpen={isShowHover}>
+							อาคารกองบริการโรงงาน
+						</Tooltip> */}
+
+						{/* <Tooltip
+							place="top"
+							anchorSelect="#water-research-building"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10, backgroundColor: '#233FA1' }}
+							isOpen={isShowHover}>
+							อาคารวิเคราะห์คุณภาพน้ำระบบผลิต
+						</Tooltip> */}
+
+						<Tooltip
+							place="top"
+							anchorSelect="#adminstration-building"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10, backgroundColor: '#233FA1' }}
+							isOpen={isShowHover}>
+							อาคารอำนวยการโรงงานผลิตน้ำบางเขน
+						</Tooltip>
+
+						{/* <Tooltip
+							place="top"
+							anchorSelect="#air-filling-building"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							อาคารเติมอากาศ
+						</Tooltip> */}
+
+						{/* <Tooltip
+							place="right"
+							anchorSelect="#clean-water-storage-building-1"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							อาคารเก็บน้ำสะอาด 1
+						</Tooltip>
+
+						<Tooltip
+							place="right"
+							anchorSelect="#clean-water-storage-building-2"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							อาคารเก็บน้ำสะอาด 2
+						</Tooltip>
+
+						<Tooltip
+							place="right"
+							anchorSelect="#clean-water-storage-building-3"
+							className="fs-7 fw-bold"
+							style={{ zIndex: 10 }}
+							isOpen={isShowHover}>
+							อาคารเก็บน้ำสะอาด 3
+						</Tooltip> */}
+						{/* Tooltip */}
 
 						<div className="card-body position-relative p-0">
 							<TransformWrapper
@@ -231,7 +371,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 								onPanningStop={onEndPanning}
 								maxScale={is4K || is8K ? 3 : 1.5}>
 								{({ zoomIn, zoomOut }) => (
-									<div className='relative w-100 h-100'>
+									<div className="relative w-100 h-100">
 										<div
 											className="position-absolute d-flex justify-content-start align-items-end"
 											style={{ zIndex: 100, left: 20, top: stageDimensions.height - 100 }}>
@@ -511,7 +651,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 										</div>
 
 										<TransformComponent wrapperClass="h-100 w-100">
-											<PlantStation />
+											<BangKhenPlantStation />
 										</TransformComponent>
 									</div>
 								)}

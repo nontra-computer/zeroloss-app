@@ -24,7 +24,10 @@ const WindDirection: React.FC<WindDirectionProps> = ({
 			draggable={draggable}
 			position={position}
 			eventHandlers={{
-				mouseover: event => event.target.openPopup(),
+				click: event => {
+					event.target.openPopup()
+				},
+				// mouseover: event => event.target.openPopup(),
 			}}
 			rotationAngle={windDeg}>
 			{popup && (

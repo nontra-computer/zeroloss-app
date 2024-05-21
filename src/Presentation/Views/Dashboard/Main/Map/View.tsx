@@ -1,46 +1,85 @@
 import React from 'react'
 import { MapContainer, TileLayer } from 'react-leaflet'
 import { KTSVG } from '@/_metronic/helpers'
-import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
-import LocationWithStatus from '@/Presentation/Components/LeafletMap/LocationWithStatus'
-import IncidentPopup from '@/Presentation/Components/LeafletMap/IncidentPopup'
+import PlainLocation from '@/Presentation/Components/LeafletMap/PlainLocation'
+import LocationPopup from '@/Presentation/Views/Events/Detail/Components/LocationPopup'
+import EventWithStatus from '@/Presentation/Components/LeafletMap/EventWithStatus'
+import EventPopup from '@/Presentation/Components/LeafletMap/EventPopup'
 import WindDirection from '@/Presentation/Components/LeafletMap/WindDirection'
 import WindPopup from '@/Presentation/Components/LeafletMap/WindPopup'
-import LocationPolygon from '@/Presentation/Components/LeafletMap/LocationPolygon'
 import LocationMeasurementStation from '@/Presentation/Components/LeafletMap/LocationMeasurementStation'
 import InfoBoard from '../../Components/InfoBoard/View'
 // import Alert from '../../Components/Alert/View'
 import MeasurementTable from '../../Components/MeasurementTable/View'
+import MeasurementDetailPopup from '@/Presentation/Components/LeafletMap/MeasurementDetailPopup'
 // import FeatureNews from '@/Presentation/Components/News/FeatureNews'
 // import NewsHorizontal from '@/Presentation/Components/News/NewsHorizontal'
 import PhoneRotateCaution from '@/Presentation/Components/PhoneRotateCaution/View'
-import Select, { components } from 'react-select'
+import Select from 'react-select'
 import Filter from './Components/Filter'
+import LocationFilter from './Components/LocationFilter'
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
+import { BangkhenWaterTreatmentPlant } from '@/Configuration/​MapCoordinates'
 
 const MainDashboardMapView: React.FC = () => {
 	const {
 		isMobile,
-		isLargeMobile,
 		themeMode,
+		locationData,
+		selectedMeasurementData,
 		data,
+		windData,
+		measurementData,
 		dataTypeOptions,
-		locationOptions,
+		locationTypeOptions,
+		distanceOptions,
+		measurementTypeOptions,
+		measurementIsOverStdOptions,
+		measurementStatusOptions,
 		type,
 		onTypeChange,
 		TYPE_OPTIONS,
 		filter,
+		preFilterState,
 		displayFilter,
 		searchText,
 		setSearchText,
+		onChangeFilter,
 		onAddFilter,
 		onRemoveFilter,
+		confirmFilterEvent,
+		clearFilterEvent,
+		confirmFilterLocation,
+		clearFilterLocation,
+		showMeasurementTable,
+		onOpenMeasurementTable,
+		onCloseMeasurementTable,
 	} = useViewModel()
 
 	return (
 		<React.Fragment>
-			<Filter />
+			<Filter
+				searchText={searchText}
+				setSearchText={setSearchText}
+				filter={preFilterState}
+				onChangeFilter={onAddFilter}
+				confirmFilter={confirmFilterEvent}
+				clearFilter={clearFilterEvent}
+				eventTypeOptions={dataTypeOptions}
+				measurementTypeOptions={measurementTypeOptions}
+				measurementIsOverStdOptions={measurementIsOverStdOptions}
+				measurementStatusOptions={measurementStatusOptions}
+			/>
+
+			<LocationFilter
+				locationOptions={locationTypeOptions}
+				distanceOccuredOptions={distanceOptions}
+				filter={filter}
+				onChangeFilter={onChangeFilter}
+				confirmFilter={confirmFilterLocation}
+				clearFilter={clearFilterLocation}
+			/>
 
 			<div className="row gy-5">
 				{/* Header */}
@@ -66,85 +105,6 @@ const MainDashboardMapView: React.FC = () => {
 						<div
 							className="w-100 w-lg-auto d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-end"
 							style={{ gap: '12px' }}>
-							<FormGenerator
-								formKey="search"
-								inputType="plain"
-								containerClassName="w-100 w-lg-400px d-inline-block"
-								additionalClassName="shadow-sm"
-								placeholder="ค้นหาสถานที่/เหตุการณ์"
-								label="ค้นหาเหตุการณ์"
-								value={searchText}
-								onChange={e => setSearchText(e.target.value)}
-								onPressEnter={() => {
-									onAddFilter('search', searchText)
-									setSearchText('')
-								}}
-							/>
-							<div className="w-100 w-lg-auto">
-								<label className="form-label">ประเภทเหตุการณ์</label>
-								<Select
-									placeholder="เลือกประเภทเหตุการณ์"
-									noOptionsMessage={() => 'ไม่พบข้อมูล'}
-									className="shadow-sm w-100 w-lg-200px"
-									styles={{
-										container: styles => ({
-											...styles,
-											height: '44px',
-										}),
-										control: styles => ({
-											...styles,
-											height: '44px',
-											borderColor: themeMode === 'dark' ? '#363843' : '#dbdfe9',
-											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
-											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
-										}),
-										menu: styles => ({
-											...styles,
-											backgroundColor: themeMode === 'dark' ? '#15171c' : '#FFFFFF',
-											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
-											zIndex: 1000,
-										}),
-										input: styles => ({
-											...styles,
-											color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
-										}),
-									}}
-									options={dataTypeOptions}
-									value={dataTypeOptions.find(option => option.value === filter.type) ?? null}
-									onChange={option => onAddFilter('type', option?.value)}
-									components={{
-										IndicatorSeparator: () => null,
-										SingleValue: props => (
-											<components.SingleValue {...props} className="cursor-pointer">
-												<span
-													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
-														'bg-zeroloss-error': props.data.value === 1,
-														'bg-zeroloss-warning': props.data.value === 2,
-														'bg-zeroloss-success': props.data.value === 3,
-														'bg-zeroloss-primary': props.data.value === 4,
-														'bg-zeroloss-brand-600': props.data.value === 5,
-														'bg-zeroloss-primary-400': props.data.value === 6,
-													})}></span>
-												{props.data.label}
-											</components.SingleValue>
-										),
-										Option: props => (
-											<components.Option {...props} className="cursor-pointer">
-												<span
-													className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
-														'bg-zeroloss-error': props.data.value === 1,
-														'bg-zeroloss-warning': props.data.value === 2,
-														'bg-zeroloss-success': props.data.value === 3,
-														'bg-zeroloss-primary': props.data.value === 4,
-														'bg-zeroloss-brand-600': props.data.value === 5,
-														'bg-zeroloss-primary-400': props.data.value === 6,
-													})}></span>
-												{props.data.label}
-											</components.Option>
-										),
-									}}
-								/>
-							</div>
 							<div className="w-100 w-lg-auto">
 								<label className="form-label">รูปแบบการมองเห็น</label>
 								<Select
@@ -209,6 +169,24 @@ const MainDashboardMapView: React.FC = () => {
 								/>
 								ตัวกรอง
 							</button>
+							<button
+								id="kt_main_dashboard_map_location_filter_toggle"
+								className={clsx('btn btn-sm w-100 w-lg-auto', {
+									'white-button': themeMode === 'light',
+									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
+										themeMode === 'dark',
+								})}
+								style={{ height: '44px' }}>
+								{/* <KTSVG
+									className="svg-icon-3 me-1"
+									path={
+										themeMode === 'light'
+											? 'media/icons/zeroloss/filter-lines.svg'
+											: 'media/icons/zeroloss/white-filter-lines.svg'
+									}
+								/> */}
+								ค้นหาสถานที่
+							</button>
 						</div>
 					</div>
 				</div>
@@ -218,14 +196,14 @@ const MainDashboardMapView: React.FC = () => {
 					<div className="card">
 						<div className="card-header">
 							<div className="card-title fw-bold w-100 w-lg-auto flex-column flex-lg-row align-items-lg-center">
-								<div className="d-none d-lg-block">Current Filter:</div>
+								<div className="d-none d-lg-block">ตัวกรอง:</div>
 								{(displayFilter?.search ?? []).length + (displayFilter?.type ?? []).length === 0 ? (
 									<span
 										className={clsx('fw-normal', {
 											'ms-3': !isMobile,
 											'mt-3': isMobile,
 										})}>
-										<span className="d-inine-block d-lg-none">Current Filter: </span> None
+										<span className="d-inine-block d-lg-none">ตัวกรอง: </span> ไม่มีตัวกรอง
 									</span>
 								) : (
 									<React.Fragment>
@@ -277,7 +255,7 @@ const MainDashboardMapView: React.FC = () => {
 								{/* begin:: Map */}
 								<div className="d-none d-sm-block col-12">
 									<div className="card h-800px">
-										<div className="card-body p-0 position-relative">
+										<div className="card-body p-0 position-relative main-dashboard-map-container">
 											{/* {(type === 'all' || type === 'simulation') && (
 												<React.Fragment>
 													<div
@@ -289,13 +267,18 @@ const MainDashboardMapView: React.FC = () => {
 												</React.Fragment>
 											)} */}
 
-											{type === 'measurement' && (
+											{['all', 'measurement'].includes(type) && (
 												<React.Fragment>
-													<MeasurementTable />
+													{showMeasurementTable && (
+														<MeasurementTable
+															data={selectedMeasurementData}
+															onClose={onCloseMeasurementTable}
+														/>
+													)}
 												</React.Fragment>
 											)}
 
-											<Select
+											{/* <Select
 												placeholder="เลือกสถานที่"
 												noOptionsMessage={() => 'ไม่พบข้อมูล'}
 												className="position-absolute"
@@ -331,33 +314,40 @@ const MainDashboardMapView: React.FC = () => {
 												components={{
 													IndicatorSeparator: () => null,
 												}}
-											/>
+											/> */}
 											<InfoBoard data={dataTypeOptions} />
 											<MapContainer
 												center={{
-													lat: 13.7563,
-													lng: 100.5018,
+													lat: BangkhenWaterTreatmentPlant.lat,
+													lng: BangkhenWaterTreatmentPlant.lng,
 												}}
-												zoom={7}>
+												zoom={16}>
 												<TileLayer
 													attribution="@Copyright 2024 Zeroloss"
 													url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 												/>
 
-												{data.map((d: any, index: number) => (
-													<React.Fragment key={`map-data-${index}`}>
-														{type === 'all' && (
-															<LocationWithStatus
-																{...d}
-																popup={IncidentPopup}
-																position={{
-																	lat: d?.latitude ?? 0,
-																	lng: d?.longitude ?? 0,
-																}}
-															/>
-														)}
-														{type === 'wind-direction' && (
+												{locationData.map((l, idx) => (
+													<PlainLocation
+														key={`location-${idx}`}
+														{...l}
+														latitude={l?.latitude ?? 0}
+														longitude={l?.longitude ?? 0}
+														popup={LocationPopup}
+													/>
+												))}
+
+												{data.map((d: any, index: number) => {
+													return (
+														<EventWithStatus key={`map-data-${index}`} {...d} popup={EventPopup} />
+													)
+												})}
+
+												{['wind-direction', 'all'].includes(type) && (
+													<React.Fragment>
+														{windData.map((d: any, index: number) => (
 															<WindDirection
+																key={`wind-data-${index}`}
 																{...d}
 																popup={WindPopup}
 																position={{
@@ -366,25 +356,26 @@ const MainDashboardMapView: React.FC = () => {
 																}}
 																degree={d?.direction ?? 0}
 															/>
-														)}
-														{type === 'simulation' && (
-															<LocationPolygon
-																type={d.shapeType}
-																position={[d.position]}
-																radius={1500}
-															/>
-														)}
-														{type === 'measurement' && (
+														))}
+													</React.Fragment>
+												)}
+
+												{['measurement', 'all'].includes(type) && (
+													<React.Fragment>
+														{measurementData.map((d: any, index: number) => (
 															<LocationMeasurementStation
+																key={`measurement-data-${index}`}
 																{...d}
 																position={{
 																	lat: d?.latitude ?? 0,
 																	lng: d?.longitude ?? 0,
 																}}
+																popup={MeasurementDetailPopup}
+																onClick={onOpenMeasurementTable}
 															/>
-														)}
+														))}
 													</React.Fragment>
-												))}
+												)}
 											</MapContainer>
 										</div>
 									</div>
