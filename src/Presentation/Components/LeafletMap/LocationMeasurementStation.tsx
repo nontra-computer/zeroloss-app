@@ -11,18 +11,18 @@ const LocationMeasurementStation: React.FC<LocationMeasurementStationProps> = ({
 }) => {
 	const status = props.status ?? false
 	const state = props.state ?? 0
-	const dataStatus = props.dataStatus ?? 0
+	const dataStatus = props.dataStatus ?? false
 	let iconColor = 'black'
 
 	if (state === 0) {
 		iconColor = 'black'
 	} else if (state == 2) {
 		iconColor = 'blue'
-	} else if (state === 1 && status === true && dataStatus === 1) {
+	} else if (state === 1 && status === true && dataStatus === true) {
 		iconColor = 'green'
-	} else if (state === 1 && status === false && dataStatus === 1) {
+	} else if (state === 1 && status === false && dataStatus === false) {
 		iconColor = 'grey'
-	} else if (state === 1 && status === true && dataStatus === 0) {
+	} else if (state === 1 && status === true && dataStatus === false) {
 		iconColor = 'red'
 	}
 

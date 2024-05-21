@@ -11,5 +11,5 @@ export interface LocationMeasurementStationProps {
 	title?: string
 	state?: number
 	status?: boolean
-	dataStatus?: any
+	dataStatus?: boolean
 }

@@ -111,7 +111,7 @@ const ViewModel = () => {
 	}, [selected])
 
 	const canViewSimulation = useMemo(() => {
-		return (selected?.riskModelOutputs ?? [])?.[0]?.id !== undefined
+		return (selected?.riskModelInputs ?? [])?.[0]?.id !== undefined
 	}, [selected])
 
 	let themeMode = ''
@@ -129,7 +129,7 @@ const ViewModel = () => {
 	}
 
 	const onViewSimulation = () => {
-		const riskModelId = (selected?.riskModelOutputs ?? [])?.[0]?.id
+		const riskModelId = (selected?.riskModelInputs ?? [])?.[0]?.id
 		window.open(`${import.meta.env.VITE_APP_ZEROLOSS_SIMULATION_URL.replace(':id', riskModelId)}`)
 	}
 
