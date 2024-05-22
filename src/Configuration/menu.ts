@@ -86,12 +86,12 @@ export const ZEROLOSS_MENU = [
 				label: 'ZEROLOSS.MENU.REPORT_MEASUREMENT',
 				outside: true,
 			},
-			// {
-			// 	key: 'event',
-			// 	icon: 'bi-calendar3-event',
-			// 	path: '/report/event',
-			// 	label: 'ZEROLOSS.MENU.REPORT_EVENT',
-			// },
+			{
+				key: 'event',
+				icon: 'bi-calendar3-event',
+				path: '/report/event',
+				label: 'ZEROLOSS.MENU.REPORT_EVENT',
+			},
 			// {
 			// 	key: 'summary',
 			// 	icon: 'bi-calculator',
