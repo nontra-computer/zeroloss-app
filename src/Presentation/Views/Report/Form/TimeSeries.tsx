@@ -3,8 +3,14 @@ import { PageTitle } from '@/_metronic/layout/core'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import clsx from 'clsx'
 
+import { TableChart, LineChart, BarChart } from '../Measurement/Chart/TableChart'
+import data from '../Measurement/data.json'
+
 import useViewModel from './ViewModel'
 import FormHeader from '../Component/FormHeader'
+
+import moment from 'moment'
+import 'moment/locale/th'
 
 const TimeSeries: React.FC = () => {
 	const { timeStr, themeMode } = useViewModel()
@@ -12,6 +18,24 @@ const TimeSeries: React.FC = () => {
 	const handleSubmit = values => {
 		console.log(values)
 	}
+	const processedData = data.data.map(item => {
+		const processedRow = {
+			date: moment(item.date_time).format('DD/MM/YYYY HH:mm'),
+		}
+
+		data.parameters.forEach(param => {
+			const paramName = param.name
+			const paramNumber = paramName.split('-')[1]
+			const paramKey = `p${paramNumber}`
+			// const standardKey = `s${paramNumber}`
+			processedRow[`p_${paramName}`] = item[paramKey]
+			// processedRow[`s_${paramName}`] = item[standardKey]
+		})
+
+		return processedRow
+	})
+
+	const parameters = data.parameters
 
 	return (
 		<React.Fragment>
@@ -187,6 +211,14 @@ const TimeSeries: React.FC = () => {
 							</Form>
 						)}
 					</Formik>
+				</div>
+			</div>
+			<div className="row gy-5">
+				<div className="col-12 px-10 py-5">
+					<h1>Charts</h1>
+					<TableChart data={processedData} parameters={parameters} />
+					{/* <LineChart data={processedData} parameters={parameters} /> */}
+					{/* <BarChart data={processedData} parameters={parameters} /> */}
 				</div>
 			</div>
 		</React.Fragment>
