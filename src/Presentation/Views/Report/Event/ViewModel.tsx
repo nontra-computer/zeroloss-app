@@ -62,6 +62,7 @@ const ViewModel = () => {
 		setIsLoadingData,
 		dashboardData,
 		events,
+		setEvents,
 		eventTypes,
 		eventSubTypes,
 		getAll,
@@ -81,6 +82,7 @@ const ViewModel = () => {
 		getSubTypes: state.getSubTypes,
 		getEventMediaPath: state.getEventMediaPath,
 		getDashboardMap: state.getDashboardData,
+		setEvents: state.setData,
 		clearState: state.clearState,
 	}))
 	const { clearStateMeasurement } = useMeasurementStore(state => ({
@@ -221,6 +223,7 @@ const ViewModel = () => {
 	}
 
 	useEffect(() => {
+		setEvents([])
 		fetchProperties()
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
