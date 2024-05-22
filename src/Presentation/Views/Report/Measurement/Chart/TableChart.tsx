@@ -1,10 +1,16 @@
-import React, { useEffect, useRef } from 'react'
-import ApexCharts from 'apexcharts'
+import React from 'react'
 
-export const TableChart = ({ data, parameters }) => (
-	<>
-		<style>
-			{`
+interface TableChartProps {
+	data: any[]
+	parameters: any[]
+	average: { paramName: string; average: string }[]
+}
+
+const TableChart: React.FC<TableChartProps> = ({ data, parameters, average }) => {
+	return (
+		<>
+			<style>
+				{`
       table {
         width: 100%;
         border-collapse: collapse;
@@ -33,62 +39,65 @@ export const TableChart = ({ data, parameters }) => (
         background-color: #b3e0ff ; /* Light gray */
       }
     `}
-		</style>
-		<table>
-			<thead>
-				<tr>
-					<th>Date Time</th>
-					{parameters.map(param => (
-						<th key={param.id}>{param.name}</th>
-					))}
-				</tr>
-			</thead>
-			<tbody>
-				{data.map((row, index) => (
-					<tr key={index}>
-						<td>{row.date}</td>
+			</style>
+			<table>
+				<thead>
+					<tr>
+						<th>Date Time</th>
 						{parameters.map(param => (
-							<td key={param.id}>{row[`p_${param.name}`]}</td>
+							<th key={param.id}>{param.name}</th>
 						))}
 					</tr>
-				))}
-				<tr className="special-row">
-					<td>Average</td>
-					{parameters.map(param => (
-						<td key={param.id}>0.00</td>
+				</thead>
+				<tbody>
+					{data.map((row, index) => (
+						<tr key={index}>
+							<td>{row.date}</td>
+							{parameters.map(param => (
+								<td key={param.id}>{row[`p_${param.name}`]}</td>
+							))}
+						</tr>
 					))}
-				</tr>
-				<tr className="special-row">
-					<td>Standard</td>
-					{parameters.map(param => (
-						<td key={param.id}>1.00</td>
-					))}
-				</tr>
-				<tr className="special-row">
-					<td>Min</td>
-					{parameters.map(param => (
-						<td key={param.id}></td>
-					))}
-				</tr>
-				<tr className="special-row">
-					<td>Max</td>
-					{parameters.map(param => (
-						<td key={param.id}></td>
-					))}
-				</tr>
-				<tr className="special-row">
-					<td>Data Number</td>
-					{parameters.map(param => (
-						<td key={param.id}>0</td>
-					))}
-				</tr>
-				<tr className="special-row">
-					<td>% Data</td>
-					{parameters.map(param => (
-						<td key={param.id}>0.00%</td>
-					))}
-				</tr>
-			</tbody>
-		</table>
-	</>
-)
+					<tr className="special-row">
+						<td>Average</td>
+						{average.map((avg, index) => (
+							<td key={index}>{avg.average}</td>
+						))}
+					</tr>
+					<tr className="special-row">
+						<td>Standard</td>
+						{parameters.map(param => (
+							<td key={param.id}>1.00</td>
+						))}
+					</tr>
+					<tr className="special-row">
+						<td>Min</td>
+						{parameters.map(param => (
+							<td key={param.id}></td>
+						))}
+					</tr>
+					<tr className="special-row">
+						<td>Max</td>
+						{parameters.map(param => (
+							<td key={param.id}></td>
+						))}
+					</tr>
+					<tr className="special-row">
+						<td>Data Number</td>
+						{parameters.map(param => (
+							<td key={param.id}>0</td>
+						))}
+					</tr>
+					<tr className="special-row">
+						<td>% Data</td>
+						{parameters.map(param => (
+							<td key={param.id}>0.00%</td>
+						))}
+					</tr>
+				</tbody>
+			</table>
+		</>
+	)
+}
+
+export default TableChart

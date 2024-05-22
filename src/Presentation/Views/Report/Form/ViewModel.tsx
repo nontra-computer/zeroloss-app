@@ -8,8 +8,9 @@ import { useEventStore } from '@/Store/Event'
 import { useLocationStore } from '@/Store/Location'
 import { toast } from 'react-toastify'
 import moment from 'moment-timezone'
+import data from '../Measurement/data.json' // Make sure this path is correct
 
-const ViewModel = () => {
+const useViewModel = () => {
 	const location = useLocation()
 	const navigate = useNavigate()
 	const selectedLang = useLang()
@@ -63,6 +64,42 @@ const ViewModel = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
+	const processData = () => {
+		interface ProcessedDataRow {
+			date: string
+			[key: string]: any
+		}
+
+		const processedData = data.data.map(item => {
+			const processedRow = {
+				date: moment(item.date_time).format('DD/MM/YYYY HH:mm'),
+			}
+
+			data.parameters.forEach(param => {
+				const paramName = param.name
+				const paramNumber = paramName.split('-')[1]
+				const paramKey = `p${paramNumber}`
+				processedRow[`p_${paramName}`] = item[paramKey]
+			})
+
+			return processedRow
+		})
+
+		const parameters = data.parameters
+
+		const average = parameters.map(param => {
+			const paramName = param.name
+			const total = processedData.reduce(
+				(sum, row: ProcessedDataRow) => sum + row[`p_${paramName}`],
+				0
+			)
+			const average = total / processedData.length
+			return { paramName, average: average.toFixed(2) }
+		})
+
+		return { processedData, parameters, average }
+	}
+
 	return {
 		timeStr,
 		themeMode,
@@ -71,7 +108,8 @@ const ViewModel = () => {
 		isShowCalendar,
 		summary,
 		onClickView,
+		processData,
 	}
 }
 
-export default ViewModel
+export default useViewModel
