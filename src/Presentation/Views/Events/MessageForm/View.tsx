@@ -57,7 +57,7 @@ const EventMessageForm: React.FC = () => {
 								</div>
 							</label>
 
-							<div className="w-100 h-300px">
+							<div className="w-100 h-300px overflow-hidden">
 								<LocationSelectionComponent
 									position={{ lat: formState.latitude, lng: formState.longitude }}
 									setPosition={({ lat, lng }) => {
