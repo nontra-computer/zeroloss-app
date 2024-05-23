@@ -45,7 +45,7 @@ const EventDetailMapView: React.FC = () => {
 				/>
 
 				<div className="card h-900px shadow overflow-hidden border-zeroloss-grey-300">
-					<div className="card-header px-5">
+					<div className="card-header px-5 no-print">
 						<div className="card-title fw-bold w-100 w-lg-auto flex-column flex-lg-row align-items-lg-center">
 							{/* <div className="d-none d-lg-block">ตัวกรอง:</div> */}
 						</div>
@@ -53,7 +53,7 @@ const EventDetailMapView: React.FC = () => {
 							{canViewSimulation && (
 								<button
 									type="button"
-									className="btn btn-sm w-100 w-lg-auto white-button me-4"
+									className="btn btn-sm w-100 w-lg-auto white-button me-4 no-print"
 									onClick={onViewSimulation}
 									style={{ height: 44 }}>
 									แบบจำลองการแพร่ของมลพิษ
@@ -61,7 +61,7 @@ const EventDetailMapView: React.FC = () => {
 							)}
 							<button
 								type="button"
-								className="btn btn-sm w-100 w-lg-auto white-button me-4"
+								className="btn btn-sm w-100 w-lg-auto white-button me-4 no-print"
 								onClick={onNavigateToEvent}
 								style={{ height: 44 }}>
 								<KTSVG
@@ -77,7 +77,7 @@ const EventDetailMapView: React.FC = () => {
 							<button
 								type="button"
 								id="kt_event_detail_filter_toggle"
-								className={clsx('btn btn-sm w-100 w-lg-auto', {
+								className={clsx('btn btn-sm w-100 w-lg-auto no-print', {
 									'white-button': themeMode === 'light',
 									'btn-zeroloss-base-grey-carbon border-zeroloss-base-white border-1px':
 										themeMode === 'dark',

@@ -110,6 +110,9 @@ const ViewModel = () => {
 
 	const [eventMessagePage, setEventMessagePage] = useState(1)
 
+	const [isPrinting, setIsPrinting] = useState(false)
+	const [isOpenExportType, setIsOpenExportType] = useState(false)
+
 	const steppers = useMemo(
 		() =>
 			STEPPERS.map(step => {
@@ -177,23 +180,24 @@ const ViewModel = () => {
 	}, [data])
 	const eventMessages = useMemo(
 		() =>
-			eventMessageData
-				.slice(
-					0,
-					eventMessagePage * 4 < eventMessageData.length
-						? eventMessagePage * 4
-						: eventMessageData.length
-				)
-				.map(m => ({
-					id: m.id,
-					date: m.createdAt,
-					img: (m?.medias ?? [])?.[0]?.picturePath
-						? getMediaPath((m?.medias ?? [])?.[0]?.picturePath)
-						: null,
-					detail: m.detail,
-				})),
+			(isPrinting === false
+				? eventMessageData.slice(
+						0,
+						eventMessagePage * 4 < eventMessageData.length
+							? eventMessagePage * 4
+							: eventMessageData.length
+					)
+				: eventMessageData
+			).map(m => ({
+				id: m.id,
+				date: m.createdAt,
+				img: (m?.medias ?? [])?.[0]?.picturePath
+					? getMediaPath((m?.medias ?? [])?.[0]?.picturePath)
+					: null,
+				detail: m.detail,
+			})),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[eventMessageData, eventMessagePage]
+		[eventMessageData, eventMessagePage, isPrinting]
 	)
 	const eventStatusOptions = useMemo(() => {
 		const options = EVENT_STATUS_OPTIONS
@@ -210,9 +214,6 @@ const ViewModel = () => {
 	}, [data])
 	const isHideEventChangeStatusButton = data?.state === 4
 	const isEventMessageMax = eventMessagePage * 4 >= eventMessageData.length
-
-	const [isPrinting, setIsPrinting] = useState(false)
-	const [isOpenExportType, setIsOpenExportType] = useState(false)
 
 	let themeMode = ''
 	if (mode === 'system') {
