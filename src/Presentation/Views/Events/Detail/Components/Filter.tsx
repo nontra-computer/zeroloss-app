@@ -145,6 +145,10 @@ const Filter: React.FC<Props> = ({
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
 									className="w-100 shadow-sm"
 									options={distanceOccuredOptions}
+									value={
+										distanceOccuredOptions.find(option => option.value === filter.distance) ?? null
+									}
+									onChange={option => onChangeFilter('distance', option?.value)}
 									components={{
 										IndicatorSeparator: () => null,
 									}}
