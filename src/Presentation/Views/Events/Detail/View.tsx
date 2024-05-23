@@ -245,6 +245,7 @@ const EventDetailView: React.FC = () => {
 														}
 													)}>
 													<video
+														id={`event-detail-video-${index}`}
 														controls={false}
 														autoPlay
 														muted
@@ -252,7 +253,13 @@ const EventDetailView: React.FC = () => {
 														src={item ?? ''}
 														className="object-fit-cover mx-auto"
 														onClick={() => {
-															window.open(item, '_blank')
+															// window.open(item, '_blank')
+															const el = document.getElementById(`event-detail-video-${index}`)
+															if (!el) return
+
+															if (el.requestFullscreen) {
+																el.requestFullscreen()
+															}
 														}}
 														style={{ maxWidth: '100%', height: '150px' }}>
 														Your browser does not support the video tag.
