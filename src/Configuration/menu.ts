@@ -88,9 +88,16 @@ export const ZEROLOSS_MENU = [
 			},
 			{
 				key: 'event',
+				icon: 'bi-flag-fill',
+				path: import.meta.env.VITE_APP_ZEROLOSS_EMCC_EVENT_REPORT,
+				label: 'ZEROLOSS.MENU.REPORT_EVENT',
+				outside: true,
+			},
+			{
+				key: 'event-summary',
 				icon: 'bi-calendar3-event',
 				path: '/report/event',
-				label: 'ZEROLOSS.MENU.REPORT_EVENT',
+				label: 'ZEROLOSS.MENU.REPORT_EVENT_SUMMARY',
 			},
 			// {
 			// 	key: 'summary',
@@ -132,12 +139,13 @@ export const ZEROLOSS_SETTING_MENU = [
 				label: 'ZEROLOSS.MENU.HAZARD_MODELING',
 				outside: true,
 			},
-			// {
-			// 	key: 'import',
-			// 	icon: 'bi-upload',
-			// 	path: '/import',
-			// 	label: 'ZEROLOSS.MENU.IMPORT',
-			// },
+			{
+				key: 'import',
+				icon: 'bi-upload',
+				path: import.meta.env.VITE_APP_ZEROLOSS_EMCC_IMPORT,
+				label: 'ZEROLOSS.MENU.IMPORT',
+				outside: true,
+			},
 			{
 				key: 'measurement_setup',
 				icon: 'bi-database-fill-gear',

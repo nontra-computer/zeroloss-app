@@ -48,7 +48,7 @@ const ReportEventView: React.FC = () => {
 					</React.Fragment>
 				}
 				aditionalDescription="Your current sales summary and activity.">
-				Report / Event
+				Event Summary
 			</PageTitle>
 
 			<Filter
