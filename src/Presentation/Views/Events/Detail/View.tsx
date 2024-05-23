@@ -31,6 +31,7 @@ const EventDetailView: React.FC = () => {
 		setOpenChangeEventStatus,
 		pictureCover,
 		galleryImages,
+		galleryVideos,
 		locationAddress,
 		eventSubTypes,
 		steppers,
@@ -224,38 +225,77 @@ const EventDetailView: React.FC = () => {
 
 								{/* Additional Pictures */}
 								<div className="row w-lg-50 g-5" style={{ height: 'fit-content' }}>
-									{(isPrinting === false ? galleryImages.slice(0, 9) : galleryImages).map(
-										(item: any, index: number) => (
+									{isPrinting === false &&
+										galleryVideos.map((item: any, index: number) => (
 											<div
 												key={`event-additional-picture-${index}`}
 												className={clsx('', {
 													'col-4': isPrinting === false,
-													'col-6': isPrinting === true,
+													'col-6': isPrinting,
 												})}
 												onClick={() => {
-													onOpenLightBox(index)
+													window.open(item, '_blank')
 												}}>
 												<div
 													className={clsx(
 														'rounded-3 overflow-hidden cursor-pointer hover-filter-brightness transition-300',
 														{
 															'h-100px': isPrinting === false,
-															'h-150px': isPrinting === true,
+															'h-150px': isPrinting,
 														}
 													)}>
-													<img
-														src={item ?? '/media/icons/zeroloss/default-placeholder.png'}
-														onError={e => {
-															e.currentTarget.src = '/media/icons/zeroloss/default-placeholder.png'
-															e.currentTarget.onerror = null
+													<video
+														controls={false}
+														autoPlay
+														muted
+														loop
+														src={item ?? ''}
+														className="object-fit-cover mx-auto"
+														onClick={() => {
+															window.open(item, '_blank')
 														}}
-														alt="Event Additional Picture"
-														className="w-100 h-100 object-fit-cover"
-														style={{ userSelect: 'none', pointerEvents: 'none' }}
-													/>
+														style={{ maxWidth: '100%', height: '150px' }}>
+														Your browser does not support the video tag.
+													</video>
 												</div>
 											</div>
-										)
+										))}
+
+									{(isPrinting === false ? galleryImages.slice(0, 9) : galleryImages).map(
+										(item: any, index: number) => {
+											return (
+												<div
+													key={`event-additional-picture-${index}`}
+													className={clsx('', {
+														'col-4': isPrinting === false,
+														'col-6': isPrinting === true,
+													})}
+													onClick={() => {
+														onOpenLightBox(index)
+													}}>
+													<div
+														className={clsx(
+															'rounded-3 overflow-hidden cursor-pointer hover-filter-brightness transition-300',
+															{
+																'h-100px': isPrinting === false,
+																'h-150px': isPrinting === true,
+															}
+														)}>
+														<img
+															src={item ?? '/media/icons/zeroloss/default-placeholder.png'}
+															onError={e => {
+																e.currentTarget.src =
+																	'/media/icons/zeroloss/default-placeholder.png'
+																e.currentTarget.onerror = null
+															}}
+															alt="Event Additional Picture"
+															className="w-100 h-100 object-fit-cover"
+															style={{ userSelect: 'none', pointerEvents: 'none' }}
+														/>
+													</div>
+												</div>
+											)
+										}
 									)}
 
 									{/* More Pictures */}

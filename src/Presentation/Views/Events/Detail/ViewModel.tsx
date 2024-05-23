@@ -165,6 +165,24 @@ const ViewModel = () => {
 		return galleries
 			.filter((g: any) => g.isPictureCover === false)
 			.map((g: any) => getMediaPath(g.picturePath))
+			.filter((p: any) => {
+				const isImage =
+					(p ?? '').includes('.png') ||
+					(p ?? '').includes('.jpg') ||
+					(p ?? '').includes('.jpeg')
+				return isImage
+			})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [data])
+	const galleryVideos = useMemo(() => {
+		const galleries = data?.galleries || []
+		return galleries
+			.filter((g: any) => g.isPictureCover === false)
+			.map((g: any) => getMediaPath(g.picturePath))
+			.filter((p: any) => {
+				const isVideo = (p ?? '').includes('.mp4') || (p ?? '').includes('.mov')
+				return isVideo
+			})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data])
 	const locationAddress = useMemo(() => {
@@ -601,7 +619,16 @@ const ViewModel = () => {
 	}
 
 	const onOpenLightBox = (imgIdx: number) => {
-		setImageIdx(imgIdx)
+		let targetIdx = imgIdx
+		if (galleryImages[imgIdx].includes('.mp4') || galleryImages[imgIdx].includes('.mov')) {
+			// Get the first image after the video
+			const firstImageIdx = galleryImages.findIndex(
+				(img: any) => !img.includes('.mp4') && !img.includes('.mov')
+			)
+			targetIdx = firstImageIdx === -1 ? 0 : firstImageIdx
+		}
+
+		setImageIdx(targetIdx)
 		setIsOpenLightBox(true)
 	}
 
@@ -653,6 +680,7 @@ const ViewModel = () => {
 		data: data,
 		pictureCover,
 		galleryImages,
+		galleryVideos,
 		locationAddress,
 		eventSubTypes,
 		steppers,
