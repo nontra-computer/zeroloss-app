@@ -4,9 +4,23 @@ interface TableChartProps {
 	data: any[]
 	parameters: any[]
 	average: { paramName: string; average: string }[]
+	showAverage: boolean
+	showMin: boolean
+	showMax: boolean
+	showDataNumber: boolean
+	showPercentageData: boolean
 }
 
-const TableChart: React.FC<TableChartProps> = ({ data, parameters, average }) => {
+const TableChart: React.FC<TableChartProps> = ({
+	data,
+	parameters,
+	average,
+	showAverage,
+	showMin,
+	showMax,
+	showDataNumber,
+	showPercentageData,
+}) => {
 	return (
 		<>
 			<style>
@@ -58,42 +72,52 @@ const TableChart: React.FC<TableChartProps> = ({ data, parameters, average }) =>
 							))}
 						</tr>
 					))}
-					<tr className="special-row">
-						<td>Average</td>
-						{average.map((avg, index) => (
-							<td key={index}>{avg.average}</td>
-						))}
-					</tr>
+					{showAverage && (
+						<tr className="special-row">
+							<td>Average</td>
+							{average.map((avg, index) => (
+								<td key={index}>{avg.average}</td>
+							))}
+						</tr>
+					)}
 					<tr className="special-row">
 						<td>Standard</td>
 						{parameters.map(param => (
 							<td key={param.id}>1.00</td>
 						))}
 					</tr>
-					<tr className="special-row">
-						<td>Min</td>
-						{parameters.map(param => (
-							<td key={param.id}></td>
-						))}
-					</tr>
-					<tr className="special-row">
-						<td>Max</td>
-						{parameters.map(param => (
-							<td key={param.id}></td>
-						))}
-					</tr>
-					<tr className="special-row">
-						<td>Data Number</td>
-						{parameters.map(param => (
-							<td key={param.id}>0</td>
-						))}
-					</tr>
-					<tr className="special-row">
-						<td>% Data</td>
-						{parameters.map(param => (
-							<td key={param.id}>0.00%</td>
-						))}
-					</tr>
+					{showMin && (
+						<tr className="special-row">
+							<td>Min</td>
+							{parameters.map(param => (
+								<td key={param.id}></td>
+							))}
+						</tr>
+					)}
+					{showMax && (
+						<tr className="special-row">
+							<td>Max</td>
+							{parameters.map(param => (
+								<td key={param.id}></td>
+							))}
+						</tr>
+					)}
+					{showDataNumber && (
+						<tr className="special-row">
+							<td>Data Number</td>
+							{parameters.map(param => (
+								<td key={param.id}>0</td>
+							))}
+						</tr>
+					)}
+					{showPercentageData && (
+						<tr className="special-row">
+							<td>% Data</td>
+							{parameters.map(param => (
+								<td key={param.id}>0.00%</td>
+							))}
+						</tr>
+					)}
 				</tbody>
 			</table>
 		</>

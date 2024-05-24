@@ -1,4 +1,5 @@
-import React from 'react'
+// TimeSeries.tsx
+import React, { useState } from 'react'
 import { PageTitle } from '@/_metronic/layout/core'
 import { Formik, Form, Field } from 'formik'
 import clsx from 'clsx'
@@ -11,12 +12,28 @@ import 'moment/locale/th'
 
 const TimeSeries: React.FC = () => {
 	const { timeStr, themeMode, processData } = useViewModel()
+	const [formValues, setFormValues] = useState({
+		average: '',
+		displayFormat: '',
+		summary: [],
+	})
 
 	const handleSubmit = values => {
 		console.log(values)
+		// Update formValues state
+		setFormValues(values)
 	}
 
 	const { processedData, parameters, average } = processData()
+
+	const { average: averageValue, displayFormat, summary } = formValues
+
+	// Determine which special rows to show based on form values
+	const showAverage = summary.includes('avg')
+	const showMin = summary.includes('low')
+	const showMax = summary.includes('high')
+	const showDataNumber = summary.includes('count')
+	const showPercentageData = summary.includes('percentage')
 
 	return (
 		<React.Fragment>
@@ -45,9 +62,6 @@ const TimeSeries: React.FC = () => {
 					<Formik
 						initialValues={{
 							average: '',
-							baseData: '',
-							averageValue: '',
-							timeUnit: '',
 							displayFormat: '',
 							summary: [],
 						}}
@@ -170,7 +184,7 @@ const TimeSeries: React.FC = () => {
 											</div>
 											<div>
 												<label>
-													<Field type="checkbox" name="summary" value="average" />
+													<Field type="checkbox" name="summary" value="avg" />
 													ค่าเฉลี่ย
 												</label>
 											</div>
@@ -189,6 +203,13 @@ const TimeSeries: React.FC = () => {
 										</div>
 									</div>
 								</div>
+								<div className="row pt-5">
+									<button
+										type="submit"
+										className="col-2 btn btn-md btn-zeroloss-primary-500 text-zeroloss-grey-100 fw-bold me-4 mt-10">
+										<span>ค้นหา</span>
+									</button>
+								</div>
 							</Form>
 						)}
 					</Formik>
@@ -197,7 +218,18 @@ const TimeSeries: React.FC = () => {
 			<div className="row gy-5">
 				<div className="col-12 px-10 py-5">
 					<h1>Charts</h1>
-					<TableChart data={processedData} parameters={parameters} average={average} />
+					<TableChart
+						data={processedData}
+						parameters={parameters}
+						average={average}
+						averageValue={averageValue}
+						displayFormat={displayFormat}
+						showAverage={showAverage}
+						showMin={showMin}
+						showMax={showMax}
+						showDataNumber={showDataNumber}
+						showPercentageData={showPercentageData}
+					/>
 					{/* <LineChart data={processedData} parameters={parameters} /> */}
 					{/* <BarChart data={processedData} parameters={parameters} /> */}
 				</div>
