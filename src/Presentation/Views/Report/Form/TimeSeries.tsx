@@ -219,22 +219,25 @@ const TimeSeries: React.FC = () => {
 			<div className="row gy-5">
 				<div className="col-12 px-10 py-5">
 					<h1>Charts</h1>
-					{/* <TableChart
-						data={processedData}
-						parameters={parameters}
-						average={average}
-						min={stats}
-						max={stats}
-						averageValue={averageValue}
-						displayFormat={displayFormat}
-						showAverage={showAverage}
-						showMin={showMin}
-						showMax={showMax}
-						showDataNumber={showDataNumber}
-						showPercentageData={showPercentageData}
-					/> */}
-					{/* <LineChart data={processedData} parameters={parameters} /> */}
-					<BarChart />
+					{displayFormat === 'table' && (
+						<TableChart
+							data={processedData}
+							parameters={parameters}
+							average={average}
+							min={stats}
+							max={stats}
+							averageValue={averageValue}
+							displayFormat={displayFormat}
+							showAverage={showAverage}
+							showMin={showMin}
+							showMax={showMax}
+							showDataNumber={showDataNumber}
+							showPercentageData={showPercentageData}
+						/>
+					)}
+
+					{/* {displayFormat === 'line' && <LineChart data={processedData} parameters={parameters} />} */}
+					{displayFormat === 'bar' && <BarChart />}
 				</div>
 			</div>
 		</React.Fragment>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
@@ -8,7 +8,6 @@ import { useEventStore } from '@/Store/Event'
 import { useLocationStore } from '@/Store/Location'
 import { toast } from 'react-toastify'
 import moment from 'moment-timezone'
-import data from '../Measurement/data.json' // Make sure this path is correct
 
 const useViewModel = () => {
 	const navigate = useNavigate()
@@ -41,18 +40,29 @@ const useViewModel = () => {
 		themeMode = mode
 	}
 
-	
+	const [data, setData] = useState(null)
 
-	const fetchData = () => {
-		getAllMapMarker()
-		getSummary().then(({ data, success }) => {
-			if (!success) {
-				toast.error(data)
+	const fetchData = async () => {
+		try {
+			const response = await fetch('http://env-0217481.th2.proen.cloud/monitoring/demo')
+			if (!response.ok) {
+				throw new Error('Failed to fetch data')
 			}
-		})
+			const responseData = await response.json()
+			setData(responseData)
+			getAllMapMarker()
+			getSummary().then(({ data, success }) => {
+				if (!success) {
+					toast.error(data)
+				}
+			})
+		} catch (error) {
+			console.error('Error fetching data:', error.message)
+			toast.error('Failed to fetch data')
+		}
 	}
 
-	const onClickView = (path: string) => {
+	const onClickView = path => {
 		navigate(path)
 	}
 
@@ -62,6 +72,7 @@ const useViewModel = () => {
 	}, [])
 
 	const processData = () => {
+		if (!data) return {} // Ensure data is available before processing
 		interface ProcessedDataRow {
 			date: string
 			[key: string]: any

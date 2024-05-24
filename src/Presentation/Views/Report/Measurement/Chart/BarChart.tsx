@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactApexChart from 'react-apexcharts'
 import data from '../data.json'
+import moment from 'moment-timezone'
 
 const BarChart = () => {
 	const renderCharts = () => {
@@ -15,6 +16,10 @@ const BarChart = () => {
 					data: parameterValues,
 				},
 			]
+
+			const formattedDates = data.data.map(item =>
+				moment(item.date_time).format('DD/MM/YYYY HH:mm')
+			)
 
 			const options = {
 				chart: {
@@ -37,7 +42,7 @@ const BarChart = () => {
 					colors: ['transparent'],
 				},
 				xaxis: {
-					categories: data.data.map(item => item.date_time),
+					categories: formattedDates,
 				},
 				yaxis: {
 					title: {
