@@ -11,6 +11,9 @@ interface TableChartProps {
 	showMax: boolean
 	showDataNumber: boolean
 	showPercentageData: boolean
+	windSpeedMin: any
+	windSpeedMax: any
+	windSpeedAvg: any
 }
 
 const TableChart: React.FC<TableChartProps> = ({
@@ -24,39 +27,41 @@ const TableChart: React.FC<TableChartProps> = ({
 	showMax,
 	showDataNumber,
 	showPercentageData,
+	windSpeedMin,
+	windSpeedMax,
+	windSpeedAvg,
 }) => {
 	return (
 		<>
 			<style>
 				{`
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
 
-    
-      tbody td {
-        padding: 8px;
-        border: 1px solid #ddd;
-      }
+                tbody td {
+                    padding: 8px;
+                    border: 1px solid #ddd;
+                }
 
-      tbody tr:nth-child(odd) {
-        background-color: #f9f9f9; /* Light gray */
-      }
+                tbody tr:nth-child(odd) {
+                    background-color: #f9f9f9; /* Light gray */
+                }
 
-      tbody tr:nth-child(even) {
-        background-color: #fff; /* White */
-      }
+                tbody tr:nth-child(even) {
+                    background-color: #fff; /* White */
+                }
 
-      /* Styles for the last six rows */
-      .special-row:nth-child(odd) {
-        background-color: #788ca2; /* Light blue */
-      }
+                /* Styles for the last six rows */
+                .special-row:nth-child(odd) {
+                    background-color: #788ca2; /* Light blue */
+                }
 
-      .special-row:nth-child(even) {
-        background-color: #b3e0ff ; /* Light gray */
-      }
-    `}
+                .special-row:nth-child(even) {
+                    background-color: #b3e0ff ; /* Light gray */
+                }
+            `}
 			</style>
 			<table>
 				<thead>
@@ -65,6 +70,9 @@ const TableChart: React.FC<TableChartProps> = ({
 						{parameters.map(param => (
 							<th key={param.id}>{param.name}</th>
 						))}
+						{/* Added column headers for Wind Speed and Wind Direction */}
+						<th>Wind Speed</th>
+						<th>Wind Direction</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -74,6 +82,9 @@ const TableChart: React.FC<TableChartProps> = ({
 							{parameters.map(param => (
 								<td key={param.id}>{row[`p_${param.name}`]}</td>
 							))}
+
+							<td>{row.wind_speed}</td>
+							<td>{row.wind_direction}</td>
 						</tr>
 					))}
 					{showAverage && (
@@ -82,6 +93,9 @@ const TableChart: React.FC<TableChartProps> = ({
 							{average.map((avg, index) => (
 								<td key={index}>{avg.average}</td>
 							))}
+
+							<td>{windSpeedAvg}</td>
+							<td></td>
 						</tr>
 					)}
 					<tr className="special-row">
@@ -89,6 +103,9 @@ const TableChart: React.FC<TableChartProps> = ({
 						{parameters.map(param => (
 							<td key={param.id}>1.00</td>
 						))}
+
+						<td></td>
+						<td></td>
 					</tr>
 					{showMin && (
 						<tr className="special-row">
@@ -99,6 +116,9 @@ const TableChart: React.FC<TableChartProps> = ({
 									{min.find(minVal => minVal.paramName === param.name)?.min || ''}
 								</td>
 							))}
+
+							<td>{windSpeedMin}</td>
+							<td></td>
 						</tr>
 					)}
 					{showMax && (
@@ -109,6 +129,9 @@ const TableChart: React.FC<TableChartProps> = ({
 									{max.find(maxVal => maxVal.paramName === param.name)?.max || ''}
 								</td>
 							))}
+
+							<td>{windSpeedMax}</td>
+							<td></td>
 						</tr>
 					)}
 					{showDataNumber && (
@@ -117,6 +140,9 @@ const TableChart: React.FC<TableChartProps> = ({
 							{parameters.map(param => (
 								<td key={param.id}>0</td>
 							))}
+
+							<td></td>
+							<td></td>
 						</tr>
 					)}
 					{showPercentageData && (
@@ -125,6 +151,9 @@ const TableChart: React.FC<TableChartProps> = ({
 							{parameters.map(param => (
 								<td key={param.id}>0.00%</td>
 							))}
+
+							<td></td>
+							<td></td>
 						</tr>
 					)}
 				</tbody>

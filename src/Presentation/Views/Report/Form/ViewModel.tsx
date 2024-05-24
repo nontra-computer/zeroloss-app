@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
@@ -8,6 +8,7 @@ import { useEventStore } from '@/Store/Event'
 import { useLocationStore } from '@/Store/Location'
 import { toast } from 'react-toastify'
 import moment from 'moment-timezone'
+import data from '../Measurement/data.json' // Make sure this path is correct
 
 const useViewModel = () => {
 	const navigate = useNavigate()
@@ -40,29 +41,16 @@ const useViewModel = () => {
 		themeMode = mode
 	}
 
-	const [data, setData] = useState(null)
-
-	const fetchData = async () => {
-		try {
-			const response = await fetch('http://env-0217481.th2.proen.cloud/monitoring/demo')
-			if (!response.ok) {
-				throw new Error('Failed to fetch data')
+	const fetchData = () => {
+		getAllMapMarker()
+		getSummary().then(({ data, success }) => {
+			if (!success) {
+				toast.error(data)
 			}
-			const responseData = await response.json()
-			setData(responseData)
-			getAllMapMarker()
-			getSummary().then(({ data, success }) => {
-				if (!success) {
-					toast.error(data)
-				}
-			})
-		} catch (error) {
-			console.error('Error fetching data:', error.message)
-			toast.error('Failed to fetch data')
-		}
+		})
 	}
 
-	const onClickView = path => {
+	const onClickView = (path: string) => {
 		navigate(path)
 	}
 
@@ -72,7 +60,6 @@ const useViewModel = () => {
 	}, [])
 
 	const processData = () => {
-		if (!data) return {}
 		interface ProcessedDataRow {
 			date: string
 			[key: string]: any
@@ -81,11 +68,13 @@ const useViewModel = () => {
 		const processedData = data.data.map(item => {
 			const processedRow = {
 				date: moment(item.date_time).format('DD/MM/YYYY HH:mm'),
+				wind_speed: item.wind_speed,
+				wind_direction: item.wind_direction,
 			}
 
 			data.parameters.forEach(param => {
 				const paramName = param.name
-				const paramNumber = paramName.split('-')[1] ?? ''
+				const paramNumber = paramName.split('-')[1]
 				const paramKey = `p${paramNumber}`
 				processedRow[`p_${paramName}`] = item[paramKey]
 			})
@@ -93,7 +82,9 @@ const useViewModel = () => {
 			return processedRow
 		})
 
-		const parameters = data.parameters
+		const parameters = data.parameters.filter(param => param.id !== 31 && param.id !== 32)
+
+		console.log(parameters)
 
 		const stats = parameters.map(param => {
 			const paramName = param.name
@@ -114,7 +105,22 @@ const useViewModel = () => {
 			return { paramName, average: average.toFixed(2) }
 		})
 
-		return { processedData, parameters, average, stats }
+		// Calculate min, max, and average for wind_speed
+		const windSpeedValues = processedData.map(row => row.wind_speed)
+		const windSpeedMin = Math.min(...windSpeedValues).toFixed(2)
+		const windSpeedMax = Math.max(...windSpeedValues).toFixed(2)
+		const windSpeedTotal = windSpeedValues.reduce((sum, value) => sum + value, 0)
+		const windSpeedAverage = windSpeedTotal / processedData.length
+
+		return {
+			processedData,
+			parameters,
+			average,
+			stats,
+			windSpeedMin,
+			windSpeedMax,
+			windSpeedAverage: windSpeedAverage.toFixed(2),
+		}
 	}
 
 	return {
