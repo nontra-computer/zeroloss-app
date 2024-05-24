@@ -6,6 +6,7 @@ import clsx from 'clsx'
 
 import TableChart from '../Measurement/Chart/TableChart'
 import BarChart from '../Measurement/Chart/BarChart'
+import LineChart from '../Measurement/Chart/LineChart'
 import useViewModel from './ViewModel'
 import FormHeader from '../Component/FormHeader'
 
@@ -107,7 +108,6 @@ const TimeSeries: React.FC = () => {
 																	<div className="form-group">
 																		<label>ข้อมูลฐาน</label>
 																		<Field as="select" name="baseData" className="form-control">
-																			<option value="">Select an option</option>
 																			<option value="60">60 นาที</option>
 																			<option value="30">30 นาที</option>
 																		</Field>
@@ -236,7 +236,7 @@ const TimeSeries: React.FC = () => {
 						/>
 					)}
 
-					{/* {displayFormat === 'line' && <LineChart data={processedData} parameters={parameters} />} */}
+					{displayFormat === 'line' && <LineChart />}
 					{displayFormat === 'bar' && <BarChart />}
 				</div>
 			</div>

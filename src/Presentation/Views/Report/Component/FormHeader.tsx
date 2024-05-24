@@ -62,10 +62,9 @@ const FormHeader = ({ pagetitle }) => {
 										id="IndicatorStation"
 										name="IndicatorStation"
 										className="form-control">
-										<option value="">Select an option</option>
-										<option value="option1">Option 1</option>
-										<option value="option2">Option 2</option>
-										<option value="option3">Option 3</option>
+										<option value="option1">โรงจ่ายคลอรีน 1</option>
+										<option value="option2">โรงจ่ายคลอรีน 2</option>
+										<option value="option3">โรงจ่ายคลอรีน 3</option>
 									</Field>
 									<ErrorMessage name="IndicatorStation" component="div" className="error-message" />
 								</div>

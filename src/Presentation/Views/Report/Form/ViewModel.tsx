@@ -72,7 +72,7 @@ const useViewModel = () => {
 	}, [])
 
 	const processData = () => {
-		if (!data) return {} // Ensure data is available before processing
+		if (!data) return {}
 		interface ProcessedDataRow {
 			date: string
 			[key: string]: any
@@ -85,7 +85,7 @@ const useViewModel = () => {
 
 			data.parameters.forEach(param => {
 				const paramName = param.name
-				const paramNumber = paramName.split('-')[1]
+				const paramNumber = paramName.split('-')[1] ?? ''
 				const paramKey = `p${paramNumber}`
 				processedRow[`p_${paramName}`] = item[paramKey]
 			})

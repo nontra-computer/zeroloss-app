@@ -1,29 +1,67 @@
-import React, { useEffect, useRef } from 'react'
-import ApexCharts from 'apexcharts'
+import React from 'react'
+import ReactApexChart from 'react-apexcharts'
+import data from '../data.json'
+import moment from 'moment-timezone'
 
-export const LineChart = ({ data, parameters }) => {
-	const chartRef = useRef(null)
+const LineChart = () => {
+	const renderCharts = () => {
+		return data.parameters.map(parameter => {
+			const parameterId = parameter.id
+			const parameterName = parameter.name
+			const parameterValues = data.data.map(item => item[`p${parameterId}`])
 
-	useEffect(() => {
-		const series = parameters.map(param => ({
-			name: param.name,
-			data: data.map(item => item[`GD1_${param.id}`]),
-		}))
+			const seriesData = [
+				{
+					name: parameterName,
+					data: parameterValues,
+				},
+			]
 
-		const options = {
-			chart: {
-				type: 'line',
-				height: 350,
-			},
-			series,
-			xaxis: {
-				categories: data.map(item => item.date),
-			},
-		}
+			const formattedDates = data.data.map(item =>
+				moment(item.date_time).format('DD/MM/YYYY HH:mm')
+			)
 
-		const chart = new ApexCharts(chartRef.current, options)
-		chart.render()
-	}, [data, parameters])
+			const options = {
+				chart: {
+					type: 'line', // Change chart type to 'line'
+					height: 400,
+				},
+				stroke: {
+					show: true,
+					width: 2,
+					curve: 'smooth', // Add this line for smooth curves
+					colors: ['#008FFB'], // Customize line color if needed
+				},
+				dataLabels: {
+					enabled: false,
+				},
+				xaxis: {
+					categories: formattedDates,
+				},
+				yaxis: {
+					title: {
+						text: 'Value',
+					},
+				},
+				tooltip: {
+					y: {
+						formatter: function (value) {
+							return value
+						},
+					},
+				},
+			}
 
-	return <div ref={chartRef}></div>
+			return (
+				<div key={parameterId}>
+					<h2>{parameterName}</h2>
+					<ReactApexChart options={options} series={seriesData} type="line" height={400} />
+				</div>
+			)
+		})
+	}
+
+	return <div>{renderCharts()}</div>
 }
+
+export default LineChart
