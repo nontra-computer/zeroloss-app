@@ -105,21 +105,11 @@ const useViewModel = () => {
 			return { paramName, average: average.toFixed(2) }
 		})
 
-		// Calculate min, max, and average for wind_speed
-		const windSpeedValues = processedData.map(row => row.wind_speed)
-		const windSpeedMin = Math.min(...windSpeedValues).toFixed(2)
-		const windSpeedMax = Math.max(...windSpeedValues).toFixed(2)
-		const windSpeedTotal = windSpeedValues.reduce((sum, value) => sum + value, 0)
-		const windSpeedAverage = windSpeedTotal / processedData.length
-
 		return {
 			processedData,
 			parameters,
 			average,
 			stats,
-			windSpeedMin,
-			windSpeedMax,
-			windSpeedAverage: windSpeedAverage.toFixed(2),
 		}
 	}
 

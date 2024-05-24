@@ -11,9 +11,6 @@ interface TableChartProps {
 	showMax: boolean
 	showDataNumber: boolean
 	showPercentageData: boolean
-	windSpeedMin: any
-	windSpeedMax: any
-	windSpeedAvg: any
 }
 
 const TableChart: React.FC<TableChartProps> = ({
@@ -94,7 +91,7 @@ const TableChart: React.FC<TableChartProps> = ({
 								<td key={index}>{avg.average}</td>
 							))}
 
-							<td>{windSpeedAvg}</td>
+							<td></td>
 							<td></td>
 						</tr>
 					)}
@@ -117,7 +114,7 @@ const TableChart: React.FC<TableChartProps> = ({
 								</td>
 							))}
 
-							<td>{windSpeedMin}</td>
+							<td></td>
 							<td></td>
 						</tr>
 					)}
@@ -130,7 +127,7 @@ const TableChart: React.FC<TableChartProps> = ({
 								</td>
 							))}
 
-							<td>{windSpeedMax}</td>
+							<td></td>
 							<td></td>
 						</tr>
 					)}
