@@ -24,7 +24,7 @@ const TimeSeries: React.FC = () => {
 		setFormValues(values)
 	}
 
-	const { processedData, parameters, average } = processData()
+	const { processedData, parameters, average, stats } = processData()
 
 	const { average: averageValue, displayFormat, summary } = formValues
 
@@ -222,6 +222,8 @@ const TimeSeries: React.FC = () => {
 						data={processedData}
 						parameters={parameters}
 						average={average}
+						min={stats}
+						max={stats}
 						averageValue={averageValue}
 						displayFormat={displayFormat}
 						showAverage={showAverage}

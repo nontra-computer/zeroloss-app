@@ -87,6 +87,15 @@ const useViewModel = () => {
 
 		const parameters = data.parameters
 
+		const stats = parameters.map(param => {
+			const paramName = param.name
+			const values = processedData.map(row => row[`p_${paramName}`])
+			const min = Math.min(...values).toFixed(2)
+			const max = Math.max(...values).toFixed(2)
+
+			return { paramName, min, max }
+		})
+
 		const average = parameters.map(param => {
 			const paramName = param.name
 			const total = processedData.reduce(
@@ -97,7 +106,7 @@ const useViewModel = () => {
 			return { paramName, average: average.toFixed(2) }
 		})
 
-		return { processedData, parameters, average }
+		return { processedData, parameters, average, stats }
 	}
 
 	return {

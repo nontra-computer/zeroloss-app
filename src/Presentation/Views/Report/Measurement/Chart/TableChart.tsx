@@ -4,6 +4,8 @@ interface TableChartProps {
 	data: any[]
 	parameters: any[]
 	average: { paramName: string; average: string }[]
+	min: { paramName: string; min: string }[]
+	max: { paramName: string; max: string }[]
 	showAverage: boolean
 	showMin: boolean
 	showMax: boolean
@@ -15,6 +17,8 @@ const TableChart: React.FC<TableChartProps> = ({
 	data,
 	parameters,
 	average,
+	min,
+	max,
 	showAverage,
 	showMin,
 	showMax,
@@ -90,7 +94,10 @@ const TableChart: React.FC<TableChartProps> = ({
 						<tr className="special-row">
 							<td>Min</td>
 							{parameters.map(param => (
-								<td key={param.id}></td>
+								<td key={param.id}>
+									{' '}
+									{min.find(minVal => minVal.paramName === param.name)?.min || ''}
+								</td>
 							))}
 						</tr>
 					)}
@@ -98,7 +105,9 @@ const TableChart: React.FC<TableChartProps> = ({
 						<tr className="special-row">
 							<td>Max</td>
 							{parameters.map(param => (
-								<td key={param.id}></td>
+								<td key={param.id}>
+									{max.find(maxVal => maxVal.paramName === param.name)?.max || ''}
+								</td>
 							))}
 						</tr>
 					)}
