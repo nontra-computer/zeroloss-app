@@ -1,31 +1,71 @@
-import React, { useEffect, useRef } from 'react'
-import ApexCharts from 'apexcharts'
+import React from 'react'
+import ReactApexChart from 'react-apexcharts'
+import data from '../data.json'
 
-export const BarChart = ({ data, parameters }) => {
-	const chartRef = useRef(null)
+const BarChart = () => {
+	const renderCharts = () => {
+		return data.parameters.map(parameter => {
+			const parameterId = parameter.id
+			const parameterName = parameter.name
+			const parameterValues = data.data.map(item => item[`p${parameterId}`])
 
-	useEffect(() => {
-		const series = parameters.map(param => ({
-			name: param.name,
-			data: data.map(item => item[`GD1_${param.id}`]),
-		}))
+			const seriesData = [
+				{
+					name: parameterName,
+					data: parameterValues,
+				},
+			]
 
-		const options = {
-			chart: {
-				type: 'bar',
-				height: 350,
-			},
-			series,
-			xaxis: {
-				categories: data.map(item => item.date),
-			},
-		}
+			const options = {
+				chart: {
+					type: 'bar',
+					height: 400,
+				},
+				plotOptions: {
+					bar: {
+						horizontal: false,
+						columnWidth: '55%',
+						endingShape: 'rounded',
+					},
+				},
+				dataLabels: {
+					enabled: false,
+				},
+				stroke: {
+					show: true,
+					width: 2,
+					colors: ['transparent'],
+				},
+				xaxis: {
+					categories: data.data.map(item => item.date_time),
+				},
+				yaxis: {
+					title: {
+						text: 'Value',
+					},
+				},
+				fill: {
+					opacity: 1,
+				},
+				tooltip: {
+					y: {
+						formatter: function (value) {
+							return value
+						},
+					},
+				},
+			}
 
-		const chart = new ApexCharts(chartRef.current, options)
-		chart.render()
+			return (
+				<div key={parameterId}>
+					<h2>{parameterName}</h2>
+					<ReactApexChart options={options} series={seriesData} type="bar" height={400} />
+				</div>
+			)
+		})
+	}
 
-		return () => chart.destroy()
-	}, [data, parameters])
-
-	return <div ref={chartRef}></div>
+	return <div>{renderCharts()}</div>
 }
+
+export default BarChart

@@ -5,6 +5,7 @@ import { Formik, Form, Field } from 'formik'
 import clsx from 'clsx'
 
 import TableChart from '../Measurement/Chart/TableChart'
+import BarChart from '../Measurement/Chart/BarChart'
 import useViewModel from './ViewModel'
 import FormHeader from '../Component/FormHeader'
 
@@ -218,7 +219,7 @@ const TimeSeries: React.FC = () => {
 			<div className="row gy-5">
 				<div className="col-12 px-10 py-5">
 					<h1>Charts</h1>
-					<TableChart
+					{/* <TableChart
 						data={processedData}
 						parameters={parameters}
 						average={average}
@@ -231,9 +232,9 @@ const TimeSeries: React.FC = () => {
 						showMax={showMax}
 						showDataNumber={showDataNumber}
 						showPercentageData={showPercentageData}
-					/>
+					/> */}
 					{/* <LineChart data={processedData} parameters={parameters} /> */}
-					{/* <BarChart data={processedData} parameters={parameters} /> */}
+					<BarChart />
 				</div>
 			</div>
 		</React.Fragment>

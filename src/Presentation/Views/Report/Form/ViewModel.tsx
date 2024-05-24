@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useCurrentTime } from '@/Hooks/useCurrentTime'
 import { useLang } from '@/_metronic/i18n/Metronici18n'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
@@ -11,7 +11,6 @@ import moment from 'moment-timezone'
 import data from '../Measurement/data.json' // Make sure this path is correct
 
 const useViewModel = () => {
-	const location = useLocation()
 	const navigate = useNavigate()
 	const selectedLang = useLang()
 	const intl = useIntl()
@@ -42,9 +41,7 @@ const useViewModel = () => {
 		themeMode = mode
 	}
 
-	const isShowTable = location.pathname === '/dashboard/overview/table'
-	const isShowMap = location.pathname === '/dashboard/overview/map'
-	const isShowCalendar = location.pathname === '/dashboard/overview/calendar'
+	
 
 	const fetchData = () => {
 		getAllMapMarker()
@@ -112,9 +109,6 @@ const useViewModel = () => {
 	return {
 		timeStr,
 		themeMode,
-		isShowTable,
-		isShowMap,
-		isShowCalendar,
 		summary,
 		onClickView,
 		processData,
