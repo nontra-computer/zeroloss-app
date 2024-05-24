@@ -99,6 +99,7 @@ const Filter: React.FC<Props> = ({
 							<div className="col-12">
 								<label className="form-label">ประเภทสถานที่</label>
 								<Select
+									isClearable
 									placeholder="เลือกประเภทสถานที่"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
 									className="w-100 shadow-sm"
@@ -141,6 +142,7 @@ const Filter: React.FC<Props> = ({
 							<div className="col-12">
 								<label className="form-label">ระยะห่างจากจุดเกิดเหตุ</label>
 								<Select
+									isClearable
 									placeholder="เลือกระยะห่างจากจุดเกิดเหตุ"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
 									className="w-100 shadow-sm"

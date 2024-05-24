@@ -100,12 +100,14 @@ const ViewModel = () => {
 	}, [currentTime, intl, selectedLang])
 	const { mode } = useThemeMode()
 
+	const [viewType, setViewType] = useState<'default' | 'map'>('default')
+
 	const [openChangeEventStatus, setOpenChangeEventStatus] = useState(false)
 
 	const [isOpenLightBox, setIsOpenLightBox] = useState(false)
 	const [imageIdx, setImageIdx] = useState(0)
 
-	const isDefaultView = location.pathname.includes('map') ? false : true
+	const isDefaultView = viewType === 'default'
 	const isMapView = !isDefaultView
 
 	const [eventMessagePage, setEventMessagePage] = useState(1)
@@ -167,9 +169,7 @@ const ViewModel = () => {
 			.map((g: any) => getMediaPath(g.picturePath))
 			.filter((p: any) => {
 				const isImage =
-					(p ?? '').includes('.png') ||
-					(p ?? '').includes('.jpg') ||
-					(p ?? '').includes('.jpeg')
+					(p ?? '').includes('.png') || (p ?? '').includes('.jpg') || (p ?? '').includes('.jpeg')
 				return isImage
 			})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -638,14 +638,15 @@ const ViewModel = () => {
 	}
 
 	const onChangeViewType = (type: 'default' | 'map') => {
-		if (eventId) {
-			let path = `/events/detail/${eventId}`
-			if (type === 'map') {
-				path += '/map'
-			}
+		// if (eventId) {
+		// 	let path = `/events/detail/${eventId}`
+		// 	if (type === 'map') {
+		// 		path += '/map'
+		// 	}
 
-			navigate(path)
-		}
+		// 	navigate(path)
+		// }
+		setViewType(type)
 	}
 
 	const onViewInDetail = () => {

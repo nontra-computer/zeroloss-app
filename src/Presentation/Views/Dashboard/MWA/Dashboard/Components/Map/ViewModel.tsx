@@ -29,7 +29,7 @@ const ViewModel = () => {
 	const weatherInfo = useMemo(() => {
 		if (meteorologocalStation) {
 			return {
-				metStatus: meteorologocalStation.metStatus === 1,
+				metStatus: meteorologocalStation.isOnline === 1 || meteorologocalStation.isOnline === true,
 				wdText: meteorologocalStation.wdText,
 				ws: meteorologocalStation.ws,
 				temp: meteorologocalStation.temp,

@@ -228,13 +228,17 @@ const EventDetailView: React.FC = () => {
 									{isPrinting === false &&
 										galleryVideos.map((item: any, index: number) => (
 											<div
-												key={`event-additional-picture-${index}`}
+												key={`event-additional-video-${index}`}
+												id={`event-additional-video-${index}`}
 												className={clsx('', {
 													'col-4': isPrinting === false,
 													'col-6': isPrinting,
 												})}
 												onClick={() => {
-													window.open(item, '_blank')
+													const el = document.getElementById(`event-additional-video-${index}`)
+													if (el) {
+														el.requestFullscreen()
+													}
 												}}>
 												<div
 													className={clsx(

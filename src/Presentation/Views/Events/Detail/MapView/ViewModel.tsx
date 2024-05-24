@@ -145,6 +145,16 @@ const ViewModel = () => {
 
 	const confirmFilter = () => {
 		if (
+			filter.locationTypeId === null ||
+			filter.locationTypeId === 0 ||
+			filter.locationTypeId === '' ||
+			filter.locationTypeId === undefined
+		) {
+			toast.error('กรุณาระบุประเภทสถานที่')
+			return
+		}
+
+		if (
 			(filter.locationTypeId !== null && filter.locationTypeId !== 0) ||
 			filter.name !== '' ||
 			filter.distance !== null

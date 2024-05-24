@@ -27,6 +27,9 @@ const ViewModel = () => {
 	const [searchText, setSearchText] = useState('')
 	const [selectedEventTypeId, setSelectedEventTypeId] = useState<number>(0)
 
+	const [isPlayVideo, setIsPlayVideo] = useState<boolean>(false)
+	const [videoUrl, setVideoUrl] = useState<string>('')
+
 	// const isAdmin = useMemo(() => {
 	// 	return true
 	// }, [])
@@ -274,16 +277,23 @@ const ViewModel = () => {
 												</span>
 											)}
 											{hasVideo && (
-												<span
-													className={'badge text-zeroloss-grey-700 bg-zeroloss-warning-300'}
-													onClick={() => onViewReportingMedia(getEventMediaPath(videoMediaPath))}>
+												<Fragment>
 													<span
-														className={
-															'p-1 rounded-circle w-2px h-2px me-2 animation-blink bg-zeroloss-warning'
-														}
-													/>{' '}
-													วีดีโอ
-												</span>
+														className={'badge text-zeroloss-grey-700 bg-zeroloss-warning-300'}
+														onClick={() => {
+															// onViewReportingMedia(getEventMediaPath(videoMediaPath))
+
+															setIsPlayVideo(true)
+															setVideoUrl(getEventMediaPath(videoMediaPath))
+														}}>
+														<span
+															className={
+																'p-1 rounded-circle w-2px h-2px me-2 animation-blink bg-zeroloss-warning'
+															}
+														/>{' '}
+														วีดีโอ
+													</span>
+												</Fragment>
 											)}
 										</div>
 									</div>
@@ -353,7 +363,34 @@ const ViewModel = () => {
 		// eslint-disable-next-line
 	}, [])
 
+	useEffect(() => {
+		const el = document.getElementById('event-table-overview-video') as HTMLVideoElement
+
+		if (el) {
+			if (isPlayVideo) {
+				el.requestFullscreen()
+			}
+		}
+	}, [isPlayVideo])
+
+	useEffect(() => {
+		const handleExitFullscreen = () => {
+			if (!document.fullscreenElement) {
+				setIsPlayVideo(false)
+				setVideoUrl('')
+			}
+		}
+
+		document.addEventListener('fullscreenchange', handleExitFullscreen)
+
+		return () => {
+			document.removeEventListener('fullscreenchange', handleExitFullscreen)
+		}
+	}, [])
+
 	return {
+		isPlayVideo,
+		videoUrl,
 		isMobile,
 		isLoading,
 		themeMode,

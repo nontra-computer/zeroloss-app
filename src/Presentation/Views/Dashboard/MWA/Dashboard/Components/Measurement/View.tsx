@@ -8,8 +8,6 @@ import useViewModel from './ViewModel'
 const Measurement: React.FC = () => {
 	const { isMobile, isLargeMobile, data, intl, themeMode } = useViewModel()
 
-	console.log('isLargeMobile', isLargeMobile)
-
 	return (
 		<div className="row gy-5">
 			<div className="col-12">
