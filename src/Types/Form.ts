@@ -171,6 +171,7 @@ export interface FormDragAndDropFileProp {
 	multiple?: boolean
 	files?: File[]
 	onFileUpload?: (files: FileList) => void
+	customHelpText?: string | JSX.Element
 }
 
 /////////////////////////

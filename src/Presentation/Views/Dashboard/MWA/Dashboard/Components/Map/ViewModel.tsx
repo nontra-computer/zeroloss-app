@@ -25,15 +25,16 @@ const ViewModel = () => {
 	const buildingOne = stations.find((b: any) => b.id === 1)
 	const buildingTwo = stations.find((b: any) => b.id === 2)
 	const buildingThree = stations.find((b: any) => b.id === 3)
+	const meteorologocalStation = stations.find((b: any) => b.id === 9999)
 	const weatherInfo = useMemo(() => {
-		if (buildingOne) {
+		if (meteorologocalStation) {
 			return {
-				metStatus: buildingOne.metStatus === 1,
-				wdText: buildingOne.wdText,
-				ws: buildingOne.ws,
-				temp: buildingOne.temp,
-				rh: buildingOne.rh,
-				bp: buildingOne.bp,
+				metStatus: meteorologocalStation.isOnline === 1 || meteorologocalStation.isOnline === true,
+				wdText: meteorologocalStation.wdText,
+				ws: meteorologocalStation.ws,
+				temp: meteorologocalStation.temp,
+				rh: meteorologocalStation.rh,
+				bp: meteorologocalStation.bp,
 			}
 		} else {
 			return {
@@ -45,12 +46,14 @@ const ViewModel = () => {
 				bp: 0,
 			}
 		}
-	}, [buildingOne])
+	}, [meteorologocalStation])
 
-	const stationDropdownOptions = stations.map((b: any) => ({
-		label: b.building,
-		value: b.id,
-	}))
+	const stationDropdownOptions = stations
+		.map((b: any) => ({
+			label: b.building,
+			value: b.id,
+		}))
+		.filter((b: any) => b.value !== 9999)
 
 	let themeMode = ''
 	if (mode === 'system') {

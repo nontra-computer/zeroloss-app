@@ -7,5 +7,9 @@ export interface LocationMeasurementStationProps {
 	popup?: React.FunctionComponent<any>
 	onClick?: (data: any) => void
 	id?: number
+	measurementTypeId?: number
 	title?: string
+	state?: number
+	status?: boolean
+	dataStatus?: boolean
 }

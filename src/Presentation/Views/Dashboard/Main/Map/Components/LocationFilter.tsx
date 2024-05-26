@@ -89,8 +89,8 @@ const LocationFilter: React.FC<Props> = ({
 									label="ค้นหาด้วยชื่อสถานที่"
 									placeholder=""
 									additionalClassName="fs-7 bg-zeroloss-base-white"
-									// value={filter.contract_code}
-									// onChange={e => onChangeFilter('contract_code', e.target.value)}
+									value={filter.locationName}
+									onChange={e => onChangeFilter('locationName', e.target.value)}
 								/>
 							</div>
 							{/* END:: Search Text */}

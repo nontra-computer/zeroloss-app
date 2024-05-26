@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react'
 import { TableContext } from '@/Context/Table'
 import { useNavigate } from 'react-router-dom'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
@@ -10,6 +10,7 @@ import moment from 'moment'
 import Skeleton from 'react-loading-skeleton'
 import DoubleLineImage from '@/Presentation/Components/Table/Cells/DoubleLineImage'
 import DoubleLine from '@/Presentation/Components/Table/Cells/DoubleLine'
+import { EventState } from '@/Configuration/EventState'
 
 const ViewModel = () => {
 	const navigate = useNavigate()
@@ -25,6 +26,9 @@ const ViewModel = () => {
 
 	const [searchText, setSearchText] = useState('')
 	const [selectedEventTypeId, setSelectedEventTypeId] = useState<number>(0)
+
+	const [isPlayVideo, setIsPlayVideo] = useState<boolean>(false)
+	const [videoUrl, setVideoUrl] = useState<string>('')
 
 	// const isAdmin = useMemo(() => {
 	// 	return true
@@ -97,6 +101,14 @@ const ViewModel = () => {
 		// navigate(`/events/detail/${id}`)
 	}
 
+	const onViewReportingMedia = (path: string) => {
+		const a = document.createElement('a')
+		a.href = path
+		a.target = '_blank'
+		a.rel = 'noopener noreferrer'
+		a.click()
+	}
+
 	const TABLE_CONFIGS: any[] = [
 		{
 			Header: 'รายชื่อเหตุการณ์',
@@ -151,22 +163,26 @@ const ViewModel = () => {
 			Cell: ({ value, row }: any) => {
 				return (
 					<span
-						className={clsx('badge text-zeroloss-grey-700', {
+						className={clsx('badge', {
+							'text-zeroloss-grey-700': value !== 5,
+							'text-zeroloss-base-white': value === 5,
 							'bg-zeroloss-error-300': value === 1,
 							'bg-zeroloss-warning-300': value === 2,
 							'bg-zeroloss-success-300': value === 3,
 							'bg-zeroloss-primary-300': value === 4,
 							'bg-zeroloss-purple-1': value === 5,
 							'bg-zeroloss-primary-200': value === 6,
+							'bg-zeroloss-grey-200': value === 7,
 						})}>
 						<span
-							className={clsx('p-1 rounded-circle w-2px h-2px me-2 animation-blink', {
+							className={clsx('p-1 rounded-circle w-2px h-2px me-2', {
 								'bg-zeroloss-error': value === 1,
 								'bg-zeroloss-warning': value === 2,
 								'bg-zeroloss-success': value === 3,
 								'bg-zeroloss-primary': value === 4,
 								'bg-zeroloss-brand-600': value === 5,
 								'bg-zeroloss-primary-400': value === 6,
+								'bg-zeroloss-grey-400': value === 7,
 							})}
 						/>{' '}
 						{row?.original?.eventTypeTitle}
@@ -176,34 +192,114 @@ const ViewModel = () => {
 		},
 		{
 			Header: 'Status',
-			accessor: 'status',
+			accessor: 'state',
 			minWidth: is4K || is8K ? 60 : 40,
-			Cell: () => {
+			Cell: ({ value }: any) => {
 				return (
 					<div
 						className={clsx(
 							'border-radius-6px badge text-zeroloss-grey-900 bg-zeroloss-base-white border border-zeroloss-grey-200'
 						)}>
-						<span
-							className={clsx('me-2 bullet bullet-dot h-6px w-6px animation-blink', {
-								'bg-success': true,
-								// 'bg-danger': !weatherInfo.metStatus,
-							})}></span>
-						ปิดงานแล้ว
+						{[1, 3, 4].includes(value) && (
+							<span
+								className={clsx('me-2 bullet bullet-dot h-6px w-6px', {
+									'bg-success': value === 4,
+									'bg-danger animation-blink': value === 1 || value === 3,
+								})}></span>
+						)}
+						{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+						{/* @ts-ignore */}
+						{EventState[value] ?? '-'}
 					</div>
 				)
 			},
 		},
 		{
-			Header: 'About',
+			Header: 'News',
 			accessor: 'about',
 			minWidth: is4K || is8K ? 450 : 300,
 			Cell: (props: any) => {
+				const eventMessage = props.row.original.lastUpdate
+				const medias = eventMessage?.eventMedias ?? []
+				const hasImage =
+					medias.length > 0
+						? medias.find(
+								(m: any) =>
+									m.picturePath.includes('.png') ||
+									m.picturePath.includes('.jpg') ||
+									m.picturePath.includes('.jpeg')
+							)
+						: false
+
+				const hasVideo =
+					medias.length > 0
+						? medias.find(
+								(m: any) =>
+									m.picturePath.includes('.mp4') ||
+									m.picturePath.includes('.avi') ||
+									m.picturePath.includes('.mov') ||
+									m.picturePath.includes('.flv')
+							)
+						: false
+
+				const mediaPath = getEventMediaPath(medias?.[0]?.picturePath)
+				const videoMediaPath = (medias ?? []).find(
+					(m: any) =>
+						m.picturePath.includes('.mp4') ||
+						m.picturePath.includes('.avi') ||
+						m.picturePath.includes('.mov') ||
+						m.picturePath.includes('.flv')
+				)?.picturePath
+
 				return (
 					<DoubleLine
 						// img={'/media/icons/zeroloss/default-placeholder.png'}
-						label={props.row.original.detail ?? '-'}
-						description={props.row.original.longDescription ?? ''}
+						label={''}
+						description={
+							<Fragment>
+								{/* <span>{props.row.original.detail ?? ''}</span> */}
+								{!eventMessage && <span>ไม่มีข้อมูล</span>}
+
+								{eventMessage && (
+									<div className="d-block mt-3">
+										รายงานเหตุการณ์ล่าสุด: {eventMessage?.detail ?? '-'}
+										<div className="d-block mt-3">
+											{hasImage && (
+												<span
+													className={'badge text-zeroloss-grey-700 bg-zeroloss-success-300 me-3'}
+													onClick={() => onViewReportingMedia(mediaPath)}>
+													<span
+														className={
+															'p-1 rounded-circle w-2px h-2px me-2 animation-blink bg-zeroloss-success'
+														}
+													/>{' '}
+													รูปภาพ
+												</span>
+											)}
+											{hasVideo && (
+												<Fragment>
+													<span
+														className={'badge text-zeroloss-grey-700 bg-zeroloss-warning-300'}
+														onClick={() => {
+															// onViewReportingMedia(getEventMediaPath(videoMediaPath))
+
+															setIsPlayVideo(true)
+															setVideoUrl(getEventMediaPath(videoMediaPath))
+														}}>
+														<span
+															className={
+																'p-1 rounded-circle w-2px h-2px me-2 animation-blink bg-zeroloss-warning'
+															}
+														/>{' '}
+														วีดีโอ
+													</span>
+												</Fragment>
+											)}
+										</div>
+									</div>
+								)}
+							</Fragment>
+						}
 					/>
 				)
 			},
@@ -267,7 +363,34 @@ const ViewModel = () => {
 		// eslint-disable-next-line
 	}, [])
 
+	useEffect(() => {
+		const el = document.getElementById('event-table-overview-video') as HTMLVideoElement
+
+		if (el) {
+			if (isPlayVideo) {
+				el.requestFullscreen()
+			}
+		}
+	}, [isPlayVideo])
+
+	useEffect(() => {
+		const handleExitFullscreen = () => {
+			if (!document.fullscreenElement) {
+				setIsPlayVideo(false)
+				setVideoUrl('')
+			}
+		}
+
+		document.addEventListener('fullscreenchange', handleExitFullscreen)
+
+		return () => {
+			document.removeEventListener('fullscreenchange', handleExitFullscreen)
+		}
+	}, [])
+
 	return {
+		isPlayVideo,
+		videoUrl,
 		isMobile,
 		isLoading,
 		themeMode,

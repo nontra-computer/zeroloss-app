@@ -13,9 +13,8 @@ const ViewModel = () => {
 	const navigate = useNavigate()
 	const selectedLang = useLang()
 	const intl = useIntl()
-	const { summary, getEvents, getSummary } = useEventStore(state => ({
+	const { summary, getSummary } = useEventStore(state => ({
 		summary: state.summary,
-		getEvents: state.getAll,
 		getSummary: state.getSummary,
 		clearStateEvent: state.clearState,
 	}))
@@ -43,7 +42,6 @@ const ViewModel = () => {
 	const isShowCalendar = location.pathname === '/dashboard/overview/calendar'
 
 	const fetchData = () => {
-		getEvents({})
 		getSummary().then(({ data, success }) => {
 			if (!success) {
 				toast.error(data)

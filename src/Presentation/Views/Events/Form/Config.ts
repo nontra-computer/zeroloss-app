@@ -35,6 +35,12 @@ export const TAB_HEADER_ITEMS = [
 		description: '',
 		showHeader: false,
 	},
+	{
+		tabName: 'ตั้งเวลาการแจ้งเตือน',
+		header: 'ตั้งเวลาการแจ้งเตือน',
+		description: '',
+		showHeader: false,
+	},
 ]
 
 export const IMPACT_WATER_RESOURCE = [
@@ -75,5 +81,24 @@ export const IMPACT_ANIMAL = [
 	{
 		name: 'ตาย',
 		value: 'dead',
+	},
+]
+
+export const NOTIFIFCATION_TIME = [
+	{
+		name: '10 นาที',
+		value: 10,
+	},
+	{
+		name: '30 นาที',
+		value: 30,
+	},
+	{
+		name: '60 นาที',
+		value: 60,
+	},
+	{
+		name: '24 ชั่วโมง',
+		value: 1440,
 	},
 ]

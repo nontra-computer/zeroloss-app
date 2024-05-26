@@ -16,11 +16,12 @@ const INITIAL_STATE_FILTER: {
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
-	const { rawData, dataTypes, getAll, getTypes, clearState } = useEventStore(state => ({
+	const { rawData, dataTypes, getAll, getTypes, getMedia, clearState } = useEventStore(state => ({
 		rawData: state.data,
 		dataTypes: state.types,
 		getAll: state.getAll,
 		getTypes: state.getTypes,
+		getMedia: state.getEventMediaPath,
 		clearState: state.clearState,
 	}))
 	const { isMobile } = useResolutionDetection()
@@ -70,7 +71,7 @@ const ViewModel = () => {
 	const data = useMemo(() => {
 		return rawData
 			.reduce((acc, rd: any) => {
-				if (rd?.start && rd?.end) {
+				if (rd?.start) {
 					acc.push({
 						id: rd.id,
 						title: rd?.title,
@@ -79,7 +80,9 @@ const ViewModel = () => {
 						end: rd?.end ? moment(rd?.end).toISOString() : null,
 						type: rd?.eventTypeId ?? 0,
 						eventSubTypeTitle: rd?.eventSubTypeTitle,
-						img: '/media/examples/incident-1.jpg',
+						img: rd?.pictureCover
+							? getMedia(rd?.pictureCover)
+							: '/media/icons/zeroloss/default-placeholder.png',
 						location: '',
 						locationName: rd?.location?.locationName ?? rd?.locationName ?? '',
 					})
@@ -100,6 +103,7 @@ const ViewModel = () => {
 
 				return true
 			})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rawData, filter])
 
 	const selectedIncident = useMemo(() => {

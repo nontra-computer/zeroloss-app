@@ -15,6 +15,8 @@ const EventWithStatusPopup: React.FC<EventWithStatusProps> = ({
 	eventTypeId,
 	eventType,
 	eventSubTypeTitle,
+	hideViewMore,
+	showNavigate,
 }) => {
 	const EventTypeIdIcon = new Icon({
 		iconUrl: `/media/event-type/${eventTypeId}.svg`,
@@ -76,6 +78,8 @@ const EventWithStatusPopup: React.FC<EventWithStatusProps> = ({
 						eventTypeId,
 						eventType,
 						eventSubTypeTitle,
+						hideViewMore,
+						showNavigate,
 					})}
 				</Popup>
 			)}

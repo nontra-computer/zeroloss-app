@@ -134,7 +134,7 @@ const Map: React.FC<Props> = ({ onSelectBuilding }) => {
 				<div
 					className="card-body position-relative"
 					style={{
-						height: isLargeMobile ? '500px' : '45vh',
+						height: isLargeMobile ? '500px' : '80vh',
 					}}>
 					<TransformWrapper
 						ref={wrapperRef}

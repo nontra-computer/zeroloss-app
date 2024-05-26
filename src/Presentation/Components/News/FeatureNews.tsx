@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import moment from 'moment'
 import 'moment/locale/th'
 
-const FeatureNews: React.FC<FeatureNewsProps> = ({ date, detail, img }) => {
+const FeatureNews: React.FC<FeatureNewsProps> = ({ date, detail, img, id, onClick }) => {
 	const { mode } = useThemeMode()
 	let themeMode = ''
 	if (mode === 'system') {
@@ -14,24 +14,53 @@ const FeatureNews: React.FC<FeatureNewsProps> = ({ date, detail, img }) => {
 		themeMode = mode
 	}
 
+	const isImage =
+		(img ?? '').includes('.png') || (img ?? '').includes('.jpg') || (img ?? '').includes('.jpeg')
+
+	const isVideo =
+		(img ?? '').includes('.mp4') ||
+		(img ?? '').includes('.avi') ||
+		(img ?? '').includes('.mov') ||
+		(img ?? '').includes('.flv')
+
 	return (
 		<React.Fragment>
 			<div
-				className={clsx('feature-news-card card overflow-hidden min-h-200px w-100', {
-					'bg-zeroloss-base-white border-zeroloss-grey-300 border-1px': themeMode === 'light',
-					'bg-zeroloss-grey-true-800 border-zeroloss-base-white border-1px': themeMode === 'dark',
-				})}>
+				onClick={() => {
+					if (id && onClick) onClick(id)
+				}}
+				className={clsx(
+					'cursor-pointer transition-150 hover-opacity feature-news-card card overflow-hidden min-h-200px w-100',
+					{
+						'bg-zeroloss-base-white border-zeroloss-grey-300 border-1px': themeMode === 'light',
+						'bg-zeroloss-grey-true-800 border-zeroloss-base-white border-1px': themeMode === 'dark',
+					}
+				)}>
 				<div className="card-body p-0">
 					<div className="h-150px">
-						<img
-							src={img ?? '/media/icons/zeroloss/default-placeholder.png'}
-							onError={e => {
-								e.currentTarget.src = '/media/icons/zeroloss/default-placeholder.png'
-								e.currentTarget.onerror = null
-							}}
-							alt="Incident 1"
-							className="w-100 h-100 object-fit-contain"
-						/>
+						{isImage && (
+							<img
+								src={img ?? '/media/icons/zeroloss/default-placeholder.png'}
+								onError={e => {
+									e.currentTarget.src = '/media/icons/zeroloss/default-placeholder.png'
+									e.currentTarget.onerror = null
+								}}
+								alt="Incident 1"
+								className="w-100 h-100 object-fit-contain"
+							/>
+						)}
+
+						{isVideo && (
+							<video
+								controls={false}
+								autoPlay={false}
+								muted={true}
+								loop={true}
+								src={img ?? ''}
+								className="w-100 h-100 object-fit-contain">
+								Your browser does not support the video tag.
+							</video>
+						)}
 					</div>
 
 					<div className="px-4 py-5">

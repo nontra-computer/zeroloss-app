@@ -1,8 +1,8 @@
 import React from 'react'
-import { Tooltip } from 'react-tooltip'
+// import { Tooltip } from 'react-tooltip'
 import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModeProvider'
 import { formatNumberAbbreviation } from '@/Utils/formatNumberAbbreviation'
-import { formatNumberCommas } from '@/Utils/formatNumberCommas'
+// import { formatNumberCommas } from '@/Utils/formatNumberCommas'
 import clsx from 'clsx'
 
 interface Props {
@@ -75,7 +75,8 @@ const NumberBox: React.FC<Props> = ({ id, title, type, value, infos, height }) =
 							'text-zeroloss-error': type === 'danger' && themeMode === 'dark',
 							'text-zeroloss-grey': type === 'none' && themeMode === 'dark',
 							'text-zeroloss-grey-900': themeMode === 'light',
-						})}>
+						})}
+						style={{ userSelect: 'none' }}>
 						{formatNumberAbbreviation(value)}
 					</h1>
 
@@ -113,9 +114,9 @@ const NumberBox: React.FC<Props> = ({ id, title, type, value, infos, height }) =
 						</div>
 					)}
 				</div>
-				<Tooltip anchorSelect={`#${id}`} className="fs-5">
+				{/* <Tooltip anchorSelect={`#${id}`} className="fs-5">
 					{formatNumberCommas(value)}
-				</Tooltip>
+				</Tooltip> */}
 			</div>
 		</div>
 	)

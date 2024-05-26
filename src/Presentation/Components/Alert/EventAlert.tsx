@@ -13,22 +13,37 @@ interface Props extends ToastContentProps {
 	title: string
 	detail: string
 	galleries: any[]
+	pictureCover: string
 }
 
-const EventAlert: React.FC<Props> = ({ closeToast, id, calledTime, title, detail, galleries }) => {
+const EventAlert: React.FC<Props> = ({
+	closeToast,
+	id,
+	calledTime,
+	title,
+	detail,
+	galleries = [],
+	pictureCover = null,
+}) => {
 	const { mode } = useThemeMode()
 	const getEventMediaPath = useEventStore(state => state.getEventMediaPath)
 
 	const findedPictureCover = useMemo(() => {
-		const finded = galleries.find(gallery => gallery.isPictureCover === true)
+		// const finded = galleries.find(gallery => gallery.isPictureCover === true)
 
-		if (finded) {
-			return getEventMediaPath(finded.picturePath)
+		// if (finded) {
+		// 	return getEventMediaPath(finded.picturePath)
+		// } else {
+		// 	return '/media/icons/zeroloss/default-placeholder.png'
+		// }
+
+		if (pictureCover) {
+			return getEventMediaPath(pictureCover)
 		} else {
 			return '/media/icons/zeroloss/default-placeholder.png'
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [galleries])
+	}, [pictureCover])
 
 	const onClick = () => {
 		window.open(`/events/detail/${id}`, '_blank')

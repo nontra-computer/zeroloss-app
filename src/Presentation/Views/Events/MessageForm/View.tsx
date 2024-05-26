@@ -2,29 +2,37 @@ import React, { Fragment } from 'react'
 
 import { createPortal } from 'react-dom'
 import { Modal } from 'react-bootstrap'
+import LocationSelection from '../../LocationSelection/View'
+import LocationSelectionComponent from '@/Presentation/Components/Map/Leaflet/LocationSelection'
 import FormGenerator from '@/Presentation/Components/Form/FormGenerator'
 import { KTSVG } from '@/_metronic/helpers'
+import Lightbox from 'yet-another-react-lightbox'
 
 import useViewModel from './ViewModel'
 
 const EventMessageForm: React.FC = () => {
 	const {
+		isSubmitting,
 		formType,
 		open,
 		onClose,
 		formState,
+		onlyImages,
 		onChangeFormState,
 		onRemovePicture,
-		isSubmitting,
 		onSubmit,
 		uploadProgress,
+		isOpenLightBox,
+		imageIdx,
+		onOpenLightBox,
+		onCloseLightBox,
 	} = useViewModel()
 	const modalsRoot = document.getElementById('root-modals') || document.body
 
 	return createPortal(
 		<Modal
 			size="sm"
-			id="kt_modal_supplier_location_selection_modal"
+			id="kt_modal_event_message_form_modal"
 			tabIndex={-1}
 			aria-hidden="true"
 			dialogClassName="modal-fullscreen-lg-down modal-lg modal-dialog modal-dialog-centered"
@@ -32,6 +40,8 @@ const EventMessageForm: React.FC = () => {
 			onHide={onClose}
 			backdrop={isSubmitting ? 'static' : true}
 			style={{ zIndex: 9999 }}>
+			<LocationSelection />
+
 			<div className="modal-content">
 				<div className="modal-body py-lg-10 px-lg-10 min-h-300px">
 					<h1 className="text-zeroloss-grey-900">
@@ -42,6 +52,38 @@ const EventMessageForm: React.FC = () => {
                         </div> */}
 
 					<div className="w-100 min-h-300px pt-5">
+						<div className="mb-5">
+							<label
+								className={`form-label d-flex flex-row`}
+								data-testid="form-input-label-component">
+								<div className="d-flex flex-column">
+									<span>
+										เลือกพิกัดเหตุการณ์ <span className="required"></span>
+									</span>
+								</div>
+							</label>
+
+							<div className="w-100 h-300px overflow-hidden">
+								<LocationSelectionComponent
+									position={{ lat: formState.latitude, lng: formState.longitude }}
+									setPosition={({ lat, lng }) => {
+										onChangeFormState('coordinate', { lat, lng })
+									}}
+								/>
+							</div>
+						</div>
+
+						<FormGenerator
+							formKey="locationName"
+							label="ชื่อสถานที่"
+							inputType="plain"
+							disabled={isSubmitting}
+							additionalLabelCom={<span className="required" />}
+							additionalClassName="mb-5"
+							value={formState.locationName}
+							onChange={e => onChangeFormState('locationName', e.target.value)}
+						/>
+
 						<FormGenerator
 							formKey="detail"
 							label="บรรยายเหตุการณ์"
@@ -94,6 +136,26 @@ const EventMessageForm: React.FC = () => {
 						{formState.pictures.length === 0 && (
 							<div className="fs-7 text-kumopack-grey-300 py-10 text-center">No Files Uploaded</div>
 						)}
+
+						<Lightbox
+							index={imageIdx}
+							open={isOpenLightBox}
+							close={onCloseLightBox}
+							slides={onlyImages.map((p: any, idx: number) => ({
+								src:
+									formType === 'create'
+										? URL.createObjectURL(p)
+										: p?.isNew
+											? URL.createObjectURL(p.picturePath)
+											: p.picturePath,
+								caption: `Event Picture ${idx + 1}`,
+							}))}
+							styles={{ container: { backgroundColor: 'rgba(0, 0, 0, .6)' } }}
+							on={{
+								view: ({ index }) => onOpenLightBox(index),
+							}}
+						/>
+
 						{formType === 'create' && (
 							<div className="row g-5">
 								{formState.pictures.map((p, idx) => (
@@ -105,6 +167,7 @@ const EventMessageForm: React.FC = () => {
 														src={URL.createObjectURL(p)}
 														className="w-100 rounded object-fit-contain h-100 hover-filter-brightness cursor-pointer  transition-300"
 														alt="Additional Picture"
+														onClick={() => window.open(URL.createObjectURL(p), '_blank')}
 													/>
 													<button
 														className="btn btn-sm btn-icon btn-danger btn-active-light-danger position-absolute"
@@ -123,9 +186,19 @@ const EventMessageForm: React.FC = () => {
 											<Fragment>
 												<div className="position-relative h-150px shadow-lg">
 													<video
+														id={`video-create-event-message-form-${idx}`}
 														src={URL.createObjectURL(p)}
 														className="w-100 rounded object-fit-contain h-100 hover-filter-brightness cursor-pointer  transition-300"
 														controls
+														muted
+														onClick={() => {
+															const video = document.getElementById(
+																`video-create-event-message-form-${idx}`
+															) as HTMLVideoElement
+															if (video) {
+																video.requestFullscreen()
+															}
+														}}
 													/>
 													<button
 														className="btn btn-sm btn-icon btn-danger btn-active-light-danger position-absolute"
@@ -146,6 +219,39 @@ const EventMessageForm: React.FC = () => {
 
 						{formType === 'edit' && (
 							<div className="row g-5">
+								{onlyImages.map((p, idx) => {
+									return (
+										<div className="col-12 col-lg-4">
+											<Fragment>
+												<div className="position-relative h-150px shadow-lg">
+													<img
+														src={
+															p?.isNew
+																? URL.createObjectURL(p.picturePath)
+																: p.picturePath ?? '/media/icons/zeroloss/default-placeholder.png'
+														}
+														onError={e => {
+															e.currentTarget.src = '/media/icons/zeroloss/default-placeholder.png'
+															e.currentTarget.onerror = null
+														}}
+														onClick={() => onOpenLightBox(idx)}
+														alt="Additional Picture"
+														className="w-100 rounded object-fit-contain h-100 hover-filter-brightness cursor-pointer  transition-300"
+													/>
+													<button
+														className="btn btn-sm btn-icon btn-danger btn-active-light-danger position-absolute"
+														style={{ top: -10, right: -10 }}
+														onClick={() => onRemovePicture(idx)}>
+														<KTSVG
+															className="svg-icon-1"
+															path="media/icons/duotune/general/gen027.svg"
+														/>
+													</button>
+												</div>
+											</Fragment>
+										</div>
+									)
+								})}
 								{formState.pictures.map((p, idx) => {
 									let isImage = false
 									let isVideo = false
@@ -164,45 +270,29 @@ const EventMessageForm: React.FC = () => {
 											p.picturePath.includes('avi')
 									}
 
+									if (isImage) {
+										return null
+									}
+
 									return (
 										<div className="col-12 col-lg-4">
-											{isImage && (
-												<Fragment>
-													<div className="position-relative h-150px shadow-lg">
-														<img
-															src={
-																p?.isNew
-																	? URL.createObjectURL(p.picturePath)
-																	: p.picturePath ?? '/media/icons/zeroloss/default-placeholder.png'
-															}
-															onError={e => {
-																e.currentTarget.src =
-																	'/media/icons/zeroloss/default-placeholder.png'
-																e.currentTarget.onerror = null
-															}}
-															alt="Additional Picture"
-															className="w-100 rounded object-fit-contain h-100 hover-filter-brightness cursor-pointer  transition-300"
-														/>
-														<button
-															className="btn btn-sm btn-icon btn-danger btn-active-light-danger position-absolute"
-															style={{ top: -10, right: -10 }}
-															onClick={() => onRemovePicture(idx)}>
-															<KTSVG
-																className="svg-icon-1"
-																path="media/icons/duotune/general/gen027.svg"
-															/>
-														</button>
-													</div>
-												</Fragment>
-											)}
-
 											{isVideo && (
 												<Fragment>
 													<div className="position-relative h-150px shadow-lg">
 														<video
+															id={`video-edit-event-message-form-${idx}`}
 															src={p.picturePath}
 															className="w-100 rounded object-fit-contain h-100 hover-filter-brightness cursor-pointer  transition-300"
 															controls
+															muted
+															onClick={() => {
+																const video = document.getElementById(
+																	`video-edit-event-message-form-${idx}`
+																) as HTMLVideoElement
+																if (video) {
+																	video.requestFullscreen()
+																}
+															}}
 														/>
 														<button
 															className="btn btn-sm btn-icon btn-danger btn-active-light-danger position-absolute"
@@ -228,8 +318,14 @@ const EventMessageForm: React.FC = () => {
 						containerClassName="mt-5"
 						multiple={false}
 						disabled={isSubmitting}
-						accept="image/*, video/*"
+						accept="image/jpg, image/jpeg, image/png, video/mp4, video/mov"
 						onFileUpload={coverFiles => onChangeFormState('pictures', coverFiles[0])}
+						customHelpText={
+							<React.Fragment>
+								<span>or drag and drop</span>
+								<p>Allowed: JPG, JPEG, PNG, MP4, MOV</p>
+							</React.Fragment>
+						}
 					/>
 				</div>
 
@@ -281,7 +377,8 @@ const EventMessageForm: React.FC = () => {
 			</div>
 
 			<style>{`
-                #kt_body > div.fade.modal-backdrop.show {
+				#kt_body > div.fade.modal-backdrop.show, 
+				#kt_body > div.fade.modal.show > #kt_modal_event_message_form_modal {
                     z-index: 9999 !important;
                 }
 			`}</style>

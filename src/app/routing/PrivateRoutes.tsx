@@ -9,6 +9,7 @@ import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 
 // Zeroloss
 import DashboardRoutes from './Routes/Dashboard'
+import ReportRoutes from './Routes/Report'
 import EventsRoutes from './Routes/Events'
 
 import Error404View from '@/Presentation/Views/Error/404/View'
@@ -30,8 +31,10 @@ const PrivateRoutes = () => {
 				{/* Pages */}
 
 				<Route path="dashboard/*" element={<DashboardRoutes />} />
+				<Route path="report/*" element={<ReportRoutes />} />
 				<Route path="events/*" element={<EventsRoutes />} />
 				<Route path="hazard-modeling/*" element={<HazardManagementRoutes />} />
+				<Route path="report/*" element={<ReportRoutes />} />
 
 				<Route path="builder" element={<BuilderPageWrapper />} />
 				<Route path="menu-test" element={<MenuTestPage />} />

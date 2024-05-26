@@ -89,8 +89,8 @@ const Filter: React.FC<Props> = ({
 									label="ค้นหาด้วยชื่อสถานที่"
 									placeholder=""
 									additionalClassName="fs-7 bg-zeroloss-base-white"
-									// value={filter.contract_code}
-									// onChange={e => onChangeFilter('contract_code', e.target.value)}
+									value={filter.name}
+									onChange={e => onChangeFilter('name', e.target.value)}
 								/>
 							</div>
 							{/* END:: Search Text */}
@@ -99,6 +99,7 @@ const Filter: React.FC<Props> = ({
 							<div className="col-12">
 								<label className="form-label">ประเภทสถานที่</label>
 								<Select
+									isClearable
 									placeholder="เลือกประเภทสถานที่"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
 									className="w-100 shadow-sm"
@@ -141,10 +142,15 @@ const Filter: React.FC<Props> = ({
 							<div className="col-12">
 								<label className="form-label">ระยะห่างจากจุดเกิดเหตุ</label>
 								<Select
+									isClearable
 									placeholder="เลือกระยะห่างจากจุดเกิดเหตุ"
 									noOptionsMessage={() => 'ไม่พบข้อมูล'}
 									className="w-100 shadow-sm"
 									options={distanceOccuredOptions}
+									value={
+										distanceOccuredOptions.find(option => option.value === filter.distance) ?? null
+									}
+									onChange={option => onChangeFilter('distance', option?.value)}
 									components={{
 										IndicatorSeparator: () => null,
 									}}

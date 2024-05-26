@@ -17,4 +17,6 @@ export interface EventWithStatusProps {
 		name: string
 	}
 	eventSubTypeTitle?: string
+	hideViewMore?: boolean
+	showNavigate?: boolean
 }

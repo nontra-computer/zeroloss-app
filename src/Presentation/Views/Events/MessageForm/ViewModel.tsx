@@ -6,10 +6,14 @@ import { useEventMessageStore } from '@/Store/EventMessage'
 import { useEventMediaStore } from '@/Store/EventMedia'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
+import { Bangkok } from '@/Configuration/​MapCoordinates'
 
 const INITIAL_STATE = {
 	detail: '',
 	pictures: [] as any[],
+	locationName: '',
+	latitude: Bangkok.lat,
+	longitude: Bangkok.lng,
 }
 
 const ViewModel = () => {
@@ -22,6 +26,7 @@ const ViewModel = () => {
 		setEditId,
 		setFormType,
 	} = useContext(EventMessageFormContext)
+
 	const [formState, setFormState] = useState(INITIAL_STATE)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const getMediaPath = useEventStore(state => state.getEventMediaPath)
@@ -42,9 +47,38 @@ const ViewModel = () => {
 	}))
 	const removeEventMedia = useEventMediaStore(state => state.remove)
 
+	const [isOpenLightBox, setIsOpenLightBox] = useState(false)
+	const [imageIdx, setImageIdx] = useState(0)
+
+	const onlyImages = formState.pictures.filter(p => {
+		if (formType === 'create') {
+			const isImage = p?.type?.includes('image')
+			if (isImage) {
+				return true
+			} else {
+				return false
+			}
+		} else if (formType === 'edit') {
+			if (p?.isNew === true) {
+				return false
+			}
+
+			const isImage =
+				p?.picturePath?.includes('png') ||
+				p?.picturePath?.includes('jpg') ||
+				p?.picturePath?.includes('jpeg')
+			if (isImage) {
+				return true
+			}
+		} else {
+			return false
+		}
+	})
+
 	const handleOpenEditForm = () => {
 		if (open && formType === 'edit' && editId !== 0) {
 			const finded = messages.find(m => m.id === editId)
+
 			if (finded) {
 				setFormState({
 					detail: finded.detail,
@@ -52,9 +86,22 @@ const ViewModel = () => {
 						...m,
 						picturePath: getMediaPath(m.picturePath),
 					})),
+					locationName: finded.locationName,
+					latitude: finded.latitude ?? Bangkok.lat,
+					longitude: finded.longitude ?? Bangkok.lng,
 				})
 			}
 		}
+	}
+
+	const onOpenLightBox = (imgIdx: number) => {
+		setImageIdx(imgIdx)
+		setIsOpenLightBox(true)
+	}
+
+	const onCloseLightBox = () => {
+		setImageIdx(0)
+		setIsOpenLightBox(false)
 	}
 
 	const onChangeFormState = (key: string, value: any) => {
@@ -70,6 +117,12 @@ const ViewModel = () => {
 					pictures: [...prevState.pictures, { picturePath: value, isNew: true }],
 				}))
 			}
+		} else if (key === 'coordinate') {
+			setFormState({
+				...formState,
+				latitude: value.lat,
+				longitude: value.lng,
+			})
 		} else {
 			setFormState({
 				...formState,
@@ -118,12 +171,18 @@ const ViewModel = () => {
 			setEditId(0)
 			setFormType('create')
 			setUploadProgress(0)
+			setImageIdx(0)
+			setIsOpenLightBox(false)
 		}, 500)
 	}
 
 	const onSubmit = () => {
 		setIsSubmitting(true)
-		if (formState.detail === '' || formState.pictures.length === 0) {
+		if (
+			formState.detail === '' ||
+			formState.pictures.length === 0 ||
+			formState.locationName === ''
+		) {
 			toast.error('กรุณากรอกข้อมูลให้ครบถ้วน')
 			setIsSubmitting(false)
 			return
@@ -131,6 +190,9 @@ const ViewModel = () => {
 			if (formType === 'create') {
 				const body: { [key: string]: any } = {
 					detail: formState.detail,
+					locationName: formState.locationName,
+					latitude: formState.latitude,
+					longitude: formState.longitude,
 				}
 				formState.pictures.forEach((p, i) => {
 					body[`pictures[${i}]`] = p
@@ -153,6 +215,9 @@ const ViewModel = () => {
 			} else if (editId !== 0) {
 				const body: { [key: string]: any } = {
 					detail: formState.detail,
+					locationName: formState.locationName,
+					latitude: formState.latitude,
+					longitude: formState.longitude,
 				}
 				formState.pictures.forEach((p, i) => {
 					if (p.isNew) {
@@ -190,9 +255,14 @@ const ViewModel = () => {
 		onClose,
 		isSubmitting,
 		formState,
+		onlyImages,
+		isOpenLightBox,
+		imageIdx,
 		onChangeFormState,
 		onRemovePicture,
 		onSubmit,
+		onOpenLightBox,
+		onCloseLightBox,
 	}
 }
 

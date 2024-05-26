@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useGoogleMap } from '@/Hooks/useGoogleMap'
 import clsx from 'clsx'
 import { KTSVG } from '@/_metronic/helpers'
 
@@ -14,6 +15,10 @@ interface Props {
 	title: string
 	detail: string
 	id: number
+	lat: number
+	lng: number
+	hideViewMore?: boolean
+	showNavigate?: boolean
 }
 
 const EventPopup: React.FC<Props> = ({
@@ -24,8 +29,13 @@ const EventPopup: React.FC<Props> = ({
 	eventSubTypeTitle,
 	img,
 	eventTypeId,
+	lat,
+	lng,
+	hideViewMore,
+	showNavigate,
 }) => {
 	const navigate = useNavigate()
+	const { onNavigate } = useGoogleMap()
 
 	return (
 		<React.Fragment>
@@ -65,16 +75,34 @@ const EventPopup: React.FC<Props> = ({
 						<p className="text-zeroloss-base-white fs-6 text-start">{detail ?? '-'}</p>
 					</div>
 
-					<div className="mt-4">
-						<button
-							className="btn btn-sm white-button text-zeroloss-base-black w-100"
+					{!hideViewMore && (
+						<div className="mt-4">
+							<button
+								className="btn btn-sm white-button text-zeroloss-base-black w-100"
+								onClick={() => {
+									if (id) navigate(`/events/detail/${id}`)
+								}}>
+								ดูเพิ่มเติม
+								<KTSVG path="media/icons/zeroloss/red-arrow-narrow-up-right.svg" className="ms-1" />
+							</button>
+						</div>
+					)}
+
+					{showNavigate && (
+						<div
+							className="mt-4"
 							onClick={() => {
-								if (id) navigate(`/events/detail/${id}`)
+								if (lat && lng) onNavigate(lat, lng)
 							}}>
-							ดูเพิ่มเติม
-							<KTSVG path="media/icons/zeroloss/red-arrow-narrow-up-right.svg" className="ms-1" />
-						</button>
-					</div>
+							<button
+								className="btn btn-sm white-button text-zeroloss-base-black w-100"
+								onClick={() => {
+									if (id) navigate(`/events/detail/${id}`)
+								}}>
+								นำทาง
+							</button>
+						</div>
+					)}
 				</div>
 			</div>
 

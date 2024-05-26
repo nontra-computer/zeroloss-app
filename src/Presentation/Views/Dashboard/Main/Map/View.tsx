@@ -20,6 +20,7 @@ import Filter from './Components/Filter'
 import LocationFilter from './Components/LocationFilter'
 import useViewModel from './ViewModel'
 import clsx from 'clsx'
+import { BangkhenWaterTreatmentPlant } from '@/Configuration/​MapCoordinates'
 
 const MainDashboardMapView: React.FC = () => {
 	const {
@@ -33,6 +34,9 @@ const MainDashboardMapView: React.FC = () => {
 		dataTypeOptions,
 		locationTypeOptions,
 		distanceOptions,
+		measurementTypeOptions,
+		measurementIsOverStdOptions,
+		measurementStatusOptions,
 		type,
 		onTypeChange,
 		TYPE_OPTIONS,
@@ -58,11 +62,14 @@ const MainDashboardMapView: React.FC = () => {
 			<Filter
 				searchText={searchText}
 				setSearchText={setSearchText}
-				eventTypeOptions={dataTypeOptions}
 				filter={preFilterState}
 				onChangeFilter={onAddFilter}
 				confirmFilter={confirmFilterEvent}
 				clearFilter={clearFilterEvent}
+				eventTypeOptions={dataTypeOptions}
+				measurementTypeOptions={measurementTypeOptions}
+				measurementIsOverStdOptions={measurementIsOverStdOptions}
+				measurementStatusOptions={measurementStatusOptions}
 			/>
 
 			<LocationFilter
@@ -260,7 +267,7 @@ const MainDashboardMapView: React.FC = () => {
 												</React.Fragment>
 											)} */}
 
-											{type === 'measurement' && (
+											{['all', 'measurement'].includes(type) && (
 												<React.Fragment>
 													{showMeasurementTable && (
 														<MeasurementTable
@@ -311,10 +318,10 @@ const MainDashboardMapView: React.FC = () => {
 											<InfoBoard data={dataTypeOptions} />
 											<MapContainer
 												center={{
-													lat: 13.7563,
-													lng: 100.5018,
+													lat: BangkhenWaterTreatmentPlant.lat,
+													lng: BangkhenWaterTreatmentPlant.lng,
 												}}
-												zoom={7}>
+												zoom={16}>
 												<TileLayer
 													attribution="@Copyright 2024 Zeroloss"
 													url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -336,7 +343,7 @@ const MainDashboardMapView: React.FC = () => {
 													)
 												})}
 
-												{type === 'wind-direction' && (
+												{['wind-direction', 'all'].includes(type) && (
 													<React.Fragment>
 														{windData.map((d: any, index: number) => (
 															<WindDirection
@@ -353,7 +360,7 @@ const MainDashboardMapView: React.FC = () => {
 													</React.Fragment>
 												)}
 
-												{type === 'measurement' && (
+												{['measurement', 'all'].includes(type) && (
 													<React.Fragment>
 														{measurementData.map((d: any, index: number) => (
 															<LocationMeasurementStation

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import clsx from 'clsx'
 import { KTIcon } from '../../../helpers'
 import {
@@ -15,6 +15,13 @@ import { useThemeMode } from '@/_metronic/partials/layout/theme-mode/ThemeModePr
 
 import ZerolossNotificationView from '@/Presentation/Views/Notification/View'
 import { isMobileDevice } from '@/_metronic/assets/ts/_utils'
+import { useEventNotificationStore } from '@/Store/EventNotification'
+import { useAppStore } from '@/Store/App'
+// eslint-disable-next-line
+// @ts-ignore
+import useSound from 'use-sound'
+import SoundEffect1 from '@/Assets/SoundEffect/sound-effect-1.mp3'
+import { toast } from 'react-toastify'
 
 const itemClass = 'ms-1 ms-lg-3',
 	// btnClass =
@@ -26,6 +33,15 @@ const Topbar: FC = () => {
 	const { config } = useLayout()
 	const intl = useIntl()
 	const { mode } = useThemeMode()
+	const { isThereAnyUnreadMessage, readAllEvents, getUnreadMessages } = useEventNotificationStore(
+		state => ({
+			isThereAnyUnreadMessage: state.isThereAnyUnreadMessage,
+			readAllEvents: state.readAllMessages,
+			getUnreadMessages: state.getUnreadMessages,
+		})
+	)
+	const isPlaySoundEffect = useAppStore(state => state.isPlaySoundEffect)
+	const [playSound, { stop }] = useSound(SoundEffect1)
 	// const location = useLocation()
 	// const isDashboard = location.pathname.includes('/dashboard')
 
@@ -35,6 +51,31 @@ const Topbar: FC = () => {
 	} else {
 		themeMode = mode
 	}
+
+	const onViewNotification = () => {
+		getUnreadMessages().then(({ success }) => {
+			stop()
+
+			if (!success) {
+				toast.error('ดึงข้อมูลที่ยังไม่ได้อ่านไม่สำเร็จ')
+			} else {
+				readAllEvents()
+			}
+		})
+	}
+
+	useEffect(() => {
+		if (isPlaySoundEffect === true) {
+			setInterval(() => {
+				playSound()
+			}, 2000)
+		}
+
+		return () => {
+			stop()
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isPlaySoundEffect])
 
 	return (
 		<div className="d-flex align-items-stretch justify-self-end flex-shrink-0">
@@ -77,10 +118,13 @@ const Topbar: FC = () => {
 					})}
 					data-kt-menu-trigger="click"
 					data-kt-menu-attach="parent"
-					data-kt-menu-placement="bottom-end">
+					data-kt-menu-placement="bottom-end"
+					onClick={onViewNotification}>
 					<KTIcon iconName="notification-on" className={btnIconClass} />
 
-					<span className="bullet bullet-dot bg-danger h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+					{isThereAnyUnreadMessage === true && (
+						<span className="bullet bullet-dot bg-danger h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+					)}
 				</div>
 				<ZerolossNotificationView />
 				{/* <HeaderNotificationsMenu /> */}

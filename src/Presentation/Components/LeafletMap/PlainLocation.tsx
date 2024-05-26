@@ -5,8 +5,10 @@ import { PlainLocationProps } from '@/Types/PlainLocation'
 
 const PlainLocation: React.FC<PlainLocationProps> = ({ latitude, longitude, popup, ...props }) => {
 	const icon = new Icon({
-		iconUrl: '/media/icons/zeroloss/red-location-marker.svg',
+		iconUrl: `/media/location-type/${props.locationTypeId ?? 1}.svg`,
 		iconSize: [40, 40],
+		className:
+			'bg-zeroloss-base-white rounded-circle shadow-lg border-2 border-zeroloss-base-white p-2',
 	})
 	const markerRef = useRef<any>(null)
 

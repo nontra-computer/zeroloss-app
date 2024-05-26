@@ -17,6 +17,7 @@ const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
 	multiple,
 	onFileUpload,
 	disabled,
+	customHelpText,
 }) => {
 	// ref
 	const inputRef = useRef<HTMLInputElement>(null)
@@ -107,12 +108,15 @@ const FormDragDropFile: React.FC<FormDragAndDropFileProp> = ({
 						>
 							{isDragActive ? 'Drop the file here' : 'Click to upload'}
 						</button>
-						{!isDragActive && (
-							<React.Fragment>
-								<span>or drag and drop</span>
-								<p>SVG, PNG, JPG or GIF (max. 800x400px)</p>
-							</React.Fragment>
-						)}
+						{!isDragActive &&
+							(customHelpText ? (
+								customHelpText
+							) : (
+								<React.Fragment>
+									<span>or drag and drop</span>
+									<p>SVG, PNG, JPG or GIF (max. 800x400px)</p>
+								</React.Fragment>
+							))}
 					</div>
 				</div>
 			</form>

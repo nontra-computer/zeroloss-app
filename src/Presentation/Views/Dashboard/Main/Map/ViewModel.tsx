@@ -4,6 +4,7 @@ import { useResolutionDetection } from '@/Hooks/useResolutionDetection'
 import { useEventStore } from '@/Store/Event'
 import { useLocationStore } from '@/Store/Location'
 import { useLocationTypeStore } from '@/Store/LocationType'
+import { useMeasurementStore } from '@/Store/Measurement'
 import { toast } from 'react-toastify'
 
 const TYPE_OPTIONS = [
@@ -25,148 +26,22 @@ const TYPE_OPTIONS = [
 	},
 ]
 
-// const MOCK_DATA: any[] = [
-// 	{
-// 		id: 1,
-// 		type: 'success',
-// 		draggable: false,
-// 		shapeType: 'circle',
-// 		popup: null,
-// 		position: {
-// 			lat: 13.7473729,
-// 			lng: 100.5137062,
-// 		},
-// 		degree: 0,
-// 	},
-// 	{
-// 		id: 2,
-// 		type: 'error',
-// 		draggable: false,
-// 		shapeType: 'circle',
-// 		popup: null,
-// 		position: {
-// 			lat: 13.8527366,
-// 			lng: 100.6882377,
-// 		},
-// 		degree: 78,
-// 	},
-// 	{
-// 		id: 3,
-// 		type: 'warning',
-// 		draggable: false,
-// 		shapeType: 'circle',
-// 		popup: null,
-// 		position: {
-// 			lat: 13.7374361,
-// 			lng: 100.7136729,
-// 		},
-// 		degree: 20,
-// 	},
-// 	{
-// 		id: 4,
-// 		type: 'success',
-// 		draggable: false,
-// 		shapeType: 'circle',
-// 		popup: null,
-// 		position: {
-// 			lat: 13.7723976,
-// 			lng: 100.5680649,
-// 		},
-// 		degree: 110,
-// 	},
-// 	{
-// 		id: 5,
-// 		type: 'error',
-// 		draggable: false,
-// 		shapeType: 'circle',
-// 		popup: null,
-// 		position: {
-// 			lat: 13.8010716,
-// 			lng: 100.5355079,
-// 		},
-// 		degree: 140,
-// 	},
-// 	{
-// 		id: 6,
-// 		type: 'warning',
-// 		draggable: false,
-// 		shapeType: 'circle',
-// 		popup: null,
-// 		position: {
-// 			lat: 13.7374361,
-// 			lng: 100.7136729,
-// 		},
-// 		degree: 270,
-// 	},
-// 	{
-// 		id: 7,
-// 		type: 'success',
-// 		shapeType: 'circle',
-// 		draggable: false,
-// 		popup: null,
-// 		position: {
-// 			lat: 13.7473729,
-// 			lng: 100.5137062,
-// 		},
-// 		degree: 150,
-// 	},
-// 	{
-// 		id: 8,
-// 		type: 'error',
-// 		shapeType: 'circle',
-// 		draggable: false,
-// 		popup: null,
-// 		position: {
-// 			lat: 13.8221382,
-// 			lng: 100.4998724,
-// 		},
-// 		degree: 290,
-// 	},
-// 	{
-// 		id: 9,
-// 		type: 'warning',
-// 		shapeType: 'circle',
-// 		draggable: false,
-// 		popup: null,
-// 		position: {
-// 			lat: 13.7240437,
-// 			lng: 100.4826123,
-// 		},
-// 	},
-// 	{
-// 		id: 10,
-// 		type: 'success',
-// 		shapeType: 'circle',
-// 		draggable: false,
-// 		popup: null,
-// 		position: {
-// 			lat: 13.7093509,
-// 			lng: 100.4475244,
-// 		},
-// 		degree: 310,
-// 	},
-// 	{
-// 		id: 11,
-// 		type: 'error',
-// 		shapeType: 'circle',
-// 		draggable: false,
-// 		popup: null,
-// 		position: {
-// 			lat: 13.6126487,
-// 			lng: 100.5380794,
-// 		},
-// 		degree: 340,
-// 	},
-// ]
-
 const INITIAL_STATE_FILTER: {
 	type: any[]
 	search: any[]
+	locationName: string
 	locationTypeId: any
+	measurementType: any
+	measurementIsOverStd: any
+	measurementStatus: any
 } = {
 	type: [],
 	search: [],
+	locationName: '',
 	locationTypeId: null,
+	measurementType: null,
+	measurementIsOverStd: null,
+	measurementStatus: null,
 }
 
 const ViewModel = () => {
@@ -192,6 +67,10 @@ const ViewModel = () => {
 	const { locationTypes, getAllLocationTypes } = useLocationTypeStore(state => ({
 		locationTypes: state.data,
 		getAllLocationTypes: state.getAll,
+	}))
+	const { measurementTypes, getMeasurementTypes } = useMeasurementStore(state => ({
+		measurementTypes: state.types,
+		getMeasurementTypes: state.getTypes,
 	}))
 	const [searchText, setSearchText] = useState('')
 	const [filter, setFilter] = useState(INITIAL_STATE_FILTER)
@@ -271,6 +150,40 @@ const ViewModel = () => {
 			value: 10,
 		},
 	]
+	const measurementTypeOptions: {
+		label: string
+		value: any
+	}[] = measurementTypes.map((d: any) => ({
+		label: `${d.nameTh} (${d.code})`,
+		value: d.id,
+	}))
+	const measurementIsOverStdOptions: {
+		label: string
+		value: any
+	}[] = [
+		{
+			label: 'Normal',
+			value: false,
+		},
+		{
+			label: 'Over Standard',
+			value: true,
+		},
+	]
+	const measurementStatusOptions: {
+		label: string
+		value: any
+	}[] = [
+		{
+			label: 'เชื่อมไม่ได้',
+			value: false,
+		},
+		{
+			label: 'เชื่อมได้',
+			value: true,
+		},
+	]
+
 	const selectedMeasurementData = useMemo(() => {
 		return rawData?.measurements?.find((d: any) => d.id === measurementId)
 	}, [rawData?.measurements, measurementId])
@@ -315,7 +228,13 @@ const ViewModel = () => {
 	}
 
 	const fetchLocations = () => {
+		if (filter.locationName.length === 0 && filter.locationTypeId === null) {
+			toast.error('กรุณาระบุตัวกรองในการค้นหาสถานที่')
+			return
+		}
+
 		getLocations({
+			name: filter.locationName,
 			locationTypeId: filter.locationTypeId,
 		}).then(({ success, data }) => {
 			if (!success) {
@@ -327,7 +246,16 @@ const ViewModel = () => {
 	const fetchData = () => {
 		getTypes()
 		getAllLocationTypes()
-		getData().then(({ data: dataFetch, success }) => {
+		getMeasurementTypes()
+		getEvents({})
+	}
+
+	const fetchDataDashboardWithMeasurementFilter = () => {
+		getData({
+			measurementType: filter.measurementType,
+			measurementIsOverStd: filter.measurementIsOverStd,
+			measurementStatus: filter.measurementStatus,
+		}).then(({ data: dataFetch, success }) => {
 			if (!success) {
 				toast.error(dataFetch)
 			}
@@ -356,7 +284,12 @@ const ViewModel = () => {
 				}
 
 				if (filter.search?.length > 0) {
-					return filter.search.includes(d.title)
+					return (
+						filter.search.find((item: any) => {
+							const reg = new RegExp(item, 'i')
+							return reg.test(d.title)
+						}) !== undefined
+					)
 				}
 
 				return true
@@ -385,24 +318,24 @@ const ViewModel = () => {
 		setLocation([])
 		setFilter(prevState => ({
 			...prevState,
+			locationName: '',
 			locationTypeId: null,
 		}))
 	}
 
 	const confirmFilterEvent = () => {
+		setFilter(prevState => ({
+			locationTypeId: prevState.locationTypeId,
+			search: searchText.length > 0 ? [...prevState.search, searchText] : prevState.search,
+			locationName: prevState.locationName,
+			type: preFilterState.type,
+			measurementType: preFilterState.measurementType,
+			measurementIsOverStd: preFilterState.measurementIsOverStd,
+			measurementStatus: preFilterState.measurementStatus,
+		}))
+
 		if (searchText.length > 0) {
-			setFilter(prevState => ({
-				locationTypeId: prevState.locationTypeId,
-				search: [...prevState.search, searchText],
-				type: preFilterState.type,
-			}))
 			setSearchText('')
-		} else {
-			setFilter(prevState => ({
-				locationTypeId: prevState.locationTypeId,
-				search: prevState.search,
-				type: preFilterState.type,
-			}))
 		}
 	}
 
@@ -465,6 +398,11 @@ const ViewModel = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
+	useEffect(() => {
+		fetchDataDashboardWithMeasurementFilter()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [filter.measurementType, filter.measurementIsOverStd, filter.measurementStatus])
+
 	return {
 		TYPE_OPTIONS,
 		isMobile,
@@ -479,6 +417,9 @@ const ViewModel = () => {
 		locationOptions,
 		locationTypeOptions,
 		distanceOptions,
+		measurementTypeOptions,
+		measurementIsOverStdOptions,
+		measurementStatusOptions,
 		locationData,
 		type,
 		onTypeChange,

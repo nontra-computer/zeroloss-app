@@ -5,8 +5,8 @@ import { EventDangerLevelOptions } from '@/Configuration/EventDangerLevel'
 
 const ViewModel = () => {
 	const { mode } = useThemeMode()
-	const { data, eventTypes, eventSubTypes, pollutionTypes, getTypes, getSubTypes, getPollution } =
-		useEventStore(state => ({
+	const { data, eventTypes, eventSubTypes, pollutionTypes, getTypes, getSubTypes } = useEventStore(
+		state => ({
 			data: state.selected,
 			eventTypes: state.types,
 			eventSubTypes: state.subTypes,
@@ -14,7 +14,8 @@ const ViewModel = () => {
 			getTypes: state.getTypes,
 			getSubTypes: state.getSubTypes,
 			getPollution: state.getPollution,
-		}))
+		})
+	)
 
 	const eventTypesOptions: {
 		label: string
@@ -79,7 +80,6 @@ const ViewModel = () => {
 	const fetchData = () => {
 		getTypes()
 		getSubTypes()
-		getPollution()
 	}
 
 	useEffect(() => {
