@@ -11,7 +11,6 @@ import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import DashboardRoutes from './Routes/Dashboard'
 import ReportRoutes from './Routes/Report'
 import EventsRoutes from './Routes/Events'
-import ReportRoutes from './Routes/Report'
 
 import Error404View from '@/Presentation/Views/Error/404/View'
 

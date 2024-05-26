@@ -10,14 +10,14 @@ import ReportEventView from '@/Presentation/Views/Report/Event/View'
 const ReportRoutes = () => (
 	<Routes>
 		<Route path="event" element={<ReportEventView />} />
-    
-    <Route path="form">
+
+		<Route path="form">
 			<Route path="select" element={<ReportSelectView />} />
 			<Route path="time-series-report" element={<TimeSeries />} />
 			<Route path="windrose-report" element={<WindRose />} />
 		</Route>
 
-    <Route path="mwa">
+		<Route path="mwa">
 			<Route index element={<MwaMeasurementDashboardView />} />
 			<Route path="building/:buildingId" element={<MwaBuildingDashboardView />} />
 			<Route path="*" element={<Navigate to="/dashboard/mwa" />} />
