@@ -80,9 +80,11 @@ export const ZEROLOSS_MENU = [
 		className: 'py-3',
 		subMenu: [
 			{
-				key: 'measurement',
+				key: 'form-select',
 				icon: 'bi-calendar3',
-				path: import.meta.env.VITE_APP_ZEROLOSS_EMCC_MEASUREMENT,
+				path: '/report/form/time-series-report',
+				// label: 'ZEROLOSS.MENU.REPORT_SELECT',
+				// path: import.meta.env.VITE_APP_ZEROLOSS_EMCC_MEASUREMENT,
 				label: 'ZEROLOSS.MENU.REPORT_MEASUREMENT',
 				outside: true,
 			},
