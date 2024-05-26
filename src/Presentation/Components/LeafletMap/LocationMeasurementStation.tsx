@@ -9,8 +9,25 @@ const LocationMeasurementStation: React.FC<LocationMeasurementStationProps> = ({
 	popup,
 	...props
 }) => {
+	const status = props.status ?? false
+	const state = props.state ?? 0
+	const dataStatus = props.dataStatus ?? false
+	let iconColor = 'black'
+
+	if (state === 0) {
+		iconColor = 'black'
+	} else if (state == 2) {
+		iconColor = 'blue'
+	} else if (state === 1 && status === true && dataStatus === true) {
+		iconColor = 'green'
+	} else if (state === 1 && status === false && dataStatus === false) {
+		iconColor = 'grey'
+	} else if (state === 1 && status === true && dataStatus === false) {
+		iconColor = 'red'
+	}
+
 	const StationIcon = new Icon({
-		iconUrl: `/media/measurement-type/${props.measurementTypeId ?? 1}.svg`,
+		iconUrl: `/media/measurement-type/${props.measurementTypeId ?? 1}/${iconColor}.svg`,
 		iconSize: [40, 40],
 		className:
 			'bg-zeroloss-base-white rounded-circle shadow-lg border-2 border-zeroloss-base-white p-2',

@@ -11,6 +11,8 @@ const EventListTableView: React.FC = () => {
 	const {
 		themeMode,
 		isLoading,
+		isPlayVideo,
+		videoUrl,
 		// isMobile,
 		// displayFilter,
 		// searchText,
@@ -28,6 +30,17 @@ const EventListTableView: React.FC = () => {
 
 	return (
 		<React.Fragment>
+			{isPlayVideo && (
+				<video
+					id="event-table-overview-video"
+					controls={false}
+					autoPlay={false}
+					muted={true}
+					loop={false}
+					src={videoUrl}
+				/>
+			)}
+
 			<div className="row gy-5">
 				{/* Header */}
 				<div className="col-12">

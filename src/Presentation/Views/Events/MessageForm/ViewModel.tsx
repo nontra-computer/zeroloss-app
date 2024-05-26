@@ -47,6 +47,34 @@ const ViewModel = () => {
 	}))
 	const removeEventMedia = useEventMediaStore(state => state.remove)
 
+	const [isOpenLightBox, setIsOpenLightBox] = useState(false)
+	const [imageIdx, setImageIdx] = useState(0)
+
+	const onlyImages = formState.pictures.filter(p => {
+		if (formType === 'create') {
+			const isImage = p?.type?.includes('image')
+			if (isImage) {
+				return true
+			} else {
+				return false
+			}
+		} else if (formType === 'edit') {
+			if (p?.isNew === true) {
+				return false
+			}
+
+			const isImage =
+				p?.picturePath?.includes('png') ||
+				p?.picturePath?.includes('jpg') ||
+				p?.picturePath?.includes('jpeg')
+			if (isImage) {
+				return true
+			}
+		} else {
+			return false
+		}
+	})
+
 	const handleOpenEditForm = () => {
 		if (open && formType === 'edit' && editId !== 0) {
 			const finded = messages.find(m => m.id === editId)
@@ -64,6 +92,16 @@ const ViewModel = () => {
 				})
 			}
 		}
+	}
+
+	const onOpenLightBox = (imgIdx: number) => {
+		setImageIdx(imgIdx)
+		setIsOpenLightBox(true)
+	}
+
+	const onCloseLightBox = () => {
+		setImageIdx(0)
+		setIsOpenLightBox(false)
 	}
 
 	const onChangeFormState = (key: string, value: any) => {
@@ -133,6 +171,8 @@ const ViewModel = () => {
 			setEditId(0)
 			setFormType('create')
 			setUploadProgress(0)
+			setImageIdx(0)
+			setIsOpenLightBox(false)
 		}, 500)
 	}
 
@@ -215,9 +255,14 @@ const ViewModel = () => {
 		onClose,
 		isSubmitting,
 		formState,
+		onlyImages,
+		isOpenLightBox,
+		imageIdx,
 		onChangeFormState,
 		onRemovePicture,
 		onSubmit,
+		onOpenLightBox,
+		onCloseLightBox,
 	}
 }
 

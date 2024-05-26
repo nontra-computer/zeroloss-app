@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { useEventStore } from '@/Store/Event'
 import { useLocationStore } from '@/Store/Location'
 import { useLocationTypeStore } from '@/Store/LocationType'
@@ -10,9 +11,11 @@ import { toast } from 'react-toastify'
 const INITIAL_FILTER_STATE = {
 	name: '',
 	locationTypeId: null,
+	distance: null,
 }
 
 const ViewModel = () => {
+	const { eventId } = useParams()
 	const { mode } = useThemeMode()
 	const { selected, eventTypes, eventSubTypes, getTypes, getSubTypes, getMediaPath } =
 		useEventStore(state => ({
@@ -111,7 +114,7 @@ const ViewModel = () => {
 	}, [selected])
 
 	const canViewSimulation = useMemo(() => {
-		return (selected?.riskModelOutputs ?? [])?.[0]?.id !== undefined
+		return (selected?.riskModelInputs ?? [])?.[0]?.id !== undefined
 	}, [selected])
 
 	let themeMode = ''
@@ -129,7 +132,7 @@ const ViewModel = () => {
 	}
 
 	const onViewSimulation = () => {
-		const riskModelId = (selected?.riskModelOutputs ?? [])?.[0]?.id
+		const riskModelId = (selected?.riskModelInputs ?? [])?.[0]?.id
 		window.open(`${import.meta.env.VITE_APP_ZEROLOSS_SIMULATION_URL.replace(':id', riskModelId)}`)
 	}
 
@@ -141,8 +144,34 @@ const ViewModel = () => {
 	}
 
 	const confirmFilter = () => {
-		if ((filter.locationTypeId !== null && filter.locationTypeId !== 0) || filter.name !== '') {
-			getAllLocations(filter)
+		if (
+			filter.locationTypeId === null ||
+			filter.locationTypeId === 0 ||
+			filter.locationTypeId === '' ||
+			filter.locationTypeId === undefined
+		) {
+			toast.error('กรุณาระบุประเภทสถานที่')
+			return
+		}
+
+		if (
+			(filter.locationTypeId !== null && filter.locationTypeId !== 0) ||
+			filter.name !== '' ||
+			filter.distance !== null
+		) {
+			const fetchFilter: { [key: string]: any } = {}
+			if (filter.distance !== null) {
+				fetchFilter.distanceKm = filter.distance
+				fetchFilter.eventId = eventId
+			}
+			if (filter.name.length > 0) {
+				fetchFilter.name = filter.name
+			}
+			if (filter.locationTypeId !== null && filter.locationTypeId !== 0) {
+				fetchFilter.locationTypeId = filter.locationTypeId
+			}
+
+			getAllLocations(fetchFilter)
 		} else {
 			toast.error('กรุณาระบุตัวกรองในการค้นหาสถานที่')
 		}

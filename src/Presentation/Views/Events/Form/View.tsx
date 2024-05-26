@@ -916,11 +916,20 @@ const EventFormView: React.FC = () => {
 														index={imageIdx}
 														open={isOpenLightBox}
 														close={onCloseLightBox}
-														slides={eventMedias.map((p: any, idx: number) => ({
-															src: p.picturePath,
-															caption: `Event Picture ${idx + 1}`,
-														}))}
+														slides={eventMedias
+															.map((p: any, idx: number) => ({
+																src: p.picturePath,
+																caption: `Event Picture ${idx + 1}`,
+															}))
+															.filter((p: any) => {
+																if (p?.src?.includes('.mp4') || p?.src?.includes('.mov')) {
+																	return false
+																}
+															})}
 														styles={{ container: { backgroundColor: 'rgba(0, 0, 0, .6)' } }}
+														on={{
+															view: ({ index }) => onOpenLightBox(index),
+														}}
 													/>
 
 													<div className="col-12">
@@ -976,11 +985,19 @@ const EventFormView: React.FC = () => {
 																		)}
 																		{media.isVideo && (
 																			<video
+																				id={`event-form-detail-video-${index}`}
 																				controls
 																				muted
 																				loop
 																				className="w-100 rounded object-fit-cover h-100 hover-filter-brightness transition-300"
-																				onClick={() => onOpenLightBox(index)}>
+																				onClick={() => {
+																					const video = document.getElementById(
+																						`event-form-detail-video-${index}`
+																					) as HTMLVideoElement
+																					if (video) {
+																						video.requestFullscreen()
+																					}
+																				}}>
 																				<source src={media.picturePath} type="video/mp4" />
 																				Your browser does not support the video tag.
 																			</video>

@@ -35,7 +35,6 @@ const EventsRoutes = () => (
 
 		<Route path="detail/:eventId">
 			<Route index element={<EventDetailView />} />
-			<Route path="map" element={<EventDetailView />} />
 
 			<Route path="*" element={<Navigate to="." replace />} />
 		</Route>

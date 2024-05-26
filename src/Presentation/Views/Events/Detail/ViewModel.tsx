@@ -100,15 +100,20 @@ const ViewModel = () => {
 	}, [currentTime, intl, selectedLang])
 	const { mode } = useThemeMode()
 
+	const [viewType, setViewType] = useState<'default' | 'map'>('default')
+
 	const [openChangeEventStatus, setOpenChangeEventStatus] = useState(false)
 
 	const [isOpenLightBox, setIsOpenLightBox] = useState(false)
 	const [imageIdx, setImageIdx] = useState(0)
 
-	const isDefaultView = location.pathname.includes('map') ? false : true
+	const isDefaultView = viewType === 'default'
 	const isMapView = !isDefaultView
 
 	const [eventMessagePage, setEventMessagePage] = useState(1)
+
+	const [isPrinting, setIsPrinting] = useState(false)
+	const [isOpenExportType, setIsOpenExportType] = useState(false)
 
 	const steppers = useMemo(
 		() =>
@@ -162,6 +167,22 @@ const ViewModel = () => {
 		return galleries
 			.filter((g: any) => g.isPictureCover === false)
 			.map((g: any) => getMediaPath(g.picturePath))
+			.filter((p: any) => {
+				const isImage =
+					(p ?? '').includes('.png') || (p ?? '').includes('.jpg') || (p ?? '').includes('.jpeg')
+				return isImage
+			})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [data])
+	const galleryVideos = useMemo(() => {
+		const galleries = data?.galleries || []
+		return galleries
+			.filter((g: any) => g.isPictureCover === false)
+			.map((g: any) => getMediaPath(g.picturePath))
+			.filter((p: any) => {
+				const isVideo = (p ?? '').includes('.mp4') || (p ?? '').includes('.mov')
+				return isVideo
+			})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data])
 	const locationAddress = useMemo(() => {
@@ -177,23 +198,24 @@ const ViewModel = () => {
 	}, [data])
 	const eventMessages = useMemo(
 		() =>
-			eventMessageData
-				.slice(
-					0,
-					eventMessagePage * 4 < eventMessageData.length
-						? eventMessagePage * 4
-						: eventMessageData.length
-				)
-				.map(m => ({
-					id: m.id,
-					date: m.createdAt,
-					img: (m?.medias ?? [])?.[0]?.picturePath
-						? getMediaPath((m?.medias ?? [])?.[0]?.picturePath)
-						: null,
-					detail: m.detail,
-				})),
+			(isPrinting === false
+				? eventMessageData.slice(
+						0,
+						eventMessagePage * 4 < eventMessageData.length
+							? eventMessagePage * 4
+							: eventMessageData.length
+					)
+				: eventMessageData
+			).map(m => ({
+				id: m.id,
+				date: m.createdAt,
+				img: (m?.medias ?? [])?.[0]?.picturePath
+					? getMediaPath((m?.medias ?? [])?.[0]?.picturePath)
+					: null,
+				detail: m.detail,
+			})),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[eventMessageData, eventMessagePage]
+		[eventMessageData, eventMessagePage, isPrinting]
 	)
 	const eventStatusOptions = useMemo(() => {
 		const options = EVENT_STATUS_OPTIONS
@@ -210,9 +232,6 @@ const ViewModel = () => {
 	}, [data])
 	const isHideEventChangeStatusButton = data?.state === 4
 	const isEventMessageMax = eventMessagePage * 4 >= eventMessageData.length
-
-	const [isPrinting, setIsPrinting] = useState(false)
-	const [isOpenExportType, setIsOpenExportType] = useState(false)
 
 	let themeMode = ''
 	if (mode === 'system') {
@@ -600,7 +619,16 @@ const ViewModel = () => {
 	}
 
 	const onOpenLightBox = (imgIdx: number) => {
-		setImageIdx(imgIdx)
+		let targetIdx = imgIdx
+		if (galleryImages[imgIdx].includes('.mp4') || galleryImages[imgIdx].includes('.mov')) {
+			// Get the first image after the video
+			const firstImageIdx = galleryImages.findIndex(
+				(img: any) => !img.includes('.mp4') && !img.includes('.mov')
+			)
+			targetIdx = firstImageIdx === -1 ? 0 : firstImageIdx
+		}
+
+		setImageIdx(targetIdx)
 		setIsOpenLightBox(true)
 	}
 
@@ -610,14 +638,15 @@ const ViewModel = () => {
 	}
 
 	const onChangeViewType = (type: 'default' | 'map') => {
-		if (eventId) {
-			let path = `/events/detail/${eventId}`
-			if (type === 'map') {
-				path += '/map'
-			}
+		// if (eventId) {
+		// 	let path = `/events/detail/${eventId}`
+		// 	if (type === 'map') {
+		// 		path += '/map'
+		// 	}
 
-			navigate(path)
-		}
+		// 	navigate(path)
+		// }
+		setViewType(type)
 	}
 
 	const onViewInDetail = () => {
@@ -652,6 +681,7 @@ const ViewModel = () => {
 		data: data,
 		pictureCover,
 		galleryImages,
+		galleryVideos,
 		locationAddress,
 		eventSubTypes,
 		steppers,

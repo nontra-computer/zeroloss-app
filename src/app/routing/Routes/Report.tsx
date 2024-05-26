@@ -5,24 +5,26 @@ import MwaBuildingDashboardView from '@/Presentation/Views/Dashboard/MWA/Buildin
 import ReportSelectView from '@/Presentation/Views/Report/FormSelect/View'
 import TimeSeries from '@/Presentation/Views/Report/Form/TimeSeries'
 import WindRose from '@/Presentation/Views/Report/Form/WindRose'
+import ReportEventView from '@/Presentation/Views/Report/Event/View'
 
 const ReportRoutes = () => (
 	<Routes>
-		<Route path="form">
+		<Route path="event" element={<ReportEventView />} />
+    
+    <Route path="form">
 			<Route path="select" element={<ReportSelectView />} />
 			<Route path="time-series-report" element={<TimeSeries />} />
 			<Route path="windrose-report" element={<WindRose />} />
 		</Route>
 
-		<Route path="mwa">
+    <Route path="mwa">
 			<Route index element={<MwaMeasurementDashboardView />} />
 			<Route path="building/:buildingId" element={<MwaBuildingDashboardView />} />
-
 			<Route path="*" element={<Navigate to="/dashboard/mwa" />} />
 		</Route>
 
-		<Route index element={<Navigate to="/dashboard/overview" />} />
-		<Route path="*" element={<Navigate to="/dashboard/overview" />} />
+		<Route index element={<Navigate to="/report/event" />} />
+		<Route path="*" element={<Navigate to="/report/event" />} />
 	</Routes>
 )
 
