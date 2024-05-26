@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 
 import EventOverviewView from '@/Presentation/Views/Events/Overview/View'
 import EventFormView from '@/Presentation/Views/Events/Form/View'
-import { LocationSelectionContextProvider } from '@/Presentation/Views/Events/Form/LocationSelection/Context'
+import { LocationSelectionContextProvider } from '@/Presentation/Views/LocationSelection/Context'
 import HazardTable from '@/Presentation/Views/Dashboard/HazardTable/View'
 import HazardManagementDetailView from '@/Presentation/Views/HazardManagement/Detail/View'
 

@@ -27,7 +27,7 @@ const HazardManagementDetailView: React.FC = () => {
 				const response = await axios.get(`/hazard-model/${id}/dashboard`)
 				setDetailData(response.data)
 				setIsLoading(false)
-			} catch (error) {
+			} catch (error: any) {
 				setError(error.message)
 				setIsLoading(false)
 			}
@@ -65,7 +65,11 @@ const HazardManagementDetailView: React.FC = () => {
 						id="red"
 						title="Red Threat zone"
 						type="danger"
+						// eslint-disable-next-line
+						// @ts-ignore
 						value={detailData?.output?.redDistance ?? 0}
+						// eslint-disable-next-line
+						// @ts-ignore
 						unit={detailData?.output?.redDistanceUnit ?? ''}
 					/>
 				</div>
@@ -74,7 +78,11 @@ const HazardManagementDetailView: React.FC = () => {
 						id="orange"
 						title="Orange Threat zone"
 						type="warning"
+						// eslint-disable-next-line
+						// @ts-ignore
 						value={detailData?.output?.orangeDistance ?? 0}
+						// eslint-disable-next-line
+						// @ts-ignore
 						unit={detailData?.output?.orangeDistanceUnit ?? ''}
 					/>
 				</div>
@@ -83,7 +91,11 @@ const HazardManagementDetailView: React.FC = () => {
 						id="yellow"
 						title="Yellow Threat zone"
 						type="warning"
+						// eslint-disable-next-line
+						// @ts-ignore
 						value={detailData?.output?.yellowDistance ?? 0}
+						// eslint-disable-next-line
+						// @ts-ignore
 						unit={detailData?.output?.yellowDistanceUnit ?? ''}
 					/>
 				</div>
@@ -92,6 +104,8 @@ const HazardManagementDetailView: React.FC = () => {
 				<>
 					<div className="row mx-5 mt-5 h-100">
 						<div className="col-4">
+							{/* eslint-disable-next-line */}
+							{/* @ts-ignore */}
 							<HazardDetailCard data={detailData.input} />
 						</div>
 						<div className="col-8">
@@ -100,9 +114,13 @@ const HazardManagementDetailView: React.FC = () => {
 					</div>
 					<div className="row mx-5 mt-5 h-100">
 						<div className="col-4">
+							{/* eslint-disable-next-line */}
+							{/* @ts-ignore */}
 							<SourceCard data={detailData.input} />
 						</div>
 						<div className="col-4">
+							{/* eslint-disable-next-line */}
+							{/* @ts-ignore */}
 							<WeatherCard data={detailData.input} />
 						</div>
 						<div className="col-4">
